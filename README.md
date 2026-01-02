@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Unbind
+
+A modern divorce collaboration platform that streamlines the divorce process through intelligent collaboration between attorneys and clients. Unbind brings clarity and organization to complex legal proceedings while empowering both legal professionals and their clients through document management, educational resources, and AI-powered features.
+
+## Tech Stack
+
+- **Frontend:** Next.js 14, React, TypeScript, Tailwind CSS
+- **Backend:** Supabase (PostgreSQL, Authentication, Real-time)
+- **AI Integration:** GPT-4 (planned for document analysis)
+- **Deployment:** Vercel (planned)
+- **Version Control:** Git, GitHub
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ installed
+- npm or yarn package manager
+- Supabase account (free tier works)
+- Git installed
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/ewills88/unbind-platform.git
+cd unbind-web
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env.local` file in the root directory with:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
-## Learn More
+Get these values from your Supabase project dashboard at `https://supabase.com/dashboard`
 
-To learn more about Next.js, take a look at the following resources:
+4. Run the development server:
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Current Features (Session 1 - Completed)
 
-## Deploy on Vercel
+### ✅ Authentication System
+- Professional login and registration pages
+- Email/password authentication via Supabase
+- Form validation and error handling
+- Session management
+- Secure logout functionality
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### ✅ Protected Dashboard
+- Role-based content (Attorney vs Client views)
+- User profile display with account information
+- Dashboard overview cards (Cases, Messages, Tasks)
+- Quick action buttons for common tasks
+- Responsive navigation bar
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### ✅ Database Architecture
+- PostgreSQL database via Supabase
+- User profiles table with role management
+- Cases table (foundation for case management)
+- Row Level Security (RLS) policies
+- Automatic profile creation on user signup
+
+## Project Structure
+```
+unbind-web/
+├── app/
+│   ├── login/          # Login page
+│   ├── register/       # Registration page
+│   ├── dashboard/      # Protected dashboard
+│   └── api/            # API routes
+├── lib/
+│   └── supabase/       # Supabase client configuration
+├── components/         # Reusable React components
+└── public/            # Static assets
+```
+
+## Next Steps (Upcoming Sessions)
+
+### Session 2: Case Management
+- Create case creation flow
+- Case details page
+- Case status tracking
+- Attorney-client case linking
+
+### Session 3: Document Management
+- Document upload functionality
+- AI-powered document categorization
+- Document viewer
+- File storage with Supabase Storage
+
+### Session 4: Messaging & Collaboration
+- Real-time messaging between attorneys and clients
+- Task management system
+- Calendar integration for important dates
+- Notification system
+
+### Future Features
+- State-specific divorce workflows
+- AI document analysis and insights
+- Educational resources library
+- Mobile app (iOS & Android via React Native)
+
+## Development Notes
+
+- Built with AI-accelerated development using Cursor AI
+- Follows Next.js 14 App Router patterns
+- Uses TypeScript for type safety
+- Implements modern React patterns (hooks, functional components)
+- Database security via Row Level Security policies
+
+## Contributing
+
+This is a private project currently in active development. Contact the repository owner for collaboration opportunities.
+
+## License
+
+Proprietary - All rights reserved
+
+---
+
+**Built with ❤️ by Eric Wills**
