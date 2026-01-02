@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase/client'
+import { createClient } from '@supabase/supabase-js'
+import Sidebar from '@/components/layout/Sidebar'
+
+const supabase = createClient(
+  'https://rpbjravqgflidnwjkgvc.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwYmpyYXZxZ2ZsaWRud2prZ3ZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwNDM2MzEsImV4cCI6MjA4MjYxOTYzMX0.kNKpXSGNVAQDReTFA0qcLMS9eKOzFaA8UPkGTYqG75Y'
+)
 
 interface Profile {
   id: string
@@ -23,7 +29,6 @@ export default function DashboardPage() {
 
   const checkUserAndLoadProfile = async () => {
     try {
-      // Check if user is authenticated
       const { data: { user }, error: userError } = await supabase.auth.getUser()
       
       if (userError || !user) {
@@ -31,7 +36,6 @@ export default function DashboardPage() {
         return
       }
 
-      // Fetch user profile
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')
@@ -51,90 +55,61 @@ export default function DashboardPage() {
     }
   }
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/login')
-  }
-
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading your dashboard...</p>
+      <>
+        <Sidebar />
+        <div className="flex-1 flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading your dashboard...</p>
+          </div>
         </div>
-      </div>
+      </>
     )
   }
 
   if (!profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <p className="text-red-600">Error loading profile</p>
-          <button
-            onClick={() => router.push('/login')}
-            className="mt-4 text-blue-600 hover:text-blue-700"
-          >
-            Return to login
-          </button>
+      <>
+        <Sidebar />
+        <div className="flex-1 flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <p className="text-red-600">Error loading profile</p>
+            <button
+              onClick={() => router.push('/login')}
+              className="mt-4 text-blue-600 hover:text-blue-700"
+            >
+              Return to login
+            </button>
+          </div>
         </div>
-      </div>
+      </>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation Bar */}
-      <nav className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            {/* Logo/Brand */}
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">Unbind</h1>
-              <span className="ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                {profile.role === 'admin' ? 'Attorney' : 'Client'}
-              </span>
-            </div>
-            
-            {/* User Info & Logout */}
-            <div className="flex items-center space-x-4">
-              <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">
-                  {profile.full_name || 'User'}
-                </p>
-                <p className="text-xs text-gray-500">{profile.email}</p>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          {/* Role-based welcome message */}
-          <div className="bg-white shadow rounded-lg p-6 mb-6">
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar />
+      
+      <main className="flex-1 overflow-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Welcome Section */}
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             {profile.role === 'admin' ? (
               <>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">
                   Welcome to your attorney dashboard, {profile.full_name || 'Attorney'}
-                </h2>
+                </h1>
                 <p className="text-gray-600">
                   Manage your divorce cases and collaborate with clients efficiently.
                 </p>
               </>
             ) : (
               <>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">
                   Welcome {profile.full_name || 'User'}, your case dashboard
-                </h2>
+                </h1>
                 <p className="text-gray-600">
                   Track your divorce case progress and communicate with your attorney.
                 </p>
@@ -142,10 +117,9 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* Dashboard Content */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Card 1 */}
-            <div className="bg-white shadow rounded-lg p-6">
+          {/* Dashboard Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0 bg-blue-500 rounded-md p-3">
                   <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,8 +140,7 @@ export default function DashboardPage() {
               </p>
             </div>
 
-            {/* Card 2 */}
-            <div className="bg-white shadow rounded-lg p-6">
+            <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0 bg-green-500 rounded-md p-3">
                   <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,8 +155,7 @@ export default function DashboardPage() {
               <p className="mt-4 text-sm text-gray-500">Unread messages</p>
             </div>
 
-            {/* Card 3 */}
-            <div className="bg-white shadow rounded-lg p-6">
+            <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0 bg-purple-500 rounded-md p-3">
                   <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,7 +172,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Quick Actions */}
-          <div className="mt-6 bg-white shadow rounded-lg p-6">
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <button className="px-4 py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg font-medium transition-colors">
@@ -219,7 +191,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Account Info */}
-          <div className="mt-6 bg-white shadow rounded-lg p-6">
+          <div className="bg-white rounded-lg shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Information</h3>
             <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -240,7 +212,7 @@ export default function DashboardPage() {
                   {profile.role === 'admin' ? 'Attorney' : 'Client'}
                 </dd>
               </div>
-              <div>
+              <div className="md:col-span-2">
                 <dt className="text-sm font-medium text-gray-500">User ID</dt>
                 <dd className="mt-1 text-sm text-gray-900 font-mono text-xs">{profile.id}</dd>
               </div>
