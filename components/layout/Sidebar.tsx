@@ -95,20 +95,25 @@ export default function Sidebar() {
   const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => (
     <div className="flex flex-col h-full">
       {/* Logo/Brand */}
-      <div className={`flex items-center px-6 py-5 border-b border-gray-200 ${isCollapsed ? 'justify-center px-4' : ''}`}>
-        {isCollapsed ? (
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">U</span>
-          </div>
-        ) : (
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">U</span>
-            </div>
-            <span className="text-xl font-bold text-gray-900">Unbind</span>
-          </div>
-        )}
-      </div>
+<div className={`flex items-center px-6 py-5 border-b border-gray-200 ${isCollapsed ? 'justify-center px-4' : ''}`}>
+  {isCollapsed ? (
+    <div className="w-10 h-10">
+      <img 
+        src="/unbind-icon.png" 
+        alt="Unbind" 
+        className="w-full h-full object-contain"
+      />
+    </div>
+  ) : (
+    <div className="flex items-center">
+      <img 
+        src="/unbind-logo.png" 
+        alt="Unbind - Divorce. Together." 
+        className="h-12 w-auto"
+      />
+    </div>
+  )}
+</div>
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
@@ -176,24 +181,25 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile Menu Button */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">U</span>
-          </div>
-          <span className="text-xl font-bold text-gray-900">Unbind</span>
-        </div>
-        <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-          <SheetTrigger asChild>
-            <button className="p-2 hover:bg-gray-100 rounded-lg">
-              <Menu className="w-6 h-6 text-gray-700" />
-            </button>
-          </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-72">
-            <SidebarContent onNavigate={() => setIsMobileOpen(false)} />
-          </SheetContent>
-        </Sheet>
-      </div>
+<div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+  <div className="flex items-center">
+    <img 
+      src="/unbind-logo.png" 
+      alt="Unbind - Divorce. Together." 
+      className="h-8 w-auto"
+    />
+  </div>
+  <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+    <SheetTrigger asChild>
+      <button className="p-2 hover:bg-gray-100 rounded-lg">
+        <Menu className="w-6 h-6 text-gray-700" />
+      </button>
+    </SheetTrigger>
+    <SheetContent side="left" className="p-0 w-72">
+      <SidebarContent onNavigate={() => setIsMobileOpen(false)} />
+    </SheetContent>
+  </Sheet>
+</div>
 
       {/* Desktop Sidebar */}
       <aside
