@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import Sidebar from '@/components/layout/Sidebar'
+import ActiveCasesOverview from '@/components/dashboard/ActiveCasesOverview'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -94,130 +95,36 @@ export default function DashboardPage() {
       
       <main className="flex-1 overflow-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Welcome Section */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            {profile.role === 'admin' ? (
-              <>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                  Welcome to your attorney dashboard, {profile.full_name || 'Attorney'}
-                </h1>
-                <p className="text-gray-600">
-                  Manage your divorce cases and collaborate with clients efficiently.
-                </p>
-              </>
-            ) : (
-              <>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                  Welcome {profile.full_name || 'User'}, your case dashboard
-                </h1>
-                <p className="text-gray-600">
-                  Track your divorce case progress and communicate with your attorney.
-                </p>
-              </>
-            )}
+          {/* Welcome Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">
+              {profile.role === 'admin' ? (
+                <>Welcome back, {profile.full_name || 'Attorney'}</>
+              ) : (
+                <>Welcome, {profile.full_name || 'User'}</>
+              )}
+            </h1>
+            <p className="mt-2 text-gray-600">
+              {profile.role === 'admin' 
+                ? 'Manage your cases and collaborate with clients efficiently.' 
+                : 'Track your divorce case progress and communicate with your attorney.'}
+            </p>
           </div>
 
-          {/* Dashboard Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                  <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <div className="ml-5">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    {profile.role === 'admin' ? 'Active Cases' : 'My Case'}
-                  </h3>
-                  <p className="text-3xl font-bold text-gray-900">0</p>
-                </div>
-              </div>
-              <p className="mt-4 text-sm text-gray-500">
-                {profile.role === 'admin' 
-                  ? 'Cases currently in progress' 
-                  : 'Your divorce case status'}
-              </p>
-            </div>
+          {/* Attorney Dashboard - Active Cases */}
+          {profile.role === 'admin' && (
+            <ActiveCasesOverview />
+          )}
 
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0 bg-green-500 rounded-md p-3">
-                  <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                  </svg>
-                </div>
-                <div className="ml-5">
-                  <h3 className="text-lg font-medium text-gray-900">Messages</h3>
-                  <p className="text-3xl font-bold text-gray-900">0</p>
-                </div>
+          {/* Client Dashboard - Simple View */}
+          {profile.role !== 'admin' && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Case Dashboard</h2>
+                <p className="text-gray-600">Client dashboard coming soon...</p>
               </div>
-              <p className="mt-4 text-sm text-gray-500">Unread messages</p>
             </div>
-
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0 bg-purple-500 rounded-md p-3">
-                  <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="ml-5">
-                  <h3 className="text-lg font-medium text-gray-900">Tasks</h3>
-                  <p className="text-3xl font-bold text-gray-900">0</p>
-                </div>
-              </div>
-              <p className="mt-4 text-sm text-gray-500">Pending tasks</p>
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <button className="px-4 py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg font-medium transition-colors">
-                {profile.role === 'admin' ? 'Create New Case' : 'View Case Details'}
-              </button>
-              <button className="px-4 py-3 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg font-medium transition-colors">
-                Send Message
-              </button>
-              <button className="px-4 py-3 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg font-medium transition-colors">
-                Upload Document
-              </button>
-              <button className="px-4 py-3 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg font-medium transition-colors">
-                Schedule Meeting
-              </button>
-            </div>
-          </div>
-
-          {/* Account Info */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Information</h3>
-            <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <dt className="text-sm font-medium text-gray-500">Full Name</dt>
-                <dd className="mt-1 text-sm text-gray-900">{profile.full_name || 'Not set'}</dd>
-              </div>
-              <div>
-                <dt className="text-sm font-medium text-gray-500">Email</dt>
-                <dd className="mt-1 text-sm text-gray-900">{profile.email}</dd>
-              </div>
-              <div>
-                <dt className="text-sm font-medium text-gray-500">Phone</dt>
-                <dd className="mt-1 text-sm text-gray-900">{profile.phone || 'Not set'}</dd>
-              </div>
-              <div>
-                <dt className="text-sm font-medium text-gray-500">Account Type</dt>
-                <dd className="mt-1 text-sm text-gray-900">
-                  {profile.role === 'admin' ? 'Attorney' : 'Client'}
-                </dd>
-              </div>
-              <div className="md:col-span-2">
-                <dt className="text-sm font-medium text-gray-500">User ID</dt>
-                <dd className="mt-1 text-sm text-gray-900 font-mono text-xs">{profile.id}</dd>
-              </div>
-            </dl>
-          </div>
+          )}
         </div>
       </main>
     </div>
