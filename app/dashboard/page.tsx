@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import Sidebar from '@/components/layout/Sidebar'
 import ActiveCasesOverview from '@/components/dashboard/ActiveCasesOverview'
+import QuickActions from '@/components/dashboard/QuickActions'
+import RecentActivity from '@/components/dashboard/RecentActivity'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -93,40 +95,59 @@ export default function DashboardPage() {
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
       
-      <main className="flex-1 overflow-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Welcome Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
-              {profile.role === 'admin' ? (
-                <>Welcome back, {profile.full_name || 'Attorney'}</>
-              ) : (
-                <>Welcome, {profile.full_name || 'User'}</>
-              )}
-            </h1>
-            <p className="mt-2 text-gray-600">
-              {profile.role === 'admin' 
-                ? 'Manage your cases and collaborate with clients efficiently.' 
-                : 'Track your divorce case progress and communicate with your attorney.'}
-            </p>
-          </div>
-
-          {/* Attorney Dashboard - Active Cases */}
-          {profile.role === 'admin' && (
-            <ActiveCasesOverview />
-          )}
-
-          {/* Client Dashboard - Simple View */}
-          {profile.role !== 'admin' && (
-            <div className="space-y-6">
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Case Dashboard</h2>
-                <p className="text-gray-600">Client dashboard coming soon...</p>
+      {/* Attorney Dashboard with 3-column layout */}
+      {profile.role === 'admin' ? (
+        <div className="flex-1 flex overflow-hidden">
+          {/* Main Content Area */}
+          <main className="flex-1 overflow-auto">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              {/* Welcome Header */}
+              <div className="mb-6">
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Welcome back, {profile.full_name || 'Attorney'}
+                </h1>
+                <p className="mt-2 text-gray-600">
+                  Manage your cases and collaborate with clients efficiently.
+                </p>
               </div>
+
+              {/* Quick Actions Bar - Horizontal */}
+              <div className="mb-6">
+                <QuickActions />
+              </div>
+              
+              {/* Active Cases Overview */}
+              <ActiveCasesOverview />
             </div>
-          )}
+          </main>
+
+          {/* Right Sidebar - Recent Activity */}
+          <aside className="hidden xl:block w-80 border-l border-gray-200 bg-white overflow-y-auto">
+            <div className="sticky top-0 p-6">
+              <RecentActivity />
+            </div>
+          </aside>
         </div>
-      </main>
+      ) : (
+        /* Client Dashboard */
+        <main className="flex-1 overflow-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-gray-900">
+                Welcome, {profile.full_name || 'User'}
+              </h1>
+              <p className="mt-2 text-gray-600">
+                Track your divorce case progress and communicate with your attorney.
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Case Dashboard</h2>
+              <p className="text-gray-600">Client dashboard coming soon...</p>
+            </div>
+          </div>
+        </main>
+      )}
     </div>
   )
 }
