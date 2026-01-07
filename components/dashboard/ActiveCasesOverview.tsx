@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
+import { useRouter } from 'next/navigation'
 import { 
   Briefcase, 
   AlertCircle, 
@@ -12,7 +13,8 @@ import {
   MoreVertical,
   MessageSquare,
   Eye,
-  FileText
+  FileText,
+  ArrowUpDown
 } from 'lucide-react'
 
 const supabase = createClient(
@@ -61,14 +63,40 @@ const getDaysSinceActivity = (date: string) => {
   return diffDays
 }
 
+type SortField = 'client_name' | 'progress_percentage' | 'filing_date' | 'last_activity_date'
+type SortDirection = 'asc' | 'desc'
+
 export default function ActiveCasesOverview() {
+  const router = useRouter()
   const [cases, setCases] = useState<Case[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
+  const [sortField, setSortField] = useState<SortField>('last_activity_date')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
 
   useEffect(() => {
     loadCases()
+    
+    // Set up real-time subscription
+    const channel = supabase
+      .channel('cases-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'cases',
+        },
+        () => {
+          loadCases()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
   }, [])
 
   const loadCases = async () => {
@@ -80,7 +108,6 @@ export default function ActiveCasesOverview() {
         .from('cases')
         .select('*')
         .eq('attorney_id', user.id)
-        .order('last_activity_date', { ascending: false })
 
       if (error) throw error
       setCases(data || [])
@@ -91,19 +118,59 @@ export default function ActiveCasesOverview() {
     }
   }
 
-  const filteredCases = cases.filter(c => {
-    const matchesSearch = c.client_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         c.spouse_name?.toLowerCase().includes(searchQuery.toLowerCase())
-    
-    let matchesFilter = true
-    if (filterStatus === 'urgent') {
-      matchesFilter = c.urgent || getDaysSinceActivity(c.last_activity_date) > 3
-    } else if (filterStatus !== 'all') {
-      matchesFilter = c.status === filterStatus
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortDirection('asc')
     }
-    
-    return matchesSearch && matchesFilter
-  })
+  }
+
+  const handleClientClick = (caseId: string) => {
+    router.push(`/dashboard/cases/${caseId}`)
+  }
+
+  const filteredAndSortedCases = cases
+    .filter(c => {
+      const matchesSearch = c.client_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           c.spouse_name?.toLowerCase().includes(searchQuery.toLowerCase())
+      
+      let matchesFilter = true
+      if (filterStatus === 'urgent') {
+        matchesFilter = c.urgent || getDaysSinceActivity(c.last_activity_date) > 3
+      } else if (filterStatus !== 'all') {
+        matchesFilter = c.status === filterStatus
+      }
+      
+      return matchesSearch && matchesFilter
+    })
+    .sort((a, b) => {
+      let aValue: any = a[sortField]
+      let bValue: any = b[sortField]
+
+      // Handle null values
+      if (aValue === null) return 1
+      if (bValue === null) return -1
+
+      // String comparison for names
+      if (sortField === 'client_name') {
+        aValue = aValue.toLowerCase()
+        bValue = bValue.toLowerCase()
+      }
+
+      // Date comparison
+      if (sortField === 'filing_date' || sortField === 'last_activity_date') {
+        aValue = new Date(aValue).getTime()
+        bValue = new Date(bValue).getTime()
+      }
+
+      if (sortDirection === 'asc') {
+        return aValue > bValue ? 1 : -1
+      } else {
+        return aValue < bValue ? 1 : -1
+      }
+    })
 
   const stats = {
     total: cases.length,
@@ -193,7 +260,7 @@ export default function ActiveCasesOverview() {
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setFilterStatus('all')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -205,16 +272,6 @@ export default function ActiveCasesOverview() {
               All
             </button>
             <button
-              onClick={() => setFilterStatus('active')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                filterStatus === 'active'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Active
-            </button>
-            <button
               onClick={() => setFilterStatus('urgent')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 filterStatus === 'urgent'
@@ -224,6 +281,19 @@ export default function ActiveCasesOverview() {
             >
               Urgent
             </button>
+            
+            <select
+              value={filterStatus === 'all' || filterStatus === 'urgent' ? 'all' : filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700 font-medium"
+            >
+              <option value="all">All Statuses</option>
+              <option value="consultation">Consultation</option>
+              <option value="active">Active</option>
+              <option value="settlement">Settlement</option>
+              <option value="finalized">Finalized</option>
+              <option value="closed">Closed</option>
+            </select>
           </div>
         </div>
       </div>
@@ -234,8 +304,14 @@ export default function ActiveCasesOverview() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Client
+                <th 
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleSort('client_name')}
+                >
+                  <div className="flex items-center gap-2">
+                    Client
+                    <ArrowUpDown className="w-4 h-4" />
+                  </div>
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
@@ -243,11 +319,23 @@ export default function ActiveCasesOverview() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Current Step
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Progress
+                <th 
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleSort('progress_percentage')}
+                >
+                  <div className="flex items-center gap-2">
+                    Progress
+                    <ArrowUpDown className="w-4 h-4" />
+                  </div>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Last Activity
+                <th 
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleSort('last_activity_date')}
+                >
+                  <div className="flex items-center gap-2">
+                    Last Activity
+                    <ArrowUpDown className="w-4 h-4" />
+                  </div>
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
@@ -255,7 +343,7 @@ export default function ActiveCasesOverview() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {filteredCases.map((case_) => {
+              {filteredAndSortedCases.map((case_) => {
                 const daysSinceActivity = getDaysSinceActivity(case_.last_activity_date)
                 const needsAttention = case_.urgent || daysSinceActivity > 3
 
@@ -265,9 +353,12 @@ export default function ActiveCasesOverview() {
                       <div className="flex items-center">
                         <div>
                           <div className="flex items-center gap-2">
-                            <p className="text-sm font-medium text-gray-900">
+                            <button
+                              onClick={() => handleClientClick(case_.id)}
+                              className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                            >
                               {case_.client_name}
-                            </p>
+                            </button>
                             {case_.urgent && (
                               <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
                                 Urgent
@@ -311,7 +402,11 @@ export default function ActiveCasesOverview() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <button className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors" title="View Case">
+                        <button 
+                          onClick={() => handleClientClick(case_.id)}
+                          className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors" 
+                          title="View Case"
+                        >
                           <Eye className="w-4 h-4" />
                         </button>
                         <button className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors" title="Message Client">
@@ -332,7 +427,7 @@ export default function ActiveCasesOverview() {
           </table>
         </div>
 
-        {filteredCases.length === 0 && (
+        {filteredAndSortedCases.length === 0 && (
           <div className="text-center py-12">
             <Briefcase className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No cases found</h3>
