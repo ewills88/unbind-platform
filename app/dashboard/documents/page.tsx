@@ -922,11 +922,12 @@ export default function DocumentsPage() {
       {previewDoc && (
         <DocumentPreviewModal
           document={previewDoc}
+          allDocuments={filteredDocuments}
           onClose={() => setPreviewDoc(null)}
           onUpdate={() => {
             loadDocuments()
-            setPreviewDoc(null)
           }}
+          onNavigate={(doc) => setPreviewDoc(doc)}
           userRole={userRole}
         />
       )}

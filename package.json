@@ -20,8 +20,10 @@
     "date-fns": "^4.1.0",
     "lucide-react": "^0.562.0",
     "next": "14.2.35",
+    "pdfjs-dist": "^5.4.530",
     "react": "^18",
     "react-dom": "^18",
+    "react-pdf": "^10.3.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7"
   },
