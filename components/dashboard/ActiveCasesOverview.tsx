@@ -7,6 +7,7 @@ import {
   AlertCircle, 
   TrendingUp, 
   Clock,
+  Calendar,
   Search,
   MoreVertical,
   MessageSquare,
@@ -29,6 +30,7 @@ interface Case {
   has_children: boolean
   urgent: boolean
   filing_date: string | null
+  target_completion_date: string | null
   last_activity_date: string
   state: string
 }
@@ -106,6 +108,14 @@ export default function ActiveCasesOverview() {
   const stats = {
     total: cases.length,
     needsAttention: cases.filter(c => c.urgent || getDaysSinceActivity(c.last_activity_date) > 3).length,
+    closingThisMonth: cases.filter(c => {
+      if (!c.target_completion_date) return false
+      const targetDate = new Date(c.target_completion_date)
+      const now = new Date()
+      const isThisMonth = targetDate.getMonth() === now.getMonth() && 
+                         targetDate.getFullYear() === now.getFullYear()
+      return isThisMonth
+    }).length,
     avgProgress: Math.round(cases.reduce((sum, c) => sum + c.progress_percentage, 0) / (cases.length || 1)),
   }
 
@@ -120,7 +130,7 @@ export default function ActiveCasesOverview() {
   return (
     <div className="space-y-6">
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -153,6 +163,18 @@ export default function ActiveCasesOverview() {
             </div>
             <div className="bg-green-100 rounded-full p-3">
               <TrendingUp className="w-6 h-6 text-green-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Closing This Month</p>
+              <p className="text-3xl font-bold text-purple-600 mt-2">{stats.closingThisMonth}</p>
+            </div>
+            <div className="bg-purple-100 rounded-full p-3">
+              <Calendar className="w-6 h-6 text-purple-600" />
             </div>
           </div>
         </div>
