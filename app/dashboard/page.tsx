@@ -7,6 +7,7 @@ import Sidebar from '@/components/layout/Sidebar'
 import ActiveCasesOverview from '@/components/dashboard/ActiveCasesOverview'
 import QuickActions from '@/components/dashboard/QuickActions'
 import RecentActivity from '@/components/dashboard/RecentActivity'
+import CaseProgressTracker from '@/components/dashboard/CaseProgressTracker'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -131,20 +132,17 @@ export default function DashboardPage() {
       ) : (
         /* Client Dashboard */
         <main className="flex-1 overflow-auto">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900">
                 Welcome, {profile.full_name || 'User'}
               </h1>
               <p className="mt-2 text-gray-600">
-                Track your divorce case progress and communicate with your attorney.
+                Track your divorce case progress and stay informed about next steps.
               </p>
             </div>
             
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Case Dashboard</h2>
-              <p className="text-gray-600">Client dashboard coming soon...</p>
-            </div>
+            <CaseProgressTracker />
           </div>
         </main>
       )}
