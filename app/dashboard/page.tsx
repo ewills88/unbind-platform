@@ -8,6 +8,7 @@ import ActiveCasesOverview from '@/components/dashboard/ActiveCasesOverview'
 import QuickActions from '@/components/dashboard/QuickActions'
 import RecentActivity from '@/components/dashboard/RecentActivity'
 import CaseProgressTracker from '@/components/dashboard/CaseProgressTracker'
+import DocumentAnalytics from '@/components/dashboard/DocumentAnalytics'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -115,6 +116,11 @@ export default function DashboardPage() {
               {/* Quick Actions Bar - Horizontal */}
               <div className="mb-6">
                 <QuickActions />
+              </div>
+
+              {/* Document Analytics */}
+              <div className="mb-6">
+                <DocumentAnalytics />
               </div>
               
               {/* Active Cases Overview */}
