@@ -1,20 +1,19 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@supabase/supabase-js'
 import { 
-  Briefcase, 
+  Clock, 
   AlertCircle, 
-  TrendingUp, 
-  Clock,
-  Calendar,
+  CheckCircle, 
+  ChevronDown,
+  ChevronUp,
+  Filter,
   Search,
-  MoreVertical,
   MessageSquare,
-  Eye,
   FileText,
-  ArrowUpDown
+  Calendar,
 } from 'lucide-react'
 
 const supabase = createClient(
@@ -29,41 +28,15 @@ interface Case {
   status: string
   current_step: string
   progress_percentage: number
-  has_children: boolean
-  urgent: boolean
+  case_number: string | null
   filing_date: string | null
-  target_completion_date: string | null
-  last_activity_date: string
-  state: string
+  next_court_date: string | null
+  unread_messages: number
+  pending_documents: number
+  upcoming_deadlines: number
 }
 
-const getStatusColor = (status: string) => {
-  const colors = {
-    consultation: 'bg-gray-100 text-gray-700 border-gray-200',
-    active: 'bg-blue-100 text-blue-700 border-blue-200',
-    settlement: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-    finalized: 'bg-green-100 text-green-700 border-green-200',
-    closed: 'bg-gray-100 text-gray-500 border-gray-200',
-  }
-  return colors[status as keyof typeof colors] || colors.consultation
-}
-
-const getProgressColor = (percentage: number) => {
-  if (percentage >= 75) return 'bg-green-500'
-  if (percentage >= 50) return 'bg-blue-500'
-  if (percentage >= 25) return 'bg-yellow-500'
-  return 'bg-gray-300'
-}
-
-const getDaysSinceActivity = (date: string) => {
-  const now = new Date()
-  const activityDate = new Date(date)
-  const diffTime = Math.abs(now.getTime() - activityDate.getTime())
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  return diffDays
-}
-
-type SortField = 'client_name' | 'progress_percentage' | 'filing_date' | 'last_activity_date'
+type SortField = 'client_name' | 'status' | 'progress_percentage' | 'next_court_date'
 type SortDirection = 'asc' | 'desc'
 
 export default function ActiveCasesOverview() {
@@ -71,33 +44,26 @@ export default function ActiveCasesOverview() {
   const [cases, setCases] = useState<Case[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filterStatus, setFilterStatus] = useState('all')
-  const [sortField, setSortField] = useState<SortField>('last_activity_date')
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [sortField, setSortField] = useState<SortField>('client_name')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
+  const [showUrgentOnly, setShowUrgentOnly] = useState(false)
+
+  // Summary stats
+  const [stats, setStats] = useState({
+    totalCases: 0,
+    activeCases: 0,
+    urgentCases: 0,
+    settlementCases: 0,
+  })
 
   useEffect(() => {
     loadCases()
-    
-    // Set up real-time subscription
-    const channel = supabase
-      .channel('cases-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'cases',
-        },
-        () => {
-          loadCases()
-        }
-      )
-      .subscribe()
-
-    return () => {
-      supabase.removeChannel(channel)
-    }
   }, [])
+
+  useEffect(() => {
+    updateStats()
+  }, [cases])
 
   const loadCases = async () => {
     try {
@@ -108,6 +74,7 @@ export default function ActiveCasesOverview() {
         .from('cases')
         .select('*')
         .eq('attorney_id', user.id)
+        .order('created_at', { ascending: false })
 
       if (error) throw error
       setCases(data || [])
@@ -116,6 +83,17 @@ export default function ActiveCasesOverview() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const updateStats = () => {
+    const totalCases = cases.length
+    const activeCases = cases.filter(c => c.status === 'active').length
+    const urgentCases = cases.filter(c => 
+      c.unread_messages > 0 || c.pending_documents > 0 || c.upcoming_deadlines > 0
+    ).length
+    const settlementCases = cases.filter(c => c.status === 'settlement').length
+
+    setStats({ totalCases, activeCases, urgentCases, settlementCases })
   }
 
   const handleSort = (field: SortField) => {
@@ -127,42 +105,74 @@ export default function ActiveCasesOverview() {
     }
   }
 
-  const handleClientClick = (caseId: string) => {
-    router.push(`/dashboard/cases/${caseId}`)
+  const getStatusColor = (status: string) => {
+    const colors: { [key: string]: string } = {
+      consultation: 'gray',
+      active: 'blue',
+      settlement: 'yellow',
+      finalized: 'green',
+      closed: 'gray',
+    }
+    return colors[status] || 'gray'
+  }
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'active':
+        return <Clock className="w-4 h-4" />
+      case 'settlement':
+        return <AlertCircle className="w-4 h-4" />
+      case 'finalized':
+        return <CheckCircle className="w-4 h-4" />
+      default:
+        return null
+    }
+  }
+
+  const isUrgent = (case_: Case) => {
+    return case_.unread_messages > 0 || case_.pending_documents > 0 || case_.upcoming_deadlines > 0
+  }
+
+  const getSortIcon = (field: SortField) => {
+    if (sortField !== field) return null
+    return sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
   }
 
   const filteredAndSortedCases = cases
-    .filter(c => {
-      const matchesSearch = c.client_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           c.spouse_name?.toLowerCase().includes(searchQuery.toLowerCase())
+    .filter(case_ => {
+      const matchesSearch = 
+        case_.client_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        case_.spouse_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        case_.case_number?.toLowerCase().includes(searchQuery.toLowerCase())
       
-      let matchesFilter = true
-      if (filterStatus === 'urgent') {
-        matchesFilter = c.urgent || getDaysSinceActivity(c.last_activity_date) > 3
-      } else if (filterStatus !== 'all') {
-        matchesFilter = c.status === filterStatus
-      }
-      
-      return matchesSearch && matchesFilter
+      const matchesStatus = statusFilter === 'all' || case_.status === statusFilter
+      const matchesUrgent = !showUrgentOnly || isUrgent(case_)
+
+      return matchesSearch && matchesStatus && matchesUrgent
     })
     .sort((a, b) => {
-      let aValue: any = a[sortField]
-      let bValue: any = b[sortField]
+      let aValue: any
+      let bValue: any
 
-      // Handle null values
-      if (aValue === null) return 1
-      if (bValue === null) return -1
-
-      // String comparison for names
-      if (sortField === 'client_name') {
-        aValue = aValue.toLowerCase()
-        bValue = bValue.toLowerCase()
-      }
-
-      // Date comparison
-      if (sortField === 'filing_date' || sortField === 'last_activity_date') {
-        aValue = new Date(aValue).getTime()
-        bValue = new Date(bValue).getTime()
+      switch (sortField) {
+        case 'client_name':
+          aValue = a.client_name.toLowerCase()
+          bValue = b.client_name.toLowerCase()
+          break
+        case 'status':
+          aValue = a.status
+          bValue = b.status
+          break
+        case 'progress_percentage':
+          aValue = a.progress_percentage
+          bValue = b.progress_percentage
+          break
+        case 'next_court_date':
+          aValue = a.next_court_date ? new Date(a.next_court_date).getTime() : 0
+          bValue = b.next_court_date ? new Date(b.next_court_date).getTime() : 0
+          break
+        default:
+          return 0
       }
 
       if (sortDirection === 'asc') {
@@ -172,270 +182,214 @@ export default function ActiveCasesOverview() {
       }
     })
 
-  const stats = {
-    total: cases.length,
-    needsAttention: cases.filter(c => c.urgent || getDaysSinceActivity(c.last_activity_date) > 3).length,
-    closingThisMonth: cases.filter(c => {
-      if (!c.target_completion_date) return false
-      const targetDate = new Date(c.target_completion_date)
-      const now = new Date()
-      const isThisMonth = targetDate.getMonth() === now.getMonth() && 
-                         targetDate.getFullYear() === now.getFullYear()
-      return isThisMonth
-    }).length,
-    avgProgress: Math.round(cases.reduce((sum, c) => sum + c.progress_percentage, 0) / (cases.length || 1)),
-  }
-
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Active Cases</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{stats.total}</p>
-            </div>
-            <div className="bg-blue-100 rounded-full p-3">
-              <Briefcase className="w-6 h-6 text-blue-600" />
-            </div>
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      {/* Header */}
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Active Cases</h2>
+        
+        {/* Summary Cards */}
+        <div className="grid grid-cols-4 gap-4 mb-4">
+          <div className="bg-blue-50 rounded-lg p-3">
+            <p className="text-sm text-blue-600 font-medium">Total Cases</p>
+            <p className="text-2xl font-bold text-blue-900">{stats.totalCases}</p>
+          </div>
+          <div className="bg-green-50 rounded-lg p-3">
+            <p className="text-sm text-green-600 font-medium">Active</p>
+            <p className="text-2xl font-bold text-green-900">{stats.activeCases}</p>
+          </div>
+          <div className="bg-red-50 rounded-lg p-3">
+            <p className="text-sm text-red-600 font-medium">Urgent</p>
+            <p className="text-2xl font-bold text-red-900">{stats.urgentCases}</p>
+          </div>
+          <div className="bg-yellow-50 rounded-lg p-3">
+            <p className="text-sm text-yellow-600 font-medium">Settlement</p>
+            <p className="text-2xl font-bold text-yellow-900">{stats.settlementCases}</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Needs Attention</p>
-              <p className="text-3xl font-bold text-orange-600 mt-2">{stats.needsAttention}</p>
-            </div>
-            <div className="bg-orange-100 rounded-full p-3">
-              <AlertCircle className="w-6 h-6 text-orange-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Avg Progress</p>
-              <p className="text-3xl font-bold text-green-600 mt-2">{stats.avgProgress}%</p>
-            </div>
-            <div className="bg-green-100 rounded-full p-3">
-              <TrendingUp className="w-6 h-6 text-green-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Closing This Month</p>
-              <p className="text-3xl font-bold text-purple-600 mt-2">{stats.closingThisMonth}</p>
-            </div>
-            <div className="bg-purple-100 rounded-full p-3">
-              <Calendar className="w-6 h-6 text-purple-600" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Filters & Search */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-        <div className="flex flex-col sm:flex-row gap-4">
+        {/* Filters */}
+        <div className="flex gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search by client name..."
+              placeholder="Search cases..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setFilterStatus('all')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                filterStatus === 'all'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => setFilterStatus('urgent')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                filterStatus === 'urgent'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Urgent
-            </button>
-            
-            <select
-              value={filterStatus === 'all' || filterStatus === 'urgent' ? 'all' : filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700 font-medium"
-            >
-              <option value="all">All Statuses</option>
-              <option value="consultation">Consultation</option>
-              <option value="active">Active</option>
-              <option value="settlement">Settlement</option>
-              <option value="finalized">Finalized</option>
-              <option value="closed">Closed</option>
-            </select>
-          </div>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="all">All Statuses</option>
+            <option value="consultation">Consultation</option>
+            <option value="active">Active</option>
+            <option value="settlement">Settlement</option>
+            <option value="finalized">Finalized</option>
+            <option value="closed">Closed</option>
+          </select>
+          <button
+            onClick={() => setShowUrgentOnly(!showUrgentOnly)}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              showUrgentOnly
+                ? 'bg-red-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            <Filter className="w-4 h-4 inline mr-2" />
+            Urgent Only
+          </button>
         </div>
       </div>
 
-      {/* Cases List */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+      {/* Cases Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th className="px-4 py-3 text-left">
+                <button
                   onClick={() => handleSort('client_name')}
+                  className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase hover:text-gray-700"
                 >
-                  <div className="flex items-center gap-2">
-                    Client
-                    <ArrowUpDown className="w-4 h-4" />
-                  </div>
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Client Name
+                  {getSortIcon('client_name')}
+                </button>
+              </th>
+              <th className="px-4 py-3 text-left">
+                <button
+                  onClick={() => handleSort('status')}
+                  className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase hover:text-gray-700"
+                >
                   Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Current Step
-                </th>
-                <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  {getSortIcon('status')}
+                </button>
+              </th>
+              <th className="px-4 py-3 text-left">
+                <button
                   onClick={() => handleSort('progress_percentage')}
+                  className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase hover:text-gray-700"
                 >
-                  <div className="flex items-center gap-2">
-                    Progress
-                    <ArrowUpDown className="w-4 h-4" />
-                  </div>
-                </th>
-                <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleSort('last_activity_date')}
+                  Progress
+                  {getSortIcon('progress_percentage')}
+                </button>
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Current Step
+              </th>
+              <th className="px-4 py-3 text-left">
+                <button
+                  onClick={() => handleSort('next_court_date')}
+                  className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase hover:text-gray-700"
                 >
-                  <div className="flex items-center gap-2">
-                    Last Activity
-                    <ArrowUpDown className="w-4 h-4" />
-                  </div>
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                  Next Court Date
+                  {getSortIcon('next_court_date')}
+                </button>
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Alerts
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {filteredAndSortedCases.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                  No cases found matching your criteria
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredAndSortedCases.map((case_) => {
-                const daysSinceActivity = getDaysSinceActivity(case_.last_activity_date)
-                const needsAttention = case_.urgent || daysSinceActivity > 3
-
-                return (
-                  <tr key={case_.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => handleClientClick(case_.id)}
-                              className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
-                            >
-                              {case_.client_name}
-                            </button>
-                            {case_.urgent && (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                                Urgent
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-sm text-gray-500">vs. {case_.spouse_name}</p>
-                        </div>
+            ) : (
+              filteredAndSortedCases.map((case_) => (
+                <tr 
+                  key={case_.id} 
+                  className={`hover:bg-gray-50 transition-colors ${
+                    isUrgent(case_) ? 'bg-red-50' : ''
+                  }`}
+                >
+                  <td className="px-4 py-4">
+                    <button
+                      onClick={() => router.push(`/dashboard/cases/${case_.id}`)}
+                      className="text-blue-600 hover:text-blue-700 hover:underline font-medium text-left"
+                    >
+                      {case_.client_name}
+                    </button>
+                    <p className="text-xs text-gray-500">vs. {case_.spouse_name}</p>
+                  </td>
+                  <td className="px-4 py-4">
+                    <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-${getStatusColor(case_.status)}-100 text-${getStatusColor(case_.status)}-800`}>
+                      {getStatusIcon(case_.status)}
+                      {case_.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="w-full">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-medium text-gray-700">{case_.progress_percentage}%</span>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(case_.status)}`}>
-                        {case_.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="text-sm text-gray-900 max-w-xs truncate">
-                        {case_.current_step}
-                      </p>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-blue-600 h-2 rounded-full transition-all"
+                          style={{ width: `${case_.progress_percentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-4">
+                    <p className="text-sm text-gray-900">{case_.current_step}</p>
+                  </td>
+                  <td className="px-4 py-4">
+                    {case_.next_court_date ? (
                       <div className="flex items-center gap-2">
-                        <div className="flex-1 bg-gray-200 rounded-full h-2 w-24">
-                          <div
-                            className={`h-2 rounded-full ${getProgressColor(case_.progress_percentage)}`}
-                            style={{ width: `${case_.progress_percentage}%` }}
-                          />
-                        </div>
-                        <span className="text-sm font-medium text-gray-700">
-                          {case_.progress_percentage}%
+                        <Calendar className="w-4 h-4 text-gray-400" />
+                        <span className="text-sm text-gray-900">
+                          {new Date(case_.next_court_date).toLocaleDateString()}
                         </span>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center gap-1">
-                        <Clock className={`w-4 h-4 ${needsAttention ? 'text-orange-500' : 'text-gray-400'}`} />
-                        <span className={`text-sm ${needsAttention ? 'text-orange-600 font-medium' : 'text-gray-500'}`}>
-                          {daysSinceActivity}d ago
+                    ) : (
+                      <span className="text-sm text-gray-500">Not scheduled</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="flex items-center gap-2">
+                      {case_.unread_messages > 0 && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                          <MessageSquare className="w-3 h-3" />
+                          {case_.unread_messages}
                         </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button 
-                          onClick={() => handleClientClick(case_.id)}
-                          className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors" 
-                          title="View Case"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors" title="Message Client">
-                          <MessageSquare className="w-4 h-4" />
-                        </button>
-                        <button className="p-1.5 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded transition-colors" title="View Documents">
-                          <FileText className="w-4 h-4" />
-                        </button>
-                        <button className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors">
-                          <MoreVertical className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        {filteredAndSortedCases.length === 0 && (
-          <div className="text-center py-12">
-            <Briefcase className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No cases found</h3>
-            <p className="text-gray-500">
-              {searchQuery ? 'Try adjusting your search terms' : 'Get started by creating a new case'}
-            </p>
-          </div>
-        )}
+                      )}
+                      {case_.pending_documents > 0 && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
+                          <FileText className="w-3 h-3" />
+                          {case_.pending_documents}
+                        </span>
+                      )}
+                      {case_.upcoming_deadlines > 0 && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                          <AlertCircle className="w-3 h-3" />
+                          {case_.upcoming_deadlines}
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   )

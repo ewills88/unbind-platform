@@ -6,6 +6,7 @@ import { createClient } from '@supabase/supabase-js'
 import Sidebar from '@/components/layout/Sidebar'
 import DocumentUpload from '@/components/dashboard/DocumentUpload'
 import DocumentPreviewModal from '@/components/dashboard/DocumentPreviewModal'
+import DocumentSkeleton from '@/components/dashboard/DocumentSkeleton'
 import { Document, DOCUMENT_CATEGORIES } from '@/types/documents'
 import {
   FileText,
@@ -13,6 +14,7 @@ import {
   Eye,
   Trash2,
   Share2,
+  Filter,
   Search,
   Calendar,
   FolderOpen,
@@ -20,9 +22,6 @@ import {
   Square,
   Grid3x3,
   List,
-  MoreVertical,
-  Edit,
-  Filter,
   X,
   ArrowUpDown,
   ArrowUp,
@@ -421,9 +420,13 @@ export default function DocumentsPage() {
     return (
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
+        <main className="flex-1 overflow-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="h-8 bg-gray-200 rounded w-48 mb-4 animate-pulse" />
+            <div className="h-4 bg-gray-200 rounded w-64 mb-8 animate-pulse" />
+            <DocumentSkeleton />
+          </div>
+        </main>
       </div>
     )
   }
