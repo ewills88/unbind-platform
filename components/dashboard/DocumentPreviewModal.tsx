@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
-import { 
-  X, 
-  Download, 
-  MessageSquare, 
-  Send, 
-  Eye, 
-  Share2, 
+import {
+  X,
+  Download,
+  MessageSquare,
+  Send,
+  Eye,
+  Share2,
   Trash2,
   ZoomIn,
   ZoomOut,
@@ -17,8 +17,16 @@ import {
   ArrowLeft,
   ArrowRight,
   ExternalLink,
+  Edit3,
+  Archive,
+  ArchiveRestore,
+  Check,
+  XCircle,
+  Sparkles,
+  History,
 } from 'lucide-react'
-import { Document } from '@/types/documents'
+import { Document, DOCUMENT_CATEGORIES } from '@/types/documents'
+import DocumentAIInsights from './DocumentAIInsights'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -36,33 +44,51 @@ interface Activity {
   }
 }
 
+interface Case {
+  id: string
+  client_name: string
+  spouse_name: string
+}
+
 interface DocumentPreviewModalProps {
   document: Document
   allDocuments?: Document[]
+  cases?: Case[]
   onClose: () => void
   onUpdate: () => void
   onNavigate?: (doc: Document) => void
   userRole: string
 }
 
-export default function DocumentPreviewModal({ 
-  document, 
+export default function DocumentPreviewModal({
+  document,
   allDocuments = [],
-  onClose, 
-  onUpdate, 
+  cases = [],
+  onClose,
+  onUpdate,
   onNavigate,
-  userRole 
+  userRole
 }: DocumentPreviewModalProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [activity, setActivity] = useState<Activity[]>([])
   const [comment, setComment] = useState('')
   const [loading, setLoading] = useState(true)
   const [sharing, setSharing] = useState(document.is_shared_with_client)
+  const [archived, setArchived] = useState(document.is_archived || false)
   const [toast, setToast] = useState<string | null>(null)
-  
+
+  // Edit mode states
+  const [isEditing, setIsEditing] = useState(false)
+  const [editCategory, setEditCategory] = useState<string>(document.category || '')
+  const [editCaseId, setEditCaseId] = useState<string>(document.case_id)
+  const [saving, setSaving] = useState(false)
+
   // Image specific states
   const [imageRotation, setImageRotation] = useState(0)
   const [imageScale, setImageScale] = useState(1.0)
+
+  // Sidebar tab state
+  const [activeTab, setActiveTab] = useState<'activity' | 'ai'>('activity')
 
   const isPDF = document.mime_type === 'application/pdf'
   const isImage = document.mime_type.startsWith('image/')
@@ -291,6 +317,110 @@ export default function DocumentPreviewModal({
     }
   }
 
+  const handleSaveChanges = async () => {
+    setSaving(true)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      const updates: Record<string, unknown> = {}
+      const activityComments: string[] = []
+
+      // Check for category change
+      if (editCategory !== (document.category || '')) {
+        updates.category = editCategory || null
+        const oldCat = DOCUMENT_CATEGORIES.find(c => c.value === document.category)?.label || 'None'
+        const newCat = DOCUMENT_CATEGORIES.find(c => c.value === editCategory)?.label || 'None'
+        activityComments.push(`Category changed from "${oldCat}" to "${newCat}"`)
+      }
+
+      // Check for case change
+      if (editCaseId !== document.case_id) {
+        updates.case_id = editCaseId
+        activityComments.push('Moved to different case')
+      }
+
+      if (Object.keys(updates).length === 0) {
+        setIsEditing(false)
+        return
+      }
+
+      const { error } = await supabase
+        .from('documents')
+        .update(updates)
+        .eq('id', document.id)
+
+      if (error) throw error
+
+      // Log activity
+      if (activityComments.length > 0) {
+        await supabase
+          .from('document_activity')
+          .insert({
+            document_id: document.id,
+            user_id: user.id,
+            activity_type: 'updated',
+            comment: activityComments.join('; '),
+          })
+      }
+
+      setIsEditing(false)
+      loadActivity()
+      onUpdate()
+      showToast('Changes saved')
+    } catch (error) {
+      console.error('Error saving changes:', error)
+      showToast('Failed to save changes')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setEditCategory(document.category || '')
+    setEditCaseId(document.case_id)
+    setIsEditing(false)
+  }
+
+  const handleToggleArchive = async () => {
+    try {
+      const newArchiveState = !archived
+
+      const updates: Record<string, unknown> = {
+        is_archived: newArchiveState,
+        archived_at: newArchiveState ? new Date().toISOString() : null,
+      }
+
+      const { error } = await supabase
+        .from('documents')
+        .update(updates)
+        .eq('id', document.id)
+
+      if (error) throw error
+
+      setArchived(newArchiveState)
+
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        await supabase
+          .from('document_activity')
+          .insert({
+            document_id: document.id,
+            user_id: user.id,
+            activity_type: newArchiveState ? 'archived' : 'restored',
+            comment: newArchiveState ? 'Document archived' : 'Document restored from archive',
+          })
+      }
+
+      loadActivity()
+      onUpdate()
+      showToast(newArchiveState ? 'Document archived' : 'Document restored')
+    } catch (error) {
+      console.error('Error toggling archive:', error)
+      showToast('Failed to update archive status')
+    }
+  }
+
   const handlePrevDocument = () => {
     if (hasPrev && onNavigate) {
       onNavigate(allDocuments[currentIndex - 1])
@@ -336,6 +466,9 @@ export default function DocumentPreviewModal({
       case 'downloaded': return <Download className="w-4 h-4 text-green-600" />
       case 'comment': return <MessageSquare className="w-4 h-4 text-purple-600" />
       case 'shared': return <Share2 className="w-4 h-4 text-orange-600" />
+      case 'updated': return <Edit3 className="w-4 h-4 text-indigo-600" />
+      case 'archived': return <Archive className="w-4 h-4 text-amber-600" />
+      case 'restored': return <ArchiveRestore className="w-4 h-4 text-emerald-600" />
       default: return null
     }
   }
@@ -486,6 +619,18 @@ export default function DocumentPreviewModal({
               {userRole === 'admin' && (
                 <>
                   <button
+                    onClick={() => setIsEditing(!isEditing)}
+                    className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                      isEditing
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <Edit3 className="w-4 h-4" />
+                    {isEditing ? 'Editing...' : 'Edit Details'}
+                  </button>
+
+                  <button
                     onClick={handleToggleShare}
                     className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                       sharing
@@ -495,6 +640,27 @@ export default function DocumentPreviewModal({
                   >
                     <Share2 className="w-4 h-4" />
                     {sharing ? 'Shared with Client' : 'Share with Client'}
+                  </button>
+
+                  <button
+                    onClick={handleToggleArchive}
+                    className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                      archived
+                        ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {archived ? (
+                      <>
+                        <ArchiveRestore className="w-4 h-4" />
+                        Restore from Archive
+                      </>
+                    ) : (
+                      <>
+                        <Archive className="w-4 h-4" />
+                        Archive Document
+                      </>
+                    )}
                   </button>
 
                   <button
@@ -508,51 +674,162 @@ export default function DocumentPreviewModal({
               )}
             </div>
 
-            {/* Activity Feed */}
-            <div className="flex-1 overflow-y-auto p-4">
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">Activity & Comments</h3>
-              <div className="space-y-4">
-                {activity.map((item) => (
-                  <div key={item.id} className="flex gap-3">
-                    <div className="flex-shrink-0 mt-1">
-                      {getActivityIcon(item.activity_type)}
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
-                        {item.user?.full_name || 'Unknown User'}
-                      </p>
-                      {item.comment ? (
-                        <p className="text-sm text-gray-700 mt-1">{item.comment}</p>
-                      ) : (
-                        <p className="text-sm text-gray-500 mt-1 capitalize">{item.activity_type}</p>
-                      )}
-                      <p className="text-xs text-gray-400 mt-1">{formatDate(item.created_at)}</p>
-                    </div>
+            {/* Edit Panel */}
+            {isEditing && userRole === 'admin' && (
+              <div className="p-4 border-b border-gray-200 bg-blue-50 space-y-4">
+                <h3 className="text-sm font-semibold text-gray-900">Edit Document</h3>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={editCategory}
+                    onChange={(e) => setEditCategory(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  >
+                    <option value="">No category</option>
+                    {DOCUMENT_CATEGORIES.map((cat) => (
+                      <option key={cat.value} value={cat.value}>
+                        {cat.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {cases.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Assign to Case
+                    </label>
+                    <select
+                      value={editCaseId}
+                      onChange={(e) => setEditCaseId(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    >
+                      {cases.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.client_name} v. {c.spouse_name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-                ))}
+                )}
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSaveChanges}
+                    disabled={saving}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-400 text-sm font-medium"
+                  >
+                    <Check className="w-4 h-4" />
+                    {saving ? 'Saving...' : 'Save'}
+                  </button>
+                  <button
+                    onClick={handleCancelEdit}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
+                  >
+                    <XCircle className="w-4 h-4" />
+                    Cancel
+                  </button>
+                </div>
               </div>
+            )}
+
+            {/* Tab Navigation */}
+            <div className="flex border-b border-gray-200">
+              <button
+                onClick={() => setActiveTab('activity')}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
+                  activeTab === 'activity'
+                    ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <History className="w-4 h-4" />
+                Activity
+              </button>
+              <button
+                onClick={() => setActiveTab('ai')}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
+                  activeTab === 'ai'
+                    ? 'text-purple-600 border-b-2 border-purple-600 bg-purple-50'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <Sparkles className="w-4 h-4" />
+                AI Insights
+              </button>
             </div>
 
-            {/* Add Comment */}
-            <div className="p-4 border-t border-gray-200">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleAddComment()}
-                  placeholder="Add a comment..."
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button
-                  onClick={handleAddComment}
-                  disabled={!comment.trim()}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
-              </div>
+            {/* Tab Content */}
+            <div className="flex-1 overflow-y-auto">
+              {activeTab === 'activity' ? (
+                <>
+                  {/* Activity Feed */}
+                  <div className="p-4">
+                    <div className="space-y-4">
+                      {activity.length === 0 ? (
+                        <p className="text-sm text-gray-500 text-center py-4">No activity yet</p>
+                      ) : (
+                        activity.map((item) => (
+                          <div key={item.id} className="flex gap-3">
+                            <div className="flex-shrink-0 mt-1">
+                              {getActivityIcon(item.activity_type)}
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium text-gray-900">
+                                {item.user?.full_name || 'Unknown User'}
+                              </p>
+                              {item.comment ? (
+                                <p className="text-sm text-gray-700 mt-1">{item.comment}</p>
+                              ) : (
+                                <p className="text-sm text-gray-500 mt-1 capitalize">{item.activity_type}</p>
+                              )}
+                              <p className="text-xs text-gray-400 mt-1">{formatDate(item.created_at)}</p>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                /* AI Insights Tab */
+                <div className="p-4">
+                  <DocumentAIInsights
+                    documentId={document.id}
+                    fileUrl={previewUrl || ''}
+                    filename={document.original_filename}
+                    mimeType={document.mime_type}
+                    onAnalysisComplete={onUpdate}
+                  />
+                </div>
+              )}
             </div>
+
+            {/* Add Comment - Only show on Activity tab */}
+            {activeTab === 'activity' && (
+              <div className="p-4 border-t border-gray-200">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleAddComment()}
+                    placeholder="Add a comment..."
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    onClick={handleAddComment}
+                    disabled={!comment.trim()}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

@@ -8,13 +8,14 @@ import {
   CheckSquare,
   PlusCircle,
   FileText,
+  LucideIcon
 } from 'lucide-react'
 
 interface QuickAction {
   id: string
   title: string
   description: string
-  icon: any
+  icon: LucideIcon
   color: string
   onClick: () => void
 }

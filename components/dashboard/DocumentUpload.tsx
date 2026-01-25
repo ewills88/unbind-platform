@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { Upload, X, File, AlertCircle, CheckCircle2, Sparkles, HelpCircle } from 'lucide-react'
 import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE, DOCUMENT_CATEGORIES } from '@/types/documents'
-import { categorizeDocument, getConfidenceLabel, getConfidenceColor } from '@/lib/ai/document-classifier'
+import { getConfidenceLabel, getConfidenceColor } from '@/lib/ai/document-classifier'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -44,7 +44,7 @@ export default function DocumentUpload({ caseId, onUploadComplete }: DocumentUpl
     return null
   }
 
-  const uploadFile = async (file: File, suggestedCategory?: string, confidence?: number, reasoning?: string) => {
+  const uploadFile = async (file: File) => {
     const error = validateFile(file)
     if (error) {
       setUploadingFiles(prev => 
@@ -62,9 +62,11 @@ export default function DocumentUpload({ caseId, onUploadComplete }: DocumentUpl
       const filename = `${timestamp}_${sanitizedName}`
       const storagePath = `case-${caseId}/${filename}`
 
-      // Simulate progress
+      console.log('📤 Uploading file:', filename)
+
+      // Upload to storage
       setUploadingFiles(prev =>
-        prev.map(f => f.file === file ? { ...f, progress: 50 } : f)
+        prev.map(f => f.file === file ? { ...f, progress: 30 } : f)
       )
 
       const { error: uploadError } = await supabase.storage
@@ -76,10 +78,21 @@ export default function DocumentUpload({ caseId, onUploadComplete }: DocumentUpl
 
       if (uploadError) throw uploadError
 
-      // Use suggested category if available and user hasn't changed it
-      const finalCategory = suggestedCategory && category === 'other' ? suggestedCategory : category
+      console.log('✅ File uploaded to storage')
 
-      const { error: dbError } = await supabase
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('case-documents')
+        .getPublicUrl(storagePath)
+
+      console.log('🔗 Public URL:', publicUrl)
+
+      setUploadingFiles(prev =>
+        prev.map(f => f.file === file ? { ...f, progress: 50 } : f)
+      )
+
+      // Insert document record
+      const { data: docData, error: dbError } = await supabase
         .from('documents')
         .insert({
           case_id: caseId,
@@ -89,16 +102,61 @@ export default function DocumentUpload({ caseId, onUploadComplete }: DocumentUpl
           file_size: file.size,
           mime_type: file.type,
           storage_path: storagePath,
-          category: finalCategory,
+          category: category !== 'other' ? category : null,
           description: description || null,
           is_shared_with_client: shareWithClient,
-          ai_suggested_category: suggestedCategory || null,
-          ai_confidence: confidence || null,
-          ai_processed: true,
         })
+        .select()
+        .single()
 
       if (dbError) throw dbError
 
+      console.log('✅ Document record created:', docData.id)
+
+      setUploadingFiles(prev =>
+        prev.map(f => f.file === file ? { ...f, progress: 70 } : f)
+      )
+
+      // 🎯 TRIGGER AI ANALYSIS
+      console.log('🤖 Calling AI analysis API...')
+      
+      try {
+        const aiResponse = await fetch('/api/analyze-document', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            documentId: docData.id,
+            fileUrl: publicUrl,
+            filename: file.name,
+            mimeType: file.type,
+            caseId: caseId,
+          }),
+        })
+
+        if (aiResponse.ok) {
+          const { analysis } = await aiResponse.json()
+          console.log('🎉 AI Analysis result:', analysis)
+          
+          // Update UI with AI suggestion
+          setUploadingFiles(prev =>
+            prev.map(f => f.file === file ? { 
+              ...f, 
+              progress: 90,
+              suggestedCategory: analysis.category,
+              confidence: analysis.confidence,
+              reasoning: analysis.reasoning,
+            } : f)
+          )
+        } else {
+          const errorData = await aiResponse.json()
+          console.error('❌ AI analysis failed:', errorData)
+        }
+      } catch (aiError) {
+        console.error('❌ AI analysis error:', aiError)
+        // Don't fail the upload - AI is optional
+      }
+
+      // Complete
       setUploadingFiles(prev =>
         prev.map(f => f.file === file ? { ...f, progress: 100, success: true } : f)
       )
@@ -108,10 +166,11 @@ export default function DocumentUpload({ caseId, onUploadComplete }: DocumentUpl
         if (onUploadComplete) onUploadComplete()
       }, 2000)
 
-    } catch (error: any) {
-      console.error('Upload error:', error)
+    } catch (error) {
+      console.error('❌ Upload error:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Upload failed'
       setUploadingFiles(prev =>
-        prev.map(f => f.file === file ? { ...f, error: error.message, progress: 0 } : f)
+        prev.map(f => f.file === file ? { ...f, error: errorMessage, progress: 0 } : f)
       )
     }
   }
@@ -121,22 +180,20 @@ export default function DocumentUpload({ caseId, onUploadComplete }: DocumentUpl
 
     const filesArray = Array.from(files)
     
-    // Classify each file and add to uploading list
-    for (const file of filesArray) {
-      const classification = await categorizeDocument(file.name)
-      
-      setUploadingFiles(prev => [...prev, {
-        file,
-        progress: 0,
-        suggestedCategory: classification.category,
-        confidence: classification.confidence,
-        reasoning: classification.reasoning,
-      }])
+    // Add files to uploading list
+    const newFiles = filesArray.map(file => ({
+      file,
+      progress: 0,
+      suggestedCategory: undefined,
+      confidence: undefined,
+      reasoning: undefined,
+    }))
+    
+    setUploadingFiles(prev => [...prev, ...newFiles])
 
-      // Auto-upload after a short delay to show suggestion
-      setTimeout(() => {
-        uploadFile(file, classification.category, classification.confidence, classification.reasoning)
-      }, 500)
+    // Upload each file (AI will analyze during upload)
+    for (const file of filesArray) {
+      await uploadFile(file)
     }
   }
 

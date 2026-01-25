@@ -18,10 +18,12 @@ export interface Document {
     // Status
     is_encrypted: boolean
     is_shared_with_client: boolean
-    
+    is_archived: boolean
+
     // Metadata
     uploaded_at: string
     last_accessed_at: string | null
+    archived_at: string | null
   }
   
   export interface DocumentUpload {

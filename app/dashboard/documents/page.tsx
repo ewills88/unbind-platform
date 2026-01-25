@@ -7,6 +7,7 @@ import Sidebar from '@/components/layout/Sidebar'
 import DocumentUpload from '@/components/dashboard/DocumentUpload'
 import DocumentPreviewModal from '@/components/dashboard/DocumentPreviewModal'
 import DocumentSkeleton from '@/components/dashboard/DocumentSkeleton'
+import DocumentAnalyticsDashboard from '@/components/dashboard/DocumentAnalyticsDashboard'
 import { Document, DOCUMENT_CATEGORIES } from '@/types/documents'
 import {
   FileText,
@@ -26,6 +27,11 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
+  Archive,
+  ArchiveRestore,
+  FolderInput,
+  Tag,
+  BarChart3,
 } from 'lucide-react'
 
 const supabase = createClient(
@@ -45,6 +51,7 @@ type SortDirection = 'asc' | 'desc'
 type DateFilter = 'all' | '7days' | '30days' | '3months'
 type UploaderFilter = 'all' | 'me' | 'client'
 type SharedFilter = 'all' | 'shared' | 'notshared'
+type ArchiveFilter = 'active' | 'archived' | 'all'
 
 export default function DocumentsPage() {
   const router = useRouter()
@@ -55,7 +62,12 @@ export default function DocumentsPage() {
   const [dateFilter, setDateFilter] = useState<DateFilter>('all')
   const [uploaderFilter, setUploaderFilter] = useState<UploaderFilter>('all')
   const [sharedFilter, setSharedFilter] = useState<SharedFilter>('all')
+  const [archiveFilter, setArchiveFilter] = useState<ArchiveFilter>('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [showBulkCategorize, setShowBulkCategorize] = useState(false)
+  const [showBulkReassign, setShowBulkReassign] = useState(false)
+  const [bulkCategory, setBulkCategory] = useState<string>('')
+  const [bulkCaseId, setBulkCaseId] = useState<string>('')
   const [loading, setLoading] = useState(true)
   const [showUpload, setShowUpload] = useState(false)
   const [userRole, setUserRole] = useState<string>('')
@@ -66,6 +78,7 @@ export default function DocumentsPage() {
   const [sortField, setSortField] = useState<SortField>('date')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
   const [showFilters, setShowFilters] = useState(false)
+  const [showAnalytics, setShowAnalytics] = useState(false)
 
   useEffect(() => {
     // Load view preference from localStorage
@@ -79,7 +92,7 @@ export default function DocumentsPage() {
     if (userRole) {
       loadDocuments()
     }
-  }, [selectedCase, categoryFilter, dateFilter, uploaderFilter, sharedFilter, userRole])
+  }, [selectedCase, categoryFilter, dateFilter, uploaderFilter, sharedFilter, archiveFilter, userRole])
 
   const loadUserAndData = async () => {
     try {
@@ -192,6 +205,16 @@ export default function DocumentsPage() {
       } else if (sharedFilter === 'notshared') {
         query = query.eq('is_shared_with_client', false)
       }
+
+      // Archive filter - only apply if not showing 'all'
+      // Note: is_archived column must exist in database
+      if (archiveFilter === 'archived') {
+        query = query.eq('is_archived', true)
+      } else if (archiveFilter === 'active') {
+        // Show documents where is_archived is false or null (for backwards compatibility)
+        query = query.neq('is_archived', true)
+      }
+      // 'all' shows everything
 
       const { data, error } = await query
 
@@ -365,21 +388,128 @@ export default function DocumentsPage() {
     }
   }
 
+  const handleBulkCategorize = async () => {
+    if (selectedDocs.size === 0 || !bulkCategory) return
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      await supabase
+        .from('documents')
+        .update({ category: bulkCategory })
+        .in('id', Array.from(selectedDocs))
+
+      const categoryLabel = DOCUMENT_CATEGORIES.find(c => c.value === bulkCategory)?.label || bulkCategory
+
+      const activities = Array.from(selectedDocs).map(docId => ({
+        document_id: docId,
+        user_id: user.id,
+        activity_type: 'updated',
+        comment: `Category changed to "${categoryLabel}" via bulk action`,
+      }))
+
+      await supabase
+        .from('document_activity')
+        .insert(activities)
+
+      setSelectedDocs(new Set())
+      setShowBulkCategorize(false)
+      setBulkCategory('')
+      loadDocuments()
+    } catch (error) {
+      console.error('Error categorizing documents:', error)
+      alert('Failed to categorize some documents')
+    }
+  }
+
+  const handleBulkReassign = async () => {
+    if (selectedDocs.size === 0 || !bulkCaseId) return
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      await supabase
+        .from('documents')
+        .update({ case_id: bulkCaseId })
+        .in('id', Array.from(selectedDocs))
+
+      const targetCase = cases.find(c => c.id === bulkCaseId)
+      const caseName = targetCase ? `${targetCase.client_name} v. ${targetCase.spouse_name}` : 'another case'
+
+      const activities = Array.from(selectedDocs).map(docId => ({
+        document_id: docId,
+        user_id: user.id,
+        activity_type: 'updated',
+        comment: `Moved to case "${caseName}" via bulk action`,
+      }))
+
+      await supabase
+        .from('document_activity')
+        .insert(activities)
+
+      setSelectedDocs(new Set())
+      setShowBulkReassign(false)
+      setBulkCaseId('')
+      loadDocuments()
+    } catch (error) {
+      console.error('Error reassigning documents:', error)
+      alert('Failed to reassign some documents')
+    }
+  }
+
+  const handleBulkArchive = async (archive: boolean) => {
+    if (selectedDocs.size === 0) return
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      await supabase
+        .from('documents')
+        .update({
+          is_archived: archive,
+          archived_at: archive ? new Date().toISOString() : null
+        })
+        .in('id', Array.from(selectedDocs))
+
+      const activities = Array.from(selectedDocs).map(docId => ({
+        document_id: docId,
+        user_id: user.id,
+        activity_type: archive ? 'archived' : 'restored',
+        comment: archive ? 'Document archived via bulk action' : 'Document restored via bulk action',
+      }))
+
+      await supabase
+        .from('document_activity')
+        .insert(activities)
+
+      setSelectedDocs(new Set())
+      loadDocuments()
+    } catch (error) {
+      console.error('Error archiving documents:', error)
+      alert('Failed to archive some documents')
+    }
+  }
+
   const clearAllFilters = () => {
     setSelectedCase('all')
     setCategoryFilter('all')
     setDateFilter('all')
     setUploaderFilter('all')
     setSharedFilter('all')
+    setArchiveFilter('all')
     setSearchQuery('')
   }
 
   const hasActiveFilters = () => {
-    return selectedCase !== 'all' || 
-           categoryFilter !== 'all' || 
+    return selectedCase !== 'all' ||
+           categoryFilter !== 'all' ||
            dateFilter !== 'all' ||
            uploaderFilter !== 'all' ||
            sharedFilter !== 'all' ||
+           archiveFilter !== 'all' ||
            searchQuery !== ''
   }
 
@@ -451,7 +581,7 @@ export default function DocumentsPage() {
                 <button
                   onClick={() => handleViewModeChange('grid')}
                   className={`p-2 rounded transition-colors ${
-                    viewMode === 'grid'
+                    viewMode === 'grid' && !showAnalytics
                       ? 'bg-blue-100 text-blue-600'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
@@ -462,13 +592,24 @@ export default function DocumentsPage() {
                 <button
                   onClick={() => handleViewModeChange('list')}
                   className={`p-2 rounded transition-colors ${
-                    viewMode === 'list'
+                    viewMode === 'list' && !showAnalytics
                       ? 'bg-blue-100 text-blue-600'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                   title="List View"
                 >
                   <List className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => setShowAnalytics(!showAnalytics)}
+                  className={`p-2 rounded transition-colors ${
+                    showAnalytics
+                      ? 'bg-purple-100 text-purple-600'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                  title="Analytics Dashboard"
+                >
+                  <BarChart3 className="w-5 h-5" />
                 </button>
               </div>
 
@@ -485,40 +626,135 @@ export default function DocumentsPage() {
 
           {/* Bulk Actions Bar */}
           {selectedDocs.size > 0 && userRole === 'admin' && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 space-y-3">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-blue-900">
                   {selectedDocs.size} document(s) selected
                 </p>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => handleBulkShare(true)}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center gap-2"
+                    className="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center gap-1.5"
                   >
                     <Share2 className="w-4 h-4" />
                     Share
                   </button>
                   <button
                     onClick={() => handleBulkShare(false)}
-                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm font-medium"
+                    className="px-3 py-1.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm font-medium"
                   >
                     Unshare
                   </button>
                   <button
+                    onClick={() => setShowBulkCategorize(!showBulkCategorize)}
+                    className={`px-3 py-1.5 rounded-lg transition-colors text-sm font-medium flex items-center gap-1.5 ${
+                      showBulkCategorize
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
+                    }`}
+                  >
+                    <Tag className="w-4 h-4" />
+                    Categorize
+                  </button>
+                  <button
+                    onClick={() => setShowBulkReassign(!showBulkReassign)}
+                    className={`px-3 py-1.5 rounded-lg transition-colors text-sm font-medium flex items-center gap-1.5 ${
+                      showBulkReassign
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+                    }`}
+                  >
+                    <FolderInput className="w-4 h-4" />
+                    Move to Case
+                  </button>
+                  {archiveFilter !== 'archived' ? (
+                    <button
+                      onClick={() => handleBulkArchive(true)}
+                      className="px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-colors text-sm font-medium flex items-center gap-1.5"
+                    >
+                      <Archive className="w-4 h-4" />
+                      Archive
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleBulkArchive(false)}
+                      className="px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 transition-colors text-sm font-medium flex items-center gap-1.5"
+                    >
+                      <ArchiveRestore className="w-4 h-4" />
+                      Restore
+                    </button>
+                  )}
+                  <button
                     onClick={handleBulkDelete}
-                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium flex items-center gap-2"
+                    className="px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium flex items-center gap-1.5"
                   >
                     <Trash2 className="w-4 h-4" />
                     Delete
                   </button>
                   <button
-                    onClick={() => setSelectedDocs(new Set())}
-                    className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
+                    onClick={() => {
+                      setSelectedDocs(new Set())
+                      setShowBulkCategorize(false)
+                      setShowBulkReassign(false)
+                    }}
+                    className="px-3 py-1.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
                   >
                     Cancel
                   </button>
                 </div>
               </div>
+
+              {/* Bulk Categorize Panel */}
+              {showBulkCategorize && (
+                <div className="flex items-center gap-3 pt-3 border-t border-blue-200">
+                  <label className="text-sm font-medium text-gray-700">Set category:</label>
+                  <select
+                    value={bulkCategory}
+                    onChange={(e) => setBulkCategory(e.target.value)}
+                    className="px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  >
+                    <option value="">Select category...</option>
+                    {DOCUMENT_CATEGORIES.map((cat) => (
+                      <option key={cat.value} value={cat.value}>
+                        {cat.label}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={handleBulkCategorize}
+                    disabled={!bulkCategory}
+                    className="px-4 py-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                  >
+                    Apply
+                  </button>
+                </div>
+              )}
+
+              {/* Bulk Reassign Panel */}
+              {showBulkReassign && (
+                <div className="flex items-center gap-3 pt-3 border-t border-blue-200">
+                  <label className="text-sm font-medium text-gray-700">Move to case:</label>
+                  <select
+                    value={bulkCaseId}
+                    onChange={(e) => setBulkCaseId(e.target.value)}
+                    className="px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  >
+                    <option value="">Select case...</option>
+                    {cases.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.client_name} v. {c.spouse_name}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={handleBulkReassign}
+                    disabled={!bulkCaseId}
+                    className="px-4 py-1.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                  >
+                    Apply
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
@@ -573,7 +809,7 @@ export default function DocumentsPage() {
                 Filters
                 {hasActiveFilters() && (
                   <span className="ml-1 px-2 py-0.5 bg-blue-600 text-white rounded-full text-xs">
-                    {[selectedCase !== 'all', categoryFilter !== 'all', dateFilter !== 'all', uploaderFilter !== 'all', sharedFilter !== 'all'].filter(Boolean).length}
+                    {[selectedCase !== 'all', categoryFilter !== 'all', dateFilter !== 'all', uploaderFilter !== 'all', sharedFilter !== 'all', archiveFilter !== 'all'].filter(Boolean).length}
                   </span>
                 )}
               </button>
@@ -662,6 +898,19 @@ export default function DocumentsPage() {
                       <option value="notshared">Not Shared</option>
                     </select>
                   )}
+
+                  {/* Archive Filter */}
+                  {userRole === 'admin' && (
+                    <select
+                      value={archiveFilter}
+                      onChange={(e) => setArchiveFilter(e.target.value as ArchiveFilter)}
+                      className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="active">Active Documents</option>
+                      <option value="archived">Archived Only</option>
+                      <option value="all">All (incl. Archived)</option>
+                    </select>
+                  )}
                 </div>
 
                 {/* Clear Filters */}
@@ -678,33 +927,41 @@ export default function DocumentsPage() {
             )}
           </div>
 
-          {/* Sort Controls */}
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm text-gray-600">Sort by:</span>
-            {[
-              { field: 'name' as SortField, label: 'Name' },
-              { field: 'date' as SortField, label: 'Date' },
-              { field: 'size' as SortField, label: 'Size' },
-              { field: 'category' as SortField, label: 'Category' },
-            ].map((option) => (
-              <button
-                key={option.field}
-                onClick={() => handleSort(option.field)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
-                  sortField === option.field
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {option.label}
-                {sortField === option.field && (
-                  sortDirection === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />
-                )}
-              </button>
-            ))}
-          </div>
+          {/* Analytics Dashboard */}
+          {showAnalytics ? (
+            <DocumentAnalyticsDashboard
+              caseId={selectedCase !== 'all' ? selectedCase : undefined}
+              documents={filteredDocuments}
+            />
+          ) : (
+            <>
+              {/* Sort Controls */}
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-sm text-gray-600">Sort by:</span>
+                {[
+                  { field: 'name' as SortField, label: 'Name' },
+                  { field: 'date' as SortField, label: 'Date' },
+                  { field: 'size' as SortField, label: 'Size' },
+                  { field: 'category' as SortField, label: 'Category' },
+                ].map((option) => (
+                  <button
+                    key={option.field}
+                    onClick={() => handleSort(option.field)}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
+                      sortField === option.field
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {option.label}
+                    {sortField === option.field && (
+                      sortDirection === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />
+                    )}
+                  </button>
+                ))}
+              </div>
 
-          {/* Documents Display */}
+              {/* Documents Display */}
           {filteredDocuments.length === 0 ? (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
               <FolderOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
@@ -784,6 +1041,12 @@ export default function DocumentsPage() {
                         <div className="flex items-center gap-1 text-green-600">
                           <Share2 className="w-3 h-3" />
                           <span>Shared with client</span>
+                        </div>
+                      )}
+                      {doc.is_archived === true && (
+                        <div className="flex items-center gap-1 text-amber-600">
+                          <Archive className="w-3 h-3" />
+                          <span>Archived</span>
                         </div>
                       )}
                     </div>
@@ -886,12 +1149,20 @@ export default function DocumentsPage() {
                           {formatDate(doc.uploaded_at)}
                         </td>
                         <td className="px-4 py-3">
-                          {doc.is_shared_with_client && (
-                            <span className="inline-flex items-center gap-1 text-xs text-green-600">
-                              <Share2 className="w-3 h-3" />
-                              Shared
-                            </span>
-                          )}
+                          <div className="flex flex-col gap-1">
+                            {doc.is_shared_with_client && (
+                              <span className="inline-flex items-center gap-1 text-xs text-green-600">
+                                <Share2 className="w-3 h-3" />
+                                Shared
+                              </span>
+                            )}
+                            {doc.is_archived === true && (
+                              <span className="inline-flex items-center gap-1 text-xs text-amber-600">
+                                <Archive className="w-3 h-3" />
+                                Archived
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center justify-end gap-2">
@@ -918,6 +1189,8 @@ export default function DocumentsPage() {
               </div>
             </div>
           )}
+          </>
+          )}
         </div>
       </main>
 
@@ -926,6 +1199,7 @@ export default function DocumentsPage() {
         <DocumentPreviewModal
           document={previewDoc}
           allDocuments={filteredDocuments}
+          cases={cases}
           onClose={() => setPreviewDoc(null)}
           onUpdate={() => {
             loadDocuments()
