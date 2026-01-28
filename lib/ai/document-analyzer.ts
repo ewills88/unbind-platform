@@ -3,7 +3,8 @@ import {
   AIAnalysisResult,
   DocumentSummary,
   DocumentExtraction,
-  DocumentAIAnalysis
+  DocumentAIAnalysis,
+  DocumentAIInsights
 } from '@/types/ai'
 
 // Category definitions for divorce documents
@@ -86,6 +87,42 @@ Return ONLY valid JSON:
   "documentType": "Specific type (e.g., 'Bank Statement', 'Tax Return 1040', 'Property Deed')",
   "relevance": "high|medium|low based on typical importance in divorce proceedings"
 }`
+
+const INSIGHTS_PROMPT = `You are an AI assistant helping family law attorneys analyze divorce case documents for actionable insights.
+
+Analyze this document and extract:
+1. Overall sentiment and urgency
+2. Named entities (people, organizations, locations)
+3. Important deadlines or dates requiring action
+4. Action items or tasks mentioned
+5. Suggested tags for organization
+6. Any risk factors or concerns
+
+Return ONLY valid JSON:
+{
+  "sentiment": "neutral",
+  "urgencyLevel": "medium",
+  "entities": {
+    "people": ["John Smith", "Jane Smith"],
+    "organizations": ["Chase Bank", "Superior Court"],
+    "locations": ["Los Angeles, CA"]
+  },
+  "deadlines": [
+    {"date": "2024-03-15", "description": "Response due date", "isUrgent": true}
+  ],
+  "actionItems": [
+    {"action": "File response to motion", "priority": "high", "dueDate": "2024-03-15"},
+    {"action": "Gather bank statements", "priority": "medium"}
+  ],
+  "suggestedTags": ["urgent", "court-filing", "deadline"],
+  "riskFactors": [
+    {"factor": "Missing signature on page 3", "severity": "medium", "recommendation": "Obtain signed copy"}
+  ]
+}
+
+Sentiment options: positive, negative, neutral, urgent
+Urgency options: low, medium, high, critical
+Priority options: low, medium, high`
 
 const EXTRACTION_PROMPT = `You are an AI assistant helping extract key information from divorce case documents.
 
@@ -279,6 +316,136 @@ export async function extractDocumentData(
   }
 }
 
+export async function extractInsights(
+  fileUrl: string,
+  filename: string,
+  mimeType: string,
+  existingCategory?: string
+): Promise<DocumentAIInsights | null> {
+  console.log(`💡 extractInsights called: filename=${filename}, mimeType=${mimeType}`)
+
+  // For PDFs, generate insights from filename
+  if (isPDF(filename, mimeType)) {
+    console.log('💡 PDF detected - generating filename-based insights')
+    return generateFallbackInsights(filename, existingCategory)
+  }
+
+  if (!isAIEnabled()) {
+    return generateFallbackInsights(filename, existingCategory)
+  }
+
+  try {
+    // Only images are supported for Vision API
+    if (!isImage(filename, mimeType)) {
+      console.log('💡 Not an image - using fallback insights')
+      return generateFallbackInsights(filename, existingCategory)
+    }
+
+    console.log('💡 Extracting insights with GPT-4 Vision...')
+
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [
+        { role: 'system', content: INSIGHTS_PROMPT },
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: `Filename: ${filename}\n\nExtract insights and action items:` },
+            { type: 'image_url', image_url: { url: fileUrl, detail: 'high' } }
+          ]
+        }
+      ],
+      response_format: { type: 'json_object' },
+      max_tokens: 2000,
+      temperature: 0.3
+    })
+
+    const content = completion.choices[0].message.content || '{}'
+    const result = JSON.parse(content)
+
+    // Calculate days until deadlines
+    const deadlinesWithDays = (result.deadlines || []).map((d: { date: string; description: string; isUrgent: boolean }) => {
+      const deadlineDate = new Date(d.date)
+      const today = new Date()
+      const daysUntil = Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+      return { ...d, daysUntil }
+    })
+
+    return {
+      sentiment: result.sentiment || 'neutral',
+      urgencyLevel: result.urgencyLevel || 'low',
+      entities: {
+        people: result.entities?.people || [],
+        organizations: result.entities?.organizations || [],
+        locations: result.entities?.locations || []
+      },
+      deadlines: deadlinesWithDays,
+      actionItems: result.actionItems || [],
+      suggestedTags: result.suggestedTags || [],
+      riskFactors: result.riskFactors,
+      analyzedAt: new Date().toISOString()
+    }
+  } catch (error) {
+    console.error('AI insights extraction failed:', error)
+    return generateFallbackInsights(filename, existingCategory)
+  }
+}
+
+function generateFallbackInsights(filename: string, category?: string): DocumentAIInsights {
+  const lower = filename.toLowerCase()
+  const suggestedTags: string[] = []
+  let urgencyLevel: 'low' | 'medium' | 'high' | 'critical' = 'low'
+  let sentiment: 'positive' | 'negative' | 'neutral' | 'urgent' = 'neutral'
+
+  // Determine urgency and tags based on filename patterns
+  if (lower.includes('urgent') || lower.includes('immediate') || lower.includes('asap')) {
+    urgencyLevel = 'critical'
+    sentiment = 'urgent'
+    suggestedTags.push('urgent')
+  }
+
+  if (lower.includes('court') || lower.includes('summons') || lower.includes('motion')) {
+    urgencyLevel = urgencyLevel === 'low' ? 'high' : urgencyLevel
+    suggestedTags.push('court-filing')
+  }
+
+  if (lower.includes('deadline') || lower.includes('due')) {
+    suggestedTags.push('deadline')
+    urgencyLevel = urgencyLevel === 'low' ? 'medium' : urgencyLevel
+  }
+
+  if (lower.includes('draft')) {
+    suggestedTags.push('draft')
+  }
+
+  if (lower.includes('final') || lower.includes('signed')) {
+    suggestedTags.push('final')
+  }
+
+  if (lower.includes('confidential') || lower.includes('private')) {
+    suggestedTags.push('confidential')
+  }
+
+  // Add category-based tags
+  if (category) {
+    suggestedTags.push(category)
+  }
+
+  return {
+    sentiment,
+    urgencyLevel,
+    entities: {
+      people: [],
+      organizations: [],
+      locations: []
+    },
+    deadlines: [],
+    actionItems: [],
+    suggestedTags: Array.from(new Set(suggestedTags)), // Remove duplicates
+    analyzedAt: new Date().toISOString()
+  }
+}
+
 export async function performFullAnalysis(
   fileUrl: string,
   filename: string,
@@ -289,11 +456,14 @@ export async function performFullAnalysis(
   console.log(`🤖 Starting full AI analysis for: ${filename}`)
 
   try {
-    // Run categorization, summarization, and extraction in parallel
-    const [category, summary, extraction] = await Promise.all([
-      analyzeDocument(fileUrl, filename, mimeType),
+    // Run categorization first to get category for insights
+    const category = await analyzeDocument(fileUrl, filename, mimeType)
+
+    // Run summarization, extraction, and insights in parallel
+    const [summary, extraction, insights] = await Promise.all([
       summarizeDocument(fileUrl, filename, mimeType),
-      extractDocumentData(fileUrl, filename, mimeType)
+      extractDocumentData(fileUrl, filename, mimeType),
+      extractInsights(fileUrl, filename, mimeType, category.category)
     ])
 
     console.log(`✅ Full analysis complete in ${Date.now() - startTime}ms`)
@@ -303,6 +473,7 @@ export async function performFullAnalysis(
       category,
       summary: summary || undefined,
       extraction: extraction || undefined,
+      insights: insights || undefined,
       analyzedAt: new Date().toISOString(),
       status: 'complete'
     }

@@ -24,9 +24,12 @@ import {
   XCircle,
   Sparkles,
   History,
+  Link2,
 } from 'lucide-react'
 import { Document, DOCUMENT_CATEGORIES } from '@/types/documents'
 import DocumentAIInsights from './DocumentAIInsights'
+import DocumentRelationships from './DocumentRelationships'
+import DocumentTagEditor from './DocumentTagEditor'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -88,7 +91,7 @@ export default function DocumentPreviewModal({
   const [imageScale, setImageScale] = useState(1.0)
 
   // Sidebar tab state
-  const [activeTab, setActiveTab] = useState<'activity' | 'ai'>('activity')
+  const [activeTab, setActiveTab] = useState<'activity' | 'ai' | 'relations'>('activity')
 
   const isPDF = document.mime_type === 'application/pdf'
   const isImage = document.mime_type.startsWith('image/')
@@ -736,6 +739,14 @@ export default function DocumentPreviewModal({
               </div>
             )}
 
+            {/* Tags Section */}
+            <div className="p-4 border-b border-gray-200">
+              <DocumentTagEditor
+                documentId={document.id}
+                onTagsChange={onUpdate}
+              />
+            </div>
+
             {/* Tab Navigation */}
             <div className="flex border-b border-gray-200">
               <button
@@ -758,13 +769,24 @@ export default function DocumentPreviewModal({
                 }`}
               >
                 <Sparkles className="w-4 h-4" />
-                AI Insights
+                AI
+              </button>
+              <button
+                onClick={() => setActiveTab('relations')}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
+                  activeTab === 'relations'
+                    ? 'text-green-600 border-b-2 border-green-600 bg-green-50'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <Link2 className="w-4 h-4" />
+                Links
               </button>
             </div>
 
             {/* Tab Content */}
             <div className="flex-1 overflow-y-auto">
-              {activeTab === 'activity' ? (
+              {activeTab === 'activity' && (
                 <>
                   {/* Activity Feed */}
                   <div className="p-4">
@@ -794,7 +816,9 @@ export default function DocumentPreviewModal({
                     </div>
                   </div>
                 </>
-              ) : (
+              )}
+
+              {activeTab === 'ai' && (
                 /* AI Insights Tab */
                 <div className="p-4">
                   <DocumentAIInsights
@@ -803,6 +827,22 @@ export default function DocumentPreviewModal({
                     filename={document.original_filename}
                     mimeType={document.mime_type}
                     onAnalysisComplete={onUpdate}
+                  />
+                </div>
+              )}
+
+              {activeTab === 'relations' && (
+                /* Document Relationships Tab */
+                <div className="p-4">
+                  <DocumentRelationships
+                    documentId={document.id}
+                    caseId={document.case_id}
+                    onNavigateToDocument={(docId) => {
+                      const targetDoc = allDocuments.find(d => d.id === docId)
+                      if (targetDoc && onNavigate) {
+                        onNavigate(targetDoc)
+                      }
+                    }}
                   />
                 </div>
               )}

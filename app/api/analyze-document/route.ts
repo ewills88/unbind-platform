@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
 
     switch (analysisType) {
       case 'full':
-        // Full analysis: categorize + summarize + extract
+        // Full analysis: categorize + summarize + extract + insights
         result = await performFullAnalysis(fileUrl, filename, mimeType, documentId)
 
         // Store full analysis results if Supabase is available
@@ -85,6 +85,7 @@ export async function POST(request: NextRequest) {
               ai_reasoning: result.category.reasoning,
               ai_summary: result.summary,
               ai_extraction: result.extraction,
+              ai_insights: result.insights,
               ai_processed_at: new Date().toISOString()
             })
             .eq('id', documentId)

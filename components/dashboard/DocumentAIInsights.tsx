@@ -13,9 +13,16 @@ import {
   AlertCircle,
   CheckCircle,
   Loader2,
-  RefreshCw
+  RefreshCw,
+  MapPin,
+  Tag,
+  ListTodo,
+  AlertTriangle,
+  Clock,
+  TrendingUp
 } from 'lucide-react'
-import { DocumentSummary, DocumentExtraction } from '@/types/ai'
+import { DocumentSummary, DocumentExtraction, DocumentAIInsights as InsightsType } from '@/types/ai'
+import { TagBadge } from '@/components/tags'
 
 interface DocumentAIInsightsProps {
   documentId: string
@@ -24,7 +31,9 @@ interface DocumentAIInsightsProps {
   mimeType: string
   existingSummary?: DocumentSummary | null
   existingExtraction?: DocumentExtraction | null
+  existingInsights?: InsightsType | null
   onAnalysisComplete?: () => void
+  onSuggestedTagsClick?: (tags: string[]) => void
 }
 
 export default function DocumentAIInsights({
@@ -34,13 +43,16 @@ export default function DocumentAIInsights({
   mimeType,
   existingSummary,
   existingExtraction,
-  onAnalysisComplete
+  existingInsights,
+  onAnalysisComplete,
+  onSuggestedTagsClick
 }: DocumentAIInsightsProps) {
   const [summary, setSummary] = useState<DocumentSummary | null>(existingSummary || null)
   const [extraction, setExtraction] = useState<DocumentExtraction | null>(existingExtraction || null)
+  const [insights, setInsights] = useState<InsightsType | null>(existingInsights || null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['summary']))
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['summary', 'insights']))
 
   const toggleSection = (section: string) => {
     const newExpanded = new Set(expandedSections)
@@ -93,8 +105,9 @@ export default function DocumentAIInsights({
       // Handle different response structures based on analysis type
       let newSummary: DocumentSummary | null = null
       let newExtraction: DocumentExtraction | null = null
+      let newInsights: InsightsType | null = null
 
-      // Full analysis returns summary and extraction directly
+      // Full analysis returns summary, extraction, and insights directly
       if (data.summary) {
         newSummary = data.summary
         console.log('📄 Got summary:', newSummary)
@@ -102,6 +115,10 @@ export default function DocumentAIInsights({
       if (data.extraction) {
         newExtraction = data.extraction
         console.log('📊 Got extraction:', newExtraction)
+      }
+      if (data.insights) {
+        newInsights = data.insights
+        console.log('💡 Got insights:', newInsights)
       }
 
       // For categorize-only responses, create a summary from category
@@ -136,6 +153,10 @@ export default function DocumentAIInsights({
 
       if (newExtraction) {
         setExtraction(newExtraction)
+      }
+
+      if (newInsights) {
+        setInsights(newInsights)
       }
 
       onAnalysisComplete?.()
@@ -424,6 +445,316 @@ export default function DocumentAIInsights({
           )}
         </div>
       )}
+
+      {/* Enhanced Insights Section */}
+      {insights && (
+        <>
+          {/* Urgency & Sentiment */}
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <button
+              onClick={() => toggleSection('insights')}
+              className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors"
+            >
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium text-gray-900">Document Insights</span>
+                <span className={`text-xs px-2 py-0.5 rounded-full ${getUrgencyColor(insights.urgencyLevel)}`}>
+                  {insights.urgencyLevel} urgency
+                </span>
+              </div>
+              {expandedSections.has('insights') ? (
+                <ChevronUp className="w-4 h-4 text-gray-400" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-gray-400" />
+              )}
+            </button>
+
+            {expandedSections.has('insights') && (
+              <div className="p-3 space-y-3">
+                {/* Sentiment & Urgency Badges */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className={`text-xs px-2 py-1 rounded-full ${getSentimentColor(insights.sentiment)}`}>
+                    {insights.sentiment === 'urgent' ? '⚠️' : insights.sentiment === 'negative' ? '😟' : insights.sentiment === 'positive' ? '😊' : '😐'} {insights.sentiment}
+                  </span>
+                  <span className={`text-xs px-2 py-1 rounded-full ${getUrgencyColor(insights.urgencyLevel)}`}>
+                    <Clock className="w-3 h-3 inline mr-1" />
+                    {insights.urgencyLevel} priority
+                  </span>
+                </div>
+
+                {/* Entities */}
+                {(insights.entities.people.length > 0 || insights.entities.organizations.length > 0 || insights.entities.locations.length > 0) && (
+                  <div className="space-y-2">
+                    <h4 className="text-xs font-medium text-gray-500 uppercase">Entities Found</h4>
+
+                    {insights.entities.people.length > 0 && (
+                      <div className="flex items-start gap-2">
+                        <Users className="w-4 h-4 text-purple-500 mt-0.5" />
+                        <div className="flex flex-wrap gap-1">
+                          {insights.entities.people.map((person, idx) => (
+                            <span key={idx} className="text-xs bg-purple-50 text-purple-700 px-2 py-0.5 rounded">
+                              {person}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {insights.entities.organizations.length > 0 && (
+                      <div className="flex items-start gap-2">
+                        <Building className="w-4 h-4 text-blue-500 mt-0.5" />
+                        <div className="flex flex-wrap gap-1">
+                          {insights.entities.organizations.map((org, idx) => (
+                            <span key={idx} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded">
+                              {org}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {insights.entities.locations.length > 0 && (
+                      <div className="flex items-start gap-2">
+                        <MapPin className="w-4 h-4 text-green-500 mt-0.5" />
+                        <div className="flex flex-wrap gap-1">
+                          {insights.entities.locations.map((loc, idx) => (
+                            <span key={idx} className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded">
+                              {loc}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Deadlines Section */}
+          {insights.deadlines && insights.deadlines.length > 0 && (
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <button
+                onClick={() => toggleSection('deadlines')}
+                className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-red-600" />
+                  <span className="text-sm font-medium text-gray-900">Deadlines</span>
+                  <span className="text-xs text-gray-500">({insights.deadlines.length})</span>
+                  {insights.deadlines.some(d => d.isUrgent) && (
+                    <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+                      Urgent
+                    </span>
+                  )}
+                </div>
+                {expandedSections.has('deadlines') ? (
+                  <ChevronUp className="w-4 h-4 text-gray-400" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-gray-400" />
+                )}
+              </button>
+
+              {expandedSections.has('deadlines') && (
+                <div className="p-3 space-y-2">
+                  {insights.deadlines.map((deadline, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex items-center justify-between p-2 rounded-lg ${
+                        deadline.isUrgent ? 'bg-red-50 border border-red-200' : 'bg-gray-50'
+                      }`}
+                    >
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">{deadline.description}</div>
+                        {deadline.daysUntil !== undefined && (
+                          <div className={`text-xs ${deadline.daysUntil <= 7 ? 'text-red-600 font-medium' : 'text-gray-500'}`}>
+                            {deadline.daysUntil <= 0 ? 'Overdue!' : deadline.daysUntil === 1 ? 'Tomorrow' : `${deadline.daysUntil} days left`}
+                          </div>
+                        )}
+                      </div>
+                      <div className={`text-sm font-medium ${deadline.isUrgent ? 'text-red-600' : 'text-gray-600'}`}>
+                        {formatDate(deadline.date)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Action Items Section */}
+          {insights.actionItems && insights.actionItems.length > 0 && (
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <button
+                onClick={() => toggleSection('actions')}
+                className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <ListTodo className="w-4 h-4 text-amber-600" />
+                  <span className="text-sm font-medium text-gray-900">Action Items</span>
+                  <span className="text-xs text-gray-500">({insights.actionItems.length})</span>
+                </div>
+                {expandedSections.has('actions') ? (
+                  <ChevronUp className="w-4 h-4 text-gray-400" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-gray-400" />
+                )}
+              </button>
+
+              {expandedSections.has('actions') && (
+                <div className="p-3 space-y-2">
+                  {insights.actionItems.map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-3 p-2 bg-gray-50 rounded-lg">
+                      <div className={`w-2 h-2 rounded-full mt-1.5 ${
+                        item.priority === 'high' ? 'bg-red-500' :
+                        item.priority === 'medium' ? 'bg-amber-500' : 'bg-green-500'
+                      }`} />
+                      <div className="flex-1">
+                        <div className="text-sm text-gray-900">{item.action}</div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className={`text-xs px-1.5 py-0.5 rounded ${
+                            item.priority === 'high' ? 'bg-red-100 text-red-700' :
+                            item.priority === 'medium' ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'
+                          }`}>
+                            {item.priority}
+                          </span>
+                          {item.assignee && (
+                            <span className="text-xs text-gray-500">→ {item.assignee}</span>
+                          )}
+                          {item.dueDate && (
+                            <span className="text-xs text-gray-500">Due: {formatDate(item.dueDate)}</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Suggested Tags Section */}
+          {insights.suggestedTags && insights.suggestedTags.length > 0 && (
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <button
+                onClick={() => toggleSection('suggestedTags')}
+                className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Tag className="w-4 h-4 text-cyan-600" />
+                  <span className="text-sm font-medium text-gray-900">Suggested Tags</span>
+                  <span className="text-xs text-gray-500">({insights.suggestedTags.length})</span>
+                </div>
+                {expandedSections.has('suggestedTags') ? (
+                  <ChevronUp className="w-4 h-4 text-gray-400" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-gray-400" />
+                )}
+              </button>
+
+              {expandedSections.has('suggestedTags') && (
+                <div className="p-3">
+                  <div className="flex flex-wrap gap-2">
+                    {insights.suggestedTags.map((tag, idx) => (
+                      <TagBadge
+                        key={idx}
+                        tag={{ name: tag, color: getTagColor(tag) }}
+                      />
+                    ))}
+                  </div>
+                  {onSuggestedTagsClick && (
+                    <button
+                      onClick={() => onSuggestedTagsClick(insights.suggestedTags)}
+                      className="mt-3 text-xs text-cyan-600 hover:text-cyan-700 font-medium"
+                    >
+                      Apply suggested tags →
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Risk Factors Section */}
+          {insights.riskFactors && insights.riskFactors.length > 0 && (
+            <div className="border border-red-200 rounded-lg overflow-hidden">
+              <button
+                onClick={() => toggleSection('risks')}
+                className="w-full flex items-center justify-between p-3 bg-red-50 hover:bg-red-100 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-red-600" />
+                  <span className="text-sm font-medium text-red-900">Risk Factors</span>
+                  <span className="text-xs text-red-600">({insights.riskFactors.length})</span>
+                </div>
+                {expandedSections.has('risks') ? (
+                  <ChevronUp className="w-4 h-4 text-red-400" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-red-400" />
+                )}
+              </button>
+
+              {expandedSections.has('risks') && (
+                <div className="p-3 space-y-2 bg-red-50/50">
+                  {insights.riskFactors.map((risk, idx) => (
+                    <div key={idx} className="p-2 bg-white rounded-lg border border-red-100">
+                      <div className="flex items-start gap-2">
+                        <AlertCircle className={`w-4 h-4 mt-0.5 ${
+                          risk.severity === 'high' ? 'text-red-600' :
+                          risk.severity === 'medium' ? 'text-amber-600' : 'text-yellow-600'
+                        }`} />
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">{risk.factor}</div>
+                          <div className="text-xs text-gray-600 mt-1">{risk.recommendation}</div>
+                          <span className={`text-xs mt-1 inline-block px-1.5 py-0.5 rounded ${
+                            risk.severity === 'high' ? 'bg-red-100 text-red-700' :
+                            risk.severity === 'medium' ? 'bg-amber-100 text-amber-700' : 'bg-yellow-100 text-yellow-700'
+                          }`}>
+                            {risk.severity} severity
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </>
+      )}
     </div>
   )
+}
+
+// Helper functions for styling
+function getUrgencyColor(urgency: string): string {
+  switch (urgency) {
+    case 'critical': return 'bg-red-100 text-red-700'
+    case 'high': return 'bg-orange-100 text-orange-700'
+    case 'medium': return 'bg-amber-100 text-amber-700'
+    case 'low': return 'bg-green-100 text-green-700'
+    default: return 'bg-gray-100 text-gray-700'
+  }
+}
+
+function getSentimentColor(sentiment: string): string {
+  switch (sentiment) {
+    case 'urgent': return 'bg-red-100 text-red-700'
+    case 'negative': return 'bg-orange-100 text-orange-700'
+    case 'positive': return 'bg-green-100 text-green-700'
+    case 'neutral': return 'bg-gray-100 text-gray-700'
+    default: return 'bg-gray-100 text-gray-700'
+  }
+}
+
+function getTagColor(tag: string): 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | 'gray' | 'cyan' | 'indigo' | 'pink' {
+  const tagLower = tag.toLowerCase()
+  if (tagLower.includes('urgent') || tagLower.includes('deadline')) return 'red'
+  if (tagLower.includes('court') || tagLower.includes('legal')) return 'purple'
+  if (tagLower.includes('financial') || tagLower.includes('money')) return 'green'
+  if (tagLower.includes('draft')) return 'gray'
+  if (tagLower.includes('final') || tagLower.includes('approved')) return 'blue'
+  if (tagLower.includes('confidential')) return 'pink'
+  if (tagLower.includes('review')) return 'orange'
+  return 'cyan'
 }

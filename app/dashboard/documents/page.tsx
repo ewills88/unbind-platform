@@ -8,7 +8,9 @@ import DocumentUpload from '@/components/dashboard/DocumentUpload'
 import DocumentPreviewModal from '@/components/dashboard/DocumentPreviewModal'
 import DocumentSkeleton from '@/components/dashboard/DocumentSkeleton'
 import DocumentAnalyticsDashboard from '@/components/dashboard/DocumentAnalyticsDashboard'
+import { TagFilterBar, TagList } from '@/components/tags'
 import { Document, DOCUMENT_CATEGORIES } from '@/types/documents'
+import { Tag as TagType } from '@/types/tags'
 import {
   FileText,
   Download,
@@ -24,7 +26,6 @@ import {
   Grid3x3,
   List,
   X,
-  ArrowUpDown,
   ArrowUp,
   ArrowDown,
   Archive,
@@ -53,9 +54,14 @@ type UploaderFilter = 'all' | 'me' | 'client'
 type SharedFilter = 'all' | 'shared' | 'notshared'
 type ArchiveFilter = 'active' | 'archived' | 'all'
 
+// Extended document type with tags for this page
+interface DocumentWithTagsExtended extends Document {
+  document_tags?: { tag: TagType }[]
+}
+
 export default function DocumentsPage() {
   const router = useRouter()
-  const [documents, setDocuments] = useState<Document[]>([])
+  const [documents, setDocuments] = useState<DocumentWithTagsExtended[]>([])
   const [cases, setCases] = useState<Case[]>([])
   const [selectedCase, setSelectedCase] = useState<string>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
@@ -63,11 +69,14 @@ export default function DocumentsPage() {
   const [uploaderFilter, setUploaderFilter] = useState<UploaderFilter>('all')
   const [sharedFilter, setSharedFilter] = useState<SharedFilter>('all')
   const [archiveFilter, setArchiveFilter] = useState<ArchiveFilter>('all')
+  const [tagFilter, setTagFilter] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [showBulkCategorize, setShowBulkCategorize] = useState(false)
   const [showBulkReassign, setShowBulkReassign] = useState(false)
+  const [showBulkTag, setShowBulkTag] = useState(false)
   const [bulkCategory, setBulkCategory] = useState<string>('')
   const [bulkCaseId, setBulkCaseId] = useState<string>('')
+  const [bulkTagIds, setBulkTagIds] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [showUpload, setShowUpload] = useState(false)
   const [userRole, setUserRole] = useState<string>('')
@@ -92,7 +101,7 @@ export default function DocumentsPage() {
     if (userRole) {
       loadDocuments()
     }
-  }, [selectedCase, categoryFilter, dateFilter, uploaderFilter, sharedFilter, archiveFilter, userRole])
+  }, [selectedCase, categoryFilter, dateFilter, uploaderFilter, sharedFilter, archiveFilter, tagFilter, userRole])
 
   const loadUserAndData = async () => {
     try {
@@ -160,7 +169,8 @@ export default function DocumentsPage() {
         .select(`
           *,
           uploader:uploader_id(full_name),
-          case:case_id(client_name, spouse_name)
+          case:case_id(client_name, spouse_name),
+          document_tags(tag:tags(*))
         `)
 
       // Apply filters
@@ -459,6 +469,31 @@ export default function DocumentsPage() {
     }
   }
 
+  const handleBulkTag = async () => {
+    if (selectedDocs.size === 0 || bulkTagIds.length === 0) return
+
+    try {
+      const response = await fetch('/api/documents/bulk/tags', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          documentIds: Array.from(selectedDocs),
+          addTagIds: bulkTagIds
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to add tags')
+
+      setSelectedDocs(new Set())
+      setShowBulkTag(false)
+      setBulkTagIds([])
+      loadDocuments()
+    } catch (error) {
+      console.error('Error adding tags to documents:', error)
+      alert('Failed to add tags to some documents')
+    }
+  }
+
   const handleBulkArchive = async (archive: boolean) => {
     if (selectedDocs.size === 0) return
 
@@ -500,6 +535,7 @@ export default function DocumentsPage() {
     setUploaderFilter('all')
     setSharedFilter('all')
     setArchiveFilter('all')
+    setTagFilter([])
     setSearchQuery('')
   }
 
@@ -510,6 +546,7 @@ export default function DocumentsPage() {
            uploaderFilter !== 'all' ||
            sharedFilter !== 'all' ||
            archiveFilter !== 'all' ||
+           tagFilter.length > 0 ||
            searchQuery !== ''
   }
 
@@ -539,11 +576,28 @@ export default function DocumentsPage() {
     return cat?.label || 'Other'
   }
 
+  // Helper to get tags from a document
+  const getDocumentTags = (doc: DocumentWithTagsExtended): TagType[] => {
+    if (!doc.document_tags) return []
+    return doc.document_tags
+      .map(dt => dt.tag)
+      .filter((tag): tag is TagType => tag !== null && tag !== undefined)
+  }
+
   const filteredDocuments = getSortedDocuments(
-    documents.filter(doc =>
-      doc.original_filename.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.description?.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    documents.filter(doc => {
+      // Search filter
+      const matchesSearch =
+        doc.original_filename.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        doc.description?.toLowerCase().includes(searchQuery.toLowerCase())
+
+      // Tag filter - document must have ALL selected tags
+      const matchesTags = tagFilter.length === 0 || tagFilter.every(tagId =>
+        doc.document_tags?.some(dt => dt.tag?.id === tagId)
+      )
+
+      return matchesSearch && matchesTags
+    })
   )
 
   if (loading) {
@@ -657,6 +711,17 @@ export default function DocumentsPage() {
                     Categorize
                   </button>
                   <button
+                    onClick={() => setShowBulkTag(!showBulkTag)}
+                    className={`px-3 py-1.5 rounded-lg transition-colors text-sm font-medium flex items-center gap-1.5 ${
+                      showBulkTag
+                        ? 'bg-cyan-600 text-white'
+                        : 'bg-cyan-100 text-cyan-700 hover:bg-cyan-200'
+                    }`}
+                  >
+                    <Tag className="w-4 h-4" />
+                    Add Tags
+                  </button>
+                  <button
                     onClick={() => setShowBulkReassign(!showBulkReassign)}
                     className={`px-3 py-1.5 rounded-lg transition-colors text-sm font-medium flex items-center gap-1.5 ${
                       showBulkReassign
@@ -696,6 +761,8 @@ export default function DocumentsPage() {
                       setSelectedDocs(new Set())
                       setShowBulkCategorize(false)
                       setShowBulkReassign(false)
+                      setShowBulkTag(false)
+                      setBulkTagIds([])
                     }}
                     className="px-3 py-1.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
                   >
@@ -752,6 +819,24 @@ export default function DocumentsPage() {
                     className="px-4 py-1.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium"
                   >
                     Apply
+                  </button>
+                </div>
+              )}
+
+              {/* Bulk Tag Panel */}
+              {showBulkTag && (
+                <div className="flex items-center gap-3 pt-3 border-t border-blue-200">
+                  <label className="text-sm font-medium text-gray-700">Add tags:</label>
+                  <TagFilterBar
+                    selectedTagIds={bulkTagIds}
+                    onTagsChange={setBulkTagIds}
+                  />
+                  <button
+                    onClick={handleBulkTag}
+                    disabled={bulkTagIds.length === 0}
+                    className="px-4 py-1.5 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                  >
+                    Apply Tags
                   </button>
                 </div>
               )}
@@ -913,6 +998,14 @@ export default function DocumentsPage() {
                   )}
                 </div>
 
+                {/* Tag Filter */}
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <TagFilterBar
+                    selectedTagIds={tagFilter}
+                    onTagsChange={setTagFilter}
+                  />
+                </div>
+
                 {/* Clear Filters */}
                 {hasActiveFilters() && (
                   <button
@@ -1020,10 +1113,14 @@ export default function DocumentsPage() {
                       </div>
                     </div>
 
-                    <div className="mb-3">
+                    <div className="mb-3 flex flex-wrap gap-1.5">
                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-${getCategoryColor(doc.category)}-100 text-${getCategoryColor(doc.category)}-800`}>
                         {getCategoryLabel(doc.category)}
                       </span>
+                      <TagList
+                        tags={getDocumentTags(doc)}
+                        maxVisible={2}
+                      />
                     </div>
 
                     {doc.description && (
@@ -1097,6 +1194,9 @@ export default function DocumentsPage() {
                         Category
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Tags
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                         Size
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
@@ -1141,6 +1241,12 @@ export default function DocumentsPage() {
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-${getCategoryColor(doc.category)}-100 text-${getCategoryColor(doc.category)}-800`}>
                             {getCategoryLabel(doc.category)}
                           </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <TagList
+                            tags={getDocumentTags(doc)}
+                            maxVisible={2}
+                          />
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-600">
                           {formatFileSize(doc.file_size)}

@@ -1,20 +1,23 @@
+import { Tag } from './tags'
+import { DocumentExtraction, DocumentAIInsights } from './ai'
+
 export interface Document {
     id: string
     case_id: string
     uploader_id: string
-    
+
     // File details
     filename: string
     original_filename: string
     file_size: number
     mime_type: string
     storage_path: string
-    
+
     // Organization
-    category: 'financial' | 'legal' | 'property' | 'custody' | 'other' | null
-    tags: string[] | null
+    category: 'financial' | 'legal' | 'property' | 'custody' | 'tax' | 'employment' | 'court' | 'other' | null
+    tags: string[] | null  // Legacy field (not used with new tag system)
     description: string | null
-    
+
     // Status
     is_encrypted: boolean
     is_shared_with_client: boolean
@@ -24,7 +27,24 @@ export interface Document {
     uploaded_at: string
     last_accessed_at: string | null
     archived_at: string | null
+
+    // AI Analysis (added in Session 4)
+    ai_category?: string | null
+    ai_confidence?: number | null
+    ai_reasoning?: string | null
+    ai_summary?: Record<string, unknown> | null
+    ai_extraction?: DocumentExtraction | null
+    ai_insights?: DocumentAIInsights | null
+    ai_processed_at?: string | null
   }
+
+// Extended document with joined tag data
+export interface DocumentWithTags extends Document {
+  document_tags?: { tag: Tag }[]
+}
+
+// Re-export DocumentAIInsights from ai.ts for convenience
+export type { DocumentAIInsights } from './ai'
   
   export interface DocumentUpload {
     file: File

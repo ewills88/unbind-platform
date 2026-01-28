@@ -86,9 +86,40 @@ export interface DocumentAIAnalysis {
   category: AIAnalysisResult
   summary?: DocumentSummary
   extraction?: DocumentExtraction
+  insights?: DocumentAIInsights
   analyzedAt: string
   status: 'pending' | 'analyzing' | 'complete' | 'error'
   error?: string
+}
+
+// Enhanced AI Insights (Session 5)
+export interface DocumentAIInsights {
+  sentiment: 'positive' | 'negative' | 'neutral' | 'urgent'
+  urgencyLevel: 'low' | 'medium' | 'high' | 'critical'
+  entities: {
+    people: string[]
+    organizations: string[]
+    locations: string[]
+  }
+  deadlines: {
+    date: string
+    description: string
+    isUrgent: boolean
+    daysUntil?: number
+  }[]
+  actionItems: {
+    action: string
+    priority: 'low' | 'medium' | 'high'
+    assignee?: string
+    dueDate?: string
+  }[]
+  suggestedTags: string[]
+  riskFactors?: {
+    factor: string
+    severity: 'low' | 'medium' | 'high'
+    recommendation: string
+  }[]
+  analyzedAt: string
 }
 
 export interface CaseDocumentAnalytics {
