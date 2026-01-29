@@ -8,7 +8,8 @@ interface UseTagsOptions {
 }
 
 export function useTags(options: UseTagsOptions = {}) {
-  const { documentId } = options
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { documentId: _documentId } = options
   const [tags, setTags] = useState<Tag[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)

@@ -24,6 +24,7 @@ import {
   Filter,
 } from 'lucide-react'
 import { Document, DOCUMENT_CATEGORIES } from '@/types/documents'
+import { MessageThread } from '@/components/messaging'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -64,6 +65,7 @@ export default function CaseDetailPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [userRole, setUserRole] = useState('')
+  const [currentUserId, setCurrentUserId] = useState('')
 
   useEffect(() => {
     loadCaseData()
@@ -91,6 +93,7 @@ export default function CaseDetailPage() {
       
       console.log('User role:', profile?.role)
       setUserRole(profile?.role || '')
+      setCurrentUserId(user.id)
 
       console.log('Querying cases table...')
       const { data: caseData, error: caseError } = await supabase
@@ -322,7 +325,7 @@ export default function CaseDetailPage() {
                 {[
                   { id: 'overview', label: 'Overview', icon: Briefcase },
                   { id: 'documents', label: 'Documents', icon: FileText, count: documents.length },
-                  { id: 'messages', label: 'Messages', icon: MessageSquare, disabled: true },
+                  { id: 'messages', label: 'Messages', icon: MessageSquare },
                   { id: 'tasks', label: 'Tasks', icon: CheckSquare, disabled: true },
                   { id: 'activity', label: 'Activity', icon: Activity, count: activities.length },
                 ].map((tab) => (
@@ -432,10 +435,13 @@ export default function CaseDetailPage() {
                       <p className="text-sm text-gray-700 mb-4">{caseData.current_step}</p>
                       {userRole === 'admin' && (
                         <div className="flex gap-2">
-                          <button className="px-3 py-1.5 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
+                          <button
+                            onClick={() => setActiveTab('messages')}
+                            className="px-3 py-1.5 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                          >
                             Message Client
                           </button>
-                          <button 
+                          <button
                             onClick={() => setActiveTab('documents')}
                             className="px-3 py-1.5 bg-white text-blue-600 border border-blue-600 rounded text-sm hover:bg-blue-50"
                           >
@@ -558,6 +564,16 @@ export default function CaseDetailPage() {
                       ))}
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* Messages Tab */}
+              {activeTab === 'messages' && currentUserId && (
+                <div className="h-[600px] -mx-6 -mb-6">
+                  <MessageThread
+                    caseId={caseId}
+                    currentUserId={currentUserId}
+                  />
                 </div>
               )}
 

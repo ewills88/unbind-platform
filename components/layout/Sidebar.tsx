@@ -15,12 +15,12 @@ import {
   CheckSquare,
   BookOpen,
   Menu,
-  X,
   LogOut,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { useUnreadCounts } from '@/hooks/useUnreadCounts'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -56,8 +56,12 @@ export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [profile, setProfile] = useState<Profile | null>(null)
+  const [userId, setUserId] = useState<string | null>(null)
   const pathname = usePathname()
   const router = useRouter()
+
+  // Get unread message counts
+  const { totalUnread } = useUnreadCounts(userId)
 
   useEffect(() => {
     loadProfile()
@@ -66,12 +70,13 @@ export default function Sidebar() {
   const loadProfile = async () => {
     const { data: { user } } = await supabase.auth.getUser()
     if (user) {
+      setUserId(user.id)
       const { data } = await supabase
         .from('profiles')
         .select('role, full_name, email')
         .eq('id', user.id)
         .single()
-      
+
       if (data) setProfile(data)
     }
   }
@@ -120,23 +125,40 @@ export default function Sidebar() {
         {navItems.map((item) => {
           const Icon = item.icon
           const isActive = pathname === item.href
-          
+          const showBadge = item.name === 'Messages' && totalUnread > 0
+
           return (
             <Link
               key={item.name}
               href={item.href}
               onClick={onNavigate}
               className={`
-                flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all
-                ${isActive 
-                  ? 'bg-blue-50 text-blue-700 shadow-sm' 
+                flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all relative
+                ${isActive
+                  ? 'bg-blue-50 text-blue-700 shadow-sm'
                   : 'text-gray-700 hover:bg-gray-100'
                 }
                 ${isCollapsed ? 'justify-center' : 'space-x-3'}
               `}
             >
-              <Icon className={`${isActive ? 'text-blue-700' : 'text-gray-500'} ${isCollapsed ? 'w-5 h-5' : 'w-5 h-5 flex-shrink-0'}`} />
-              {!isCollapsed && <span>{item.name}</span>}
+              <div className="relative">
+                <Icon className={`${isActive ? 'text-blue-700' : 'text-gray-500'} ${isCollapsed ? 'w-5 h-5' : 'w-5 h-5 flex-shrink-0'}`} />
+                {showBadge && isCollapsed && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-medium rounded-full flex items-center justify-center">
+                    {totalUnread > 9 ? '9+' : totalUnread}
+                  </span>
+                )}
+              </div>
+              {!isCollapsed && (
+                <>
+                  <span className="flex-1">{item.name}</span>
+                  {showBadge && (
+                    <span className="px-2 py-0.5 bg-red-500 text-white text-xs font-medium rounded-full">
+                      {totalUnread > 99 ? '99+' : totalUnread}
+                    </span>
+                  )}
+                </>
+              )}
             </Link>
           )
         })}
