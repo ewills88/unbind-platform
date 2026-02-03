@@ -25,6 +25,7 @@ import {
 } from 'lucide-react'
 import { Document, DOCUMENT_CATEGORIES } from '@/types/documents'
 import { MessageThread } from '@/components/messaging'
+import { EventList } from '@/components/events'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -49,7 +50,7 @@ interface Case {
   estimated_fees: number | null
 }
 
-type TabType = 'overview' | 'documents' | 'messages' | 'tasks' | 'activity'
+type TabType = 'overview' | 'documents' | 'messages' | 'events' | 'tasks' | 'activity'
 
 export default function CaseDetailPage() {
   const router = useRouter()
@@ -326,6 +327,7 @@ export default function CaseDetailPage() {
                   { id: 'overview', label: 'Overview', icon: Briefcase },
                   { id: 'documents', label: 'Documents', icon: FileText, count: documents.length },
                   { id: 'messages', label: 'Messages', icon: MessageSquare },
+                  { id: 'events', label: 'Events', icon: Calendar },
                   { id: 'tasks', label: 'Tasks', icon: CheckSquare, disabled: true },
                   { id: 'activity', label: 'Activity', icon: Activity, count: activities.length },
                 ].map((tab) => (
@@ -575,6 +577,14 @@ export default function CaseDetailPage() {
                     currentUserId={currentUserId}
                   />
                 </div>
+              )}
+
+              {/* Events Tab */}
+              {activeTab === 'events' && currentUserId && (
+                <EventList
+                  caseId={caseId}
+                  currentUserId={currentUserId}
+                />
               )}
 
               {/* Activity Tab */}

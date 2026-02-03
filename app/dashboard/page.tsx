@@ -9,6 +9,7 @@ import QuickActions from '@/components/dashboard/QuickActions'
 import RecentActivity from '@/components/dashboard/RecentActivity'
 import CaseProgressTracker from '@/components/dashboard/CaseProgressTracker'
 import DocumentAnalytics from '@/components/dashboard/DocumentAnalytics'
+import { UpcomingDeadlines } from '@/components/events'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -128,9 +129,10 @@ export default function DashboardPage() {
             </div>
           </main>
 
-          {/* Right Sidebar - Recent Activity */}
+          {/* Right Sidebar - Deadlines & Activity */}
           <aside className="hidden xl:block w-80 border-l border-gray-200 bg-white overflow-y-auto">
-            <div className="sticky top-0 p-6">
+            <div className="p-6 space-y-6">
+              <UpcomingDeadlines limit={5} />
               <RecentActivity />
             </div>
           </aside>
@@ -147,8 +149,15 @@ export default function DashboardPage() {
                 Track your divorce case progress and stay informed about next steps.
               </p>
             </div>
-            
-            <CaseProgressTracker />
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+              <div className="lg:col-span-2">
+                <CaseProgressTracker />
+              </div>
+              <div>
+                <UpcomingDeadlines limit={5} />
+              </div>
+            </div>
           </div>
         </main>
       )}

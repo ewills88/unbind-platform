@@ -18,6 +18,7 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  Bell,
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useUnreadCounts } from '@/hooks/useUnreadCounts'
@@ -39,6 +40,7 @@ const attorneyNavItems = [
   { name: 'Documents', href: '/dashboard/documents', icon: FileText },
   { name: 'Messages', href: '/dashboard/messages', icon: MessageSquare },
   { name: 'Calendar', href: '/dashboard/calendar', icon: Calendar },
+  { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
   { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
