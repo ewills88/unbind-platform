@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Plus, Search, X, Loader2 } from 'lucide-react'
+import { Plus, Search, Loader2 } from 'lucide-react'
 import { Tag, TagColor, TAG_COLORS } from '@/types/tags'
 import { TagBadge } from './TagBadge'
 

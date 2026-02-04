@@ -14,7 +14,6 @@ import {
   FileStack,
   Reply,
   Paperclip,
-  RefreshCw
 } from 'lucide-react'
 import { RelationshipType } from '@/types/tags'
 import { Document } from '@/types/documents'

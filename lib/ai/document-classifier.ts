@@ -28,6 +28,7 @@ export interface ClassificationResult {
    */
   export async function categorizeDocument(
     filename: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     fileUrl?: string
   ): Promise<ClassificationResult> {
     const lowerFilename = filename.toLowerCase()

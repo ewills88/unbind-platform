@@ -19,7 +19,6 @@ import {
   Share2,
   Filter,
   Search,
-  Calendar,
   FolderOpen,
   CheckSquare,
   Square,
@@ -33,6 +32,7 @@ import {
   FolderInput,
   Tag,
   BarChart3,
+  Calendar,
 } from 'lucide-react'
 
 const supabase = createClient(
@@ -80,7 +80,7 @@ export default function DocumentsPage() {
   const [loading, setLoading] = useState(true)
   const [showUpload, setShowUpload] = useState(false)
   const [userRole, setUserRole] = useState<string>('')
-  const [userId, setUserId] = useState<string>('')
+  const [, setUserId] = useState<string>('')
   const [selectedDocs, setSelectedDocs] = useState<Set<string>>(new Set())
   const [previewDoc, setPreviewDoc] = useState<Document | null>(null)
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
@@ -185,8 +185,8 @@ export default function DocumentsPage() {
       // Date filter
       if (dateFilter !== 'all') {
         const now = new Date()
-        let startDate = new Date()
-        
+        const startDate = new Date()
+
         switch (dateFilter) {
           case '7days':
             startDate.setDate(now.getDate() - 7)
@@ -198,7 +198,7 @@ export default function DocumentsPage() {
             startDate.setMonth(now.getMonth() - 3)
             break
         }
-        
+
         query = query.gte('uploaded_at', startDate.toISOString())
       }
 
@@ -253,8 +253,8 @@ export default function DocumentsPage() {
 
   const getSortedDocuments = (docs: Document[]) => {
     return [...docs].sort((a, b) => {
-      let aValue: any
-      let bValue: any
+      let aValue: string | number
+      let bValue: string | number
 
       switch (sortField) {
         case 'name':

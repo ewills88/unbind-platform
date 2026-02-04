@@ -226,7 +226,7 @@ export default function DocumentAIInsights({
       {!summary && !extraction && !loading && (
         <div className="text-center py-6 text-gray-500">
           <Sparkles className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-          <p className="text-sm">Click "Analyze" to generate AI insights</p>
+          <p className="text-sm">Click &quot;Analyze&quot; to generate AI insights</p>
           <p className="text-xs mt-1">Includes summary, key info extraction, and categorization</p>
         </div>
       )}

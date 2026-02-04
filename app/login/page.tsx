@@ -23,18 +23,18 @@ export default function LoginPage() {
     setLoading(true)
   
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
-  
+
       if (error) throw error
   
       // Direct navigation without alert
       router.push('/dashboard')
       router.refresh()
-    } catch (error: any) {
-      setError(error.message || 'Failed to login')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to login')
       setLoading(false)
     }
   }

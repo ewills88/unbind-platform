@@ -5,8 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import Sidebar from '@/components/layout/Sidebar'
 import DocumentUpload from '@/components/dashboard/DocumentUpload'
-import { 
-  ChevronLeft,
+import {
   Edit,
   FileText,
   MessageSquare,
@@ -14,18 +13,17 @@ import {
   Activity,
   Calendar,
   DollarSign,
-  Users,
   Briefcase,
   Upload,
   Eye,
   Download,
   Share2,
   Search,
-  Filter,
 } from 'lucide-react'
 import { Document, DOCUMENT_CATEGORIES } from '@/types/documents'
 import { MessageThread } from '@/components/messaging'
 import { EventList } from '@/components/events'
+import FinancialSummary from '@/components/financial/FinancialSummary'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -50,7 +48,20 @@ interface Case {
   estimated_fees: number | null
 }
 
-type TabType = 'overview' | 'documents' | 'messages' | 'events' | 'tasks' | 'activity'
+interface DocumentActivity {
+  id: string
+  activity_type: string
+  comment?: string | null
+  created_at: string
+  user?: {
+    full_name: string
+  } | null
+  document?: {
+    original_filename: string
+  } | null
+}
+
+type TabType = 'overview' | 'documents' | 'messages' | 'events' | 'financial' | 'tasks' | 'activity'
 
 export default function CaseDetailPage() {
   const router = useRouter()
@@ -59,7 +70,7 @@ export default function CaseDetailPage() {
 
   const [caseData, setCaseData] = useState<Case | null>(null)
   const [documents, setDocuments] = useState<Document[]>([])
-  const [activities, setActivities] = useState<any[]>([])
+  const [activities, setActivities] = useState<DocumentActivity[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<TabType>('overview')
   const [showUpload, setShowUpload] = useState(false)
@@ -328,6 +339,7 @@ export default function CaseDetailPage() {
                   { id: 'documents', label: 'Documents', icon: FileText, count: documents.length },
                   { id: 'messages', label: 'Messages', icon: MessageSquare },
                   { id: 'events', label: 'Events', icon: Calendar },
+                  { id: 'financial', label: 'Financial', icon: DollarSign },
                   { id: 'tasks', label: 'Tasks', icon: CheckSquare, disabled: true },
                   { id: 'activity', label: 'Activity', icon: Activity, count: activities.length },
                 ].map((tab) => (
@@ -585,6 +597,11 @@ export default function CaseDetailPage() {
                   caseId={caseId}
                   currentUserId={currentUserId}
                 />
+              )}
+
+              {/* Financial Tab */}
+              {activeTab === 'financial' && (
+                <FinancialSummary caseId={caseId} />
               )}
 
               {/* Activity Tab */}

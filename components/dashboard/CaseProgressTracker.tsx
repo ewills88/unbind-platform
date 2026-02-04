@@ -9,8 +9,6 @@ import {
   FileText,
   MessageSquare,
   CheckSquare,
-  Calendar,
-  User,
   Briefcase,
 } from 'lucide-react'
 
@@ -105,7 +103,7 @@ export default function CaseProgressTracker() {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
         <Briefcase className="w-12 h-12 text-gray-400 mx-auto mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">No Active Case</h3>
-        <p className="text-gray-600">You don't have an active case yet. Contact your attorney to get started.</p>
+        <p className="text-gray-600">You don&apos;t have an active case yet. Contact your attorney to get started.</p>
       </div>
     )
   }
@@ -131,7 +129,7 @@ export default function CaseProgressTracker() {
         <div className="bg-white rounded-lg p-4 mb-4">
           <div className="flex items-center gap-2 mb-2">
             <Clock className="w-5 h-5 text-blue-600" />
-            <p className="font-medium text-gray-900">What's needed next:</p>
+            <p className="font-medium text-gray-900">What&apos;s needed next:</p>
           </div>
           <p className="text-gray-700 ml-7">Please upload your 2023 tax return</p>
           <p className="text-sm text-gray-500 ml-7 mt-1">Expected timeline: 2-3 weeks remaining for this step</p>

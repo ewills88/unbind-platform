@@ -3,12 +3,11 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
-import { 
-  FileText, 
-  TrendingUp, 
+import {
+  FileText,
+  TrendingUp,
   Folder,
   HardDrive,
-  Calendar,
   BarChart3,
 } from 'lucide-react'
 import { DOCUMENT_CATEGORIES } from '@/types/documents'

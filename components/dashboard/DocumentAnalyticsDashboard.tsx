@@ -1,18 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
 import {
-  BarChart3,
   PieChart,
   DollarSign,
   FileText,
   AlertTriangle,
   CheckCircle,
-  Clock,
   TrendingUp,
-  Users,
-  Calendar,
   Building,
   Loader2
 } from 'lucide-react'
@@ -25,11 +20,6 @@ interface DocumentWithAI extends Document {
   ai_category?: string | null
   ai_confidence?: number | null
 }
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-)
 
 interface AnalyticsDashboardProps {
   caseId?: string
@@ -83,7 +73,7 @@ const REQUIRED_DOCUMENTS = [
   { type: 'custody', label: 'Parenting Plan', importance: 'optional' as const },
 ]
 
-export default function DocumentAnalyticsDashboard({ caseId, documents }: AnalyticsDashboardProps) {
+export default function DocumentAnalyticsDashboard({ documents }: AnalyticsDashboardProps) {
   const [loading, setLoading] = useState(false)
   const [categoryStats, setCategoryStats] = useState<CategoryStats[]>([])
   const [missingDocs, setMissingDocs] = useState<MissingDocument[]>([])
@@ -119,7 +109,6 @@ export default function DocumentAnalyticsDashboard({ caseId, documents }: Analyt
     setCategoryStats(stats)
 
     // Determine missing documents
-    const existingCategories = new Set(documents.map(d => d.category))
     const missing: MissingDocument[] = REQUIRED_DOCUMENTS
       .filter(req => {
         // Check if we have documents of this type
@@ -157,7 +146,7 @@ export default function DocumentAnalyticsDashboard({ caseId, documents }: Analyt
 
     // Extract financial data from AI extractions (if available)
     let totalAssets = 0
-    let totalDebts = 0
+    const totalDebts = 0
     let accountsCount = 0
 
     documents.forEach(doc => {

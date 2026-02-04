@@ -5,7 +5,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Plus,
-  Calendar,
 } from 'lucide-react'
 import {
   startOfMonth,
