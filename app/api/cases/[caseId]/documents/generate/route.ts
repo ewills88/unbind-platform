@@ -137,6 +137,7 @@ async function gatherCaseData(
       court_name: caseData.court_name || `${caseData.state_code} Superior Court`,
       court_address: '',
       county: caseData.county || '',
+      state_code: caseData.state_code || 'CA',
       marriage_date: intakeData.marriage?.marriageDate || caseData.marriage_date || '',
       separation_date: intakeData.marriage?.separationDate || caseData.separation_date || '',
       has_children: intakeData.children?.hasMinorChildren || false,

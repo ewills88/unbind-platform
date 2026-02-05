@@ -172,6 +172,7 @@ export interface FilledDocumentData {
     court_name?: string
     court_address?: string
     county?: string
+    state_code?: string
     marriage_date?: string
     separation_date?: string
     has_children?: boolean
