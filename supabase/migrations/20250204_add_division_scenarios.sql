@@ -1,8 +1,11 @@
 -- Migration: Add Division Scenarios for Property Division Planner
 -- Session 8 Checkpoint 3
 
+-- Drop existing table to ensure clean migration (handles partial migrations)
+DROP TABLE IF EXISTS division_scenarios CASCADE;
+
 -- Division Scenarios table
-CREATE TABLE IF NOT EXISTS division_scenarios (
+CREATE TABLE division_scenarios (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   case_id UUID NOT NULL REFERENCES cases(id) ON DELETE CASCADE,
   name VARCHAR(255) NOT NULL,
