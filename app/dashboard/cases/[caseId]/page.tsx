@@ -14,6 +14,7 @@ import {
   Calendar,
   DollarSign,
   Briefcase,
+  CreditCard,
   Upload,
   Eye,
   Download,
@@ -24,6 +25,7 @@ import { Document, DOCUMENT_CATEGORIES } from '@/types/documents'
 import { MessageThread } from '@/components/messaging'
 import { EventList } from '@/components/events'
 import FinancialSummary from '@/components/financial/FinancialSummary'
+import BillingDashboard from '@/components/billing/BillingDashboard'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -61,7 +63,7 @@ interface DocumentActivity {
   } | null
 }
 
-type TabType = 'overview' | 'documents' | 'messages' | 'events' | 'financial' | 'tasks' | 'activity'
+type TabType = 'overview' | 'documents' | 'messages' | 'events' | 'financial' | 'billing' | 'tasks' | 'activity'
 
 export default function CaseDetailPage() {
   const router = useRouter()
@@ -340,6 +342,7 @@ export default function CaseDetailPage() {
                   { id: 'messages', label: 'Messages', icon: MessageSquare },
                   { id: 'events', label: 'Events', icon: Calendar },
                   { id: 'financial', label: 'Financial', icon: DollarSign },
+                  { id: 'billing', label: 'Billing', icon: CreditCard },
                   { id: 'tasks', label: 'Tasks', icon: CheckSquare, disabled: true },
                   { id: 'activity', label: 'Activity', icon: Activity, count: activities.length },
                 ].map((tab) => (
@@ -602,6 +605,15 @@ export default function CaseDetailPage() {
               {/* Financial Tab */}
               {activeTab === 'financial' && (
                 <FinancialSummary caseId={caseId} />
+              )}
+
+              {/* Billing Tab */}
+              {activeTab === 'billing' && (
+                <BillingDashboard
+                  caseId={caseId}
+                  caseNumber={caseData.case_number || undefined}
+                  userRole={userRole}
+                />
               )}
 
               {/* Activity Tab */}

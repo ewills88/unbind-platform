@@ -10,6 +10,7 @@ import RecentActivity from '@/components/dashboard/RecentActivity'
 import CaseProgressTracker from '@/components/dashboard/CaseProgressTracker'
 import DocumentAnalytics from '@/components/dashboard/DocumentAnalytics'
 import { UpcomingDeadlines } from '@/components/events'
+import ClientBillingSection from '@/components/billing/ClientBillingSection'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -157,6 +158,11 @@ export default function DashboardPage() {
               <div>
                 <UpcomingDeadlines limit={5} />
               </div>
+            </div>
+
+            {/* Billing & Payments */}
+            <div className="mb-6">
+              <ClientBillingSection />
             </div>
           </div>
         </main>
