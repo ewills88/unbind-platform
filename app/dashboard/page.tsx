@@ -11,6 +11,7 @@ import CaseProgressTracker from '@/components/dashboard/CaseProgressTracker'
 import DocumentAnalytics from '@/components/dashboard/DocumentAnalytics'
 import { UpcomingDeadlines } from '@/components/events'
 import ClientBillingSection from '@/components/billing/ClientBillingSection'
+import MultiStateDashboard from '@/components/stateLaw/MultiStateDashboard'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -23,6 +24,44 @@ interface Profile {
   full_name: string | null
   role: string
   phone: string | null
+}
+
+function MultiStateDashboardWrapper() {
+  const router = useRouter()
+  const [casesByState, setCasesByState] = useState<{ state: string; count: number; cases: { id: string; client_name: string; status: string; filing_date: string | null }[] }[]>([])
+
+  useEffect(() => {
+    async function fetchCases() {
+      const { data: cases } = await supabase
+        .from('cases')
+        .select('id, client_name, status, filing_date, state')
+        .in('status', ['consultation', 'active', 'settlement'])
+        .order('created_at', { ascending: false })
+      if (!cases) return
+
+      const byState: Record<string, typeof cases> = {}
+      for (const c of cases) {
+        const st = c.state || 'Unknown'
+        if (!byState[st]) byState[st] = []
+        byState[st].push(c)
+      }
+      setCasesByState(
+        Object.entries(byState).map(([state, cs]) => ({
+          state,
+          count: cs.length,
+          cases: cs.map((c) => ({ id: c.id, client_name: c.client_name, status: c.status, filing_date: c.filing_date })),
+        }))
+      )
+    }
+    fetchCases()
+  }, [])
+
+  return (
+    <MultiStateDashboard
+      casesByState={casesByState}
+      onCaseClick={(id) => router.push(`/dashboard/cases/${id}`)}
+    />
+  )
 }
 
 export default function DashboardPage() {
@@ -127,6 +166,11 @@ export default function DashboardPage() {
               
               {/* Active Cases Overview */}
               <ActiveCasesOverview />
+
+              {/* Multi-State Dashboard */}
+              <div className="mt-6">
+                <MultiStateDashboardWrapper />
+              </div>
             </div>
           </main>
 

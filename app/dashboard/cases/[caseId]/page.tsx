@@ -15,6 +15,8 @@ import {
   DollarSign,
   Briefcase,
   CreditCard,
+  BookOpen,
+  Calculator,
   Upload,
   Eye,
   Download,
@@ -26,6 +28,13 @@ import { MessageThread } from '@/components/messaging'
 import { EventList } from '@/components/events'
 import FinancialSummary from '@/components/financial/FinancialSummary'
 import BillingDashboard from '@/components/billing/BillingDashboard'
+import StateLawPanel from '@/components/stateLaw/StateLawPanel'
+import ResidencyChecker from '@/components/stateLaw/ResidencyChecker'
+import FormSelector from '@/components/stateLaw/FormSelector'
+import PropertyDivisionCalculator from '@/components/calculators/PropertyDivisionCalculator'
+import ChildSupportCalculator from '@/components/calculators/ChildSupportCalculator'
+import SpousalSupportAnalyzerComponent from '@/components/calculators/SpousalSupportAnalyzer'
+import ProcedureChecklist from '@/components/procedures/ProcedureChecklist'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -63,7 +72,7 @@ interface DocumentActivity {
   } | null
 }
 
-type TabType = 'overview' | 'documents' | 'messages' | 'events' | 'financial' | 'billing' | 'tasks' | 'activity'
+type TabType = 'overview' | 'documents' | 'messages' | 'events' | 'financial' | 'billing' | 'state_law' | 'calculators' | 'tasks' | 'activity'
 
 export default function CaseDetailPage() {
   const router = useRouter()
@@ -343,6 +352,8 @@ export default function CaseDetailPage() {
                   { id: 'events', label: 'Events', icon: Calendar },
                   { id: 'financial', label: 'Financial', icon: DollarSign },
                   { id: 'billing', label: 'Billing', icon: CreditCard },
+                  { id: 'state_law', label: 'State Law', icon: BookOpen },
+                  { id: 'calculators', label: 'Calculators', icon: Calculator },
                   { id: 'tasks', label: 'Tasks', icon: CheckSquare, disabled: true },
                   { id: 'activity', label: 'Activity', icon: Activity, count: activities.length },
                 ].map((tab) => (
@@ -614,6 +625,64 @@ export default function CaseDetailPage() {
                   caseNumber={caseData.case_number || undefined}
                   userRole={userRole}
                 />
+              )}
+
+              {/* State Law Tab */}
+              {activeTab === 'state_law' && caseData.state && (
+                <div className="space-y-8">
+                  <StateLawPanel stateCode={caseData.state} />
+                  {userRole === 'admin' && (
+                    <>
+                      <ProcedureChecklist
+                        caseId={caseId}
+                        stateCode={caseData.state}
+                        filingDate={caseData.filing_date || undefined}
+                        hasChildren={caseData.has_children}
+                      />
+                      <ResidencyChecker caseId={caseId} stateCode={caseData.state} />
+                      <FormSelector
+                        stateCode={caseData.state}
+                        initialFacts={{
+                          has_children: caseData.has_children,
+                          case_type: (caseData.case_type as 'contested' | 'uncontested') || 'uncontested',
+                        }}
+                      />
+                    </>
+                  )}
+                </div>
+              )}
+              {activeTab === 'state_law' && !caseData.state && (
+                <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
+                  <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No State Specified</h3>
+                  <p className="text-gray-600">Set the filing state on this case to view state-specific divorce law information.</p>
+                </div>
+              )}
+
+              {/* Calculators Tab */}
+              {activeTab === 'calculators' && caseData.state && (
+                <div className="space-y-10">
+                  <PropertyDivisionCalculator
+                    caseId={caseId}
+                    stateCode={caseData.state}
+                  />
+                  <ChildSupportCalculator
+                    caseId={caseId}
+                    stateCode={caseData.state}
+                    hasChildren={caseData.has_children}
+                  />
+                  <SpousalSupportAnalyzerComponent
+                    caseId={caseId}
+                    stateCode={caseData.state}
+                  />
+                </div>
+              )}
+              {activeTab === 'calculators' && !caseData.state && (
+                <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
+                  <Calculator className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No State Specified</h3>
+                  <p className="text-gray-600">Set the filing state on this case to use state-specific calculators.</p>
+                </div>
               )}
 
               {/* Activity Tab */}

@@ -52,7 +52,7 @@ export default function BulkGenerator({
   async function fetchTemplates() {
     try {
       setLoading(true)
-      const response = await fetch(`/api/states/${stateCode}`)
+      const response = await fetch(`/api/states/${stateCode}?templates=true`)
       if (response.ok) {
         const data = await response.json()
         setAvailableTemplates(data.templates || [])
