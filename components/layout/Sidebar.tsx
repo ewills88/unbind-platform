@@ -46,10 +46,10 @@ const attorneyNavItems = [
 ]
 
 const clientNavItems = [
-  { name: 'My Case', href: '/dashboard', icon: Home },
-  { name: 'Documents', href: '/dashboard/documents', icon: FileText },
-  { name: 'Messages', href: '/dashboard/messages', icon: MessageSquare },
-  { name: 'Tasks', href: '/dashboard/tasks', icon: CheckSquare },
+  { name: 'My Case', href: '/client', icon: Home },
+  { name: 'Tasks', href: '/client/tasks', icon: CheckSquare },
+  { name: 'Documents', href: '/client/documents', icon: FileText },
+  { name: 'Messages', href: '/client/messages', icon: MessageSquare },
   { name: 'Resources', href: '/dashboard/resources', icon: BookOpen },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]

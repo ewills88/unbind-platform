@@ -1,0 +1,51 @@
+{
+  "name": "Unbind - Your Divorce Portal",
+  "short_name": "Unbind",
+  "description": "Track your divorce case, communicate with your attorney, and manage documents",
+  "start_url": "/client",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Messages",
+      "short_name": "Messages",
+      "description": "Message your attorney",
+      "url": "/client/messages"
+    },
+    {
+      "name": "Upload Document",
+      "short_name": "Upload",
+      "description": "Upload a document",
+      "url": "/client/documents/upload"
+    },
+    {
+      "name": "Tasks",
+      "short_name": "Tasks",
+      "description": "View your tasks",
+      "url": "/client/tasks"
+    }
+  ],
+  "categories": ["legal", "productivity", "lifestyle"]
+}
