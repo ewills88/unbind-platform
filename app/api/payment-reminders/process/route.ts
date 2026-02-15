@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 // Uses service role key since this is a cron/server-side operation
@@ -87,114 +87,141 @@ function formatCurrency(amount: number): string {
 }
 
 // POST - Process and send pending payment reminders (cron job endpoint)
-export async function POST() {
-  const today = new Date().toISOString().split('T')[0]
-
-  // Get pending reminders due today or earlier
-  const { data: reminders, error: fetchError } = await supabase
-    .from('payment_reminders')
-    .select(`
-      *,
-      invoice:invoices(
-        id,
-        invoice_number,
-        total_amount,
-        balance_due,
-        due_date,
-        status,
-        case_id
-      )
-    `)
-    .eq('status', 'pending')
-    .lte('scheduled_date', today)
-
-  if (fetchError) {
-    return NextResponse.json({ error: fetchError.message }, { status: 500 })
-  }
-
-  if (!reminders || reminders.length === 0) {
-    return NextResponse.json({ message: 'No reminders to send', processed: 0 })
-  }
-
-  const results = []
-
-  for (const reminder of reminders) {
-    const invoice = reminder.invoice
-    if (!invoice || invoice.status === 'paid' || invoice.status === 'void') {
-      // Cancel reminder for paid/void invoices
-      await supabase
-        .from('payment_reminders')
-        .update({ status: 'failed' })
-        .eq('id', reminder.id)
-      results.push({ id: reminder.id, status: 'cancelled', reason: 'Invoice paid or void' })
-      continue
+export async function POST(request: NextRequest) {
+  try {
+    // Basic auth check for cron endpoints
+    const authHeader = request.headers.get('authorization')
+    const cronSecret = process.env.CRON_SECRET
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    try {
-      // Get case info with client and attorney
-      const { data: caseData } = await supabase
-        .from('cases')
-        .select('client_id, attorney_id, client_name')
-        .eq('id', invoice.case_id)
-        .single()
+    const today = new Date().toISOString().split('T')[0]
 
-      if (!caseData) {
-        results.push({ id: reminder.id, status: 'skipped', reason: 'Case not found' })
+    // Get pending reminders due today or earlier
+    const { data: reminders, error: fetchError } = await supabase
+      .from('payment_reminders')
+      .select(`
+        *,
+        invoice:invoices(
+          id,
+          invoice_number,
+          total_amount,
+          balance_due,
+          due_date,
+          status,
+          case_id
+        )
+      `)
+      .eq('status', 'pending')
+      .lte('scheduled_date', today)
+
+    if (fetchError) {
+      return NextResponse.json({ error: fetchError.message }, { status: 500 })
+    }
+
+    if (!reminders || reminders.length === 0) {
+      return NextResponse.json({ message: 'No reminders to send', processed: 0 })
+    }
+
+    // Batch-fetch case and attorney data to avoid N+1
+    const caseIds = Array.from(new Set(
+      reminders.map(r => r.invoice?.case_id).filter(Boolean)
+    ))
+
+    const { data: casesData } = await supabase
+      .from('cases')
+      .select('id, client_id, attorney_id, client_name')
+      .in('id', caseIds)
+
+    const caseMap: Record<string, { client_id: string; attorney_id: string; client_name: string }> = {}
+    for (const c of casesData || []) {
+      caseMap[c.id] = c
+    }
+
+    const attorneyIds = Array.from(new Set(
+      (casesData || []).map(c => c.attorney_id).filter(Boolean)
+    ))
+
+    const { data: attorneysData } = await supabase
+      .from('profiles')
+      .select('id, full_name, email')
+      .in('id', attorneyIds)
+
+    const attorneyMap: Record<string, { full_name: string; email: string }> = {}
+    for (const a of attorneysData || []) {
+      attorneyMap[a.id] = { full_name: a.full_name, email: a.email }
+    }
+
+    const results = []
+
+    for (const reminder of reminders) {
+      const invoice = reminder.invoice
+      if (!invoice || invoice.status === 'paid' || invoice.status === 'void') {
+        await supabase
+          .from('payment_reminders')
+          .update({ status: 'failed' })
+          .eq('id', reminder.id)
+        results.push({ id: reminder.id, status: 'cancelled', reason: 'Invoice paid or void' })
         continue
       }
 
-      // Get attorney profile
-      const { data: attorney } = await supabase
-        .from('profiles')
-        .select('full_name, email')
-        .eq('id', caseData.attorney_id)
-        .single()
+      try {
+        const caseData = caseMap[invoice.case_id]
+        if (!caseData) {
+          results.push({ id: reminder.id, status: 'skipped', reason: 'Case not found' })
+          continue
+        }
 
-      const daysOverdue = Math.floor(
-        (new Date().getTime() - new Date(invoice.due_date).getTime()) / (1000 * 60 * 60 * 24)
-      )
+        const attorney = attorneyMap[caseData.attorney_id]
 
-      const template = reminderTemplates[reminder.reminder_type]
-      if (!template) {
-        results.push({ id: reminder.id, status: 'skipped', reason: 'Unknown template' })
-        continue
+        const daysOverdue = Math.floor(
+          (new Date().getTime() - new Date(invoice.due_date).getTime()) / (1000 * 60 * 60 * 24)
+        )
+
+        const template = reminderTemplates[reminder.reminder_type]
+        if (!template) {
+          results.push({ id: reminder.id, status: 'skipped', reason: 'Unknown template' })
+          continue
+        }
+
+        const vars = {
+          client_name: caseData.client_name || 'Client',
+          invoice_number: invoice.invoice_number,
+          amount: formatCurrency(invoice.balance_due),
+          due_date: new Date(invoice.due_date).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'long', day: 'numeric',
+          }),
+          days_overdue: daysOverdue.toString(),
+          payment_link: `${BASE_URL}/dashboard`,
+          attorney_name: attorney?.full_name || 'Your Attorney',
+        }
+
+        const subject = interpolate(template.subject, vars)
+        const body = interpolate(template.body, vars)
+
+        console.log(`[REMINDER] To: ${caseData.client_name}, Subject: ${subject}`)
+        console.log(`[REMINDER] Body: ${body}`)
+
+        await supabase
+          .from('payment_reminders')
+          .update({ status: 'sent', sent_at: new Date().toISOString() })
+          .eq('id', reminder.id)
+
+        results.push({ id: reminder.id, status: 'sent', subject })
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        await supabase
+          .from('payment_reminders')
+          .update({ status: 'failed', error_message: errorMessage })
+          .eq('id', reminder.id)
+        results.push({ id: reminder.id, status: 'failed', error: errorMessage })
       }
-
-      const vars = {
-        client_name: caseData.client_name || 'Client',
-        invoice_number: invoice.invoice_number,
-        amount: formatCurrency(invoice.balance_due),
-        due_date: new Date(invoice.due_date).toLocaleDateString('en-US', {
-          year: 'numeric', month: 'long', day: 'numeric',
-        }),
-        days_overdue: daysOverdue.toString(),
-        payment_link: `${BASE_URL}/dashboard`,
-        attorney_name: attorney?.full_name || 'Your Attorney',
-      }
-
-      const subject = interpolate(template.subject, vars)
-      const body = interpolate(template.body, vars)
-
-      // Log the reminder (in production, this would send an actual email)
-      console.log(`[REMINDER] To: ${caseData.client_name}, Subject: ${subject}`)
-      console.log(`[REMINDER] Body: ${body}`)
-
-      // Mark as sent
-      await supabase
-        .from('payment_reminders')
-        .update({ status: 'sent', sent_at: new Date().toISOString() })
-        .eq('id', reminder.id)
-
-      results.push({ id: reminder.id, status: 'sent', subject })
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      await supabase
-        .from('payment_reminders')
-        .update({ status: 'failed', error_message: errorMessage })
-        .eq('id', reminder.id)
-      results.push({ id: reminder.id, status: 'failed', error: errorMessage })
     }
-  }
 
-  return NextResponse.json({ message: 'Processing complete', processed: results.length, results })
+    return NextResponse.json({ message: 'Processing complete', processed: results.length, results })
+  } catch (error) {
+    console.error('Payment reminders process error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }

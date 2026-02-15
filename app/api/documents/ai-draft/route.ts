@@ -367,8 +367,8 @@ INSTRUCTIONS:
   }
 }
 
-// Common drafting prompts for the UI
-export const COMMON_DRAFTING_PROMPTS = [
+// Common drafting prompts for the UI (not exported to avoid Next.js route constraint)
+const COMMON_DRAFTING_PROMPTS = [
   {
     category: 'Custody',
     prompts: [

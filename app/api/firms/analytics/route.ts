@@ -64,33 +64,58 @@ export async function GET(request: NextRequest) {
     const prevPeriodStartStr = prevPeriodStart.toISOString()
     const prevPeriodEndStr = prevPeriodEnd.toISOString()
 
-    // Get current period invoices
-    const { data: currentInvoices } = await supabase
-      .from('invoices')
-      .select('total_amount, amount_paid, status, case_id')
-      .in('case_id', (await supabase
-        .from('cases')
-        .select('id')
-        .eq('firm_id', firmId)
-      ).data?.map(c => c.id) || [])
-      .gte('created_at', periodStartStr)
+    // Fetch firm case IDs ONCE
+    const { data: firmCases } = await supabase
+      .from('cases')
+      .select('id')
+      .eq('firm_id', firmId)
 
-    // Get previous period invoices for comparison
-    const { data: prevInvoices } = await supabase
-      .from('invoices')
-      .select('total_amount, amount_paid')
-      .in('case_id', (await supabase
-        .from('cases')
-        .select('id')
-        .eq('firm_id', firmId)
-      ).data?.map(c => c.id) || [])
-      .gte('created_at', prevPeriodStartStr)
-      .lte('created_at', prevPeriodEndStr)
+    const caseIds = (firmCases || []).map(c => c.id)
 
-    const currentRevenue = (currentInvoices || []).reduce((sum, inv) => sum + (inv.total_amount || 0), 0)
-    const prevRevenue = (prevInvoices || []).reduce((sum, inv) => sum + (inv.total_amount || 0), 0)
-    const currentCollected = (currentInvoices || []).reduce((sum, inv) => sum + (inv.amount_paid || 0), 0)
-    const prevCollected = (prevInvoices || []).reduce((sum, inv) => sum + (inv.amount_paid || 0), 0)
+    if (caseIds.length === 0) {
+      // No cases, return empty metrics
+      const { count: activeCases } = await supabase
+        .from('cases')
+        .select('*', { count: 'exact', head: true })
+        .eq('firm_id', firmId)
+        .eq('status', 'active')
+
+      return NextResponse.json({
+        metrics: {
+          total_revenue: 0,
+          revenue_change_percent: 0,
+          revenue_trend: 'flat',
+          active_cases: activeCases || 0,
+          cases_change_percent: 0,
+          collection_rate: 0,
+          collection_change_percent: 0,
+          client_satisfaction_score: 0,
+          satisfaction_change: 0,
+          revenue_history: [],
+        }
+      })
+    }
+
+    // Fetch ALL invoices for firm cases in one query (covers both periods + history)
+    const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 11, 1)
+    const { data: allInvoices } = await supabase
+      .from('invoices')
+      .select('total_amount, amount_paid, status, case_id, created_at')
+      .in('case_id', caseIds)
+      .gte('created_at', twelveMonthsAgo.toISOString())
+
+    // Filter invoices in memory for each period
+    const currentInvoices = (allInvoices || []).filter(
+      inv => new Date(inv.created_at) >= periodStart
+    )
+    const prevInvoices = (allInvoices || []).filter(
+      inv => new Date(inv.created_at) >= prevPeriodStart && new Date(inv.created_at) <= prevPeriodEnd
+    )
+
+    const currentRevenue = currentInvoices.reduce((sum, inv) => sum + (inv.total_amount || 0), 0)
+    const prevRevenue = prevInvoices.reduce((sum, inv) => sum + (inv.total_amount || 0), 0)
+    const currentCollected = currentInvoices.reduce((sum, inv) => sum + (inv.amount_paid || 0), 0)
+    const prevCollected = prevInvoices.reduce((sum, inv) => sum + (inv.amount_paid || 0), 0)
 
     const revenueChange = prevRevenue > 0 ? Math.round(((currentRevenue - prevRevenue) / prevRevenue) * 100) : 0
     const collectionRate = currentRevenue > 0 ? Math.round((currentCollected / currentRevenue) * 100) : 0
@@ -103,34 +128,22 @@ export async function GET(request: NextRequest) {
       .eq('firm_id', firmId)
       .eq('status', 'active')
 
-    const { count: prevActiveCases } = await supabase
-      .from('cases')
-      .select('*', { count: 'exact', head: true })
-      .eq('firm_id', firmId)
-      .eq('status', 'active')
-
-    // Revenue history (last 12 months)
+    // Revenue history (last 12 months) - computed from allInvoices in memory
     const revenueHistory = []
     for (let i = 11; i >= 0; i--) {
       const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1)
       const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0)
       const monthLabel = monthStart.toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
 
-      const { data: monthInvoices } = await supabase
-        .from('invoices')
-        .select('total_amount, amount_paid')
-        .in('case_id', (await supabase
-          .from('cases')
-          .select('id')
-          .eq('firm_id', firmId)
-        ).data?.map(c => c.id) || [])
-        .gte('created_at', monthStart.toISOString())
-        .lte('created_at', monthEnd.toISOString())
+      const monthInvoices = (allInvoices || []).filter(inv => {
+        const d = new Date(inv.created_at)
+        return d >= monthStart && d <= monthEnd
+      })
 
       revenueHistory.push({
         month: monthLabel,
-        revenue: (monthInvoices || []).reduce((sum, inv) => sum + (inv.total_amount || 0), 0),
-        collected: (monthInvoices || []).reduce((sum, inv) => sum + (inv.amount_paid || 0), 0),
+        revenue: monthInvoices.reduce((sum, inv) => sum + (inv.total_amount || 0), 0),
+        collected: monthInvoices.reduce((sum, inv) => sum + (inv.amount_paid || 0), 0),
       })
     }
 

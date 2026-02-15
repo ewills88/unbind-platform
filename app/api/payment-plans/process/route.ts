@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 
@@ -29,8 +29,16 @@ function calculateNextPaymentDate(currentDate: string, frequency: string): strin
 }
 
 // POST - Process scheduled payment plan charges (cron job endpoint)
-export async function POST() {
-  const today = new Date().toISOString().split('T')[0]
+export async function POST(request: NextRequest) {
+  try {
+    // Basic auth check for cron endpoints
+    const authHeader = request.headers.get('authorization')
+    const cronSecret = process.env.CRON_SECRET
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const today = new Date().toISOString().split('T')[0]
 
   // Get all active payment plans with auto_charge where next_payment_date <= today
   const { data: duePlans, error: fetchError } = await supabase
@@ -126,4 +134,8 @@ export async function POST() {
   }
 
   return NextResponse.json({ message: 'Processing complete', processed: results.length, results })
+  } catch (error) {
+    console.error('Payment plans process error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }

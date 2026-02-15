@@ -68,43 +68,40 @@ export async function GET(request: NextRequest) {
       profileMap[p.id] = { full_name: p.full_name || p.email, email: p.email }
     }
 
-    // Build performance data per attorney
+    // Batch-fetch all cases for these attorneys in one query
+    const { data: allCases } = await supabase
+      .from('cases')
+      .select('id, attorney_id, status')
+      .in('attorney_id', memberIds)
+
+    // Batch-fetch all billable time entries for these attorneys in one query
+    let timeQuery = supabase
+      .from('time_entries')
+      .select('duration_minutes, billable, amount, activity_type, attorney_id')
+      .in('attorney_id', memberIds)
+      .eq('billable', true)
+
+    if (startDate) timeQuery = timeQuery.gte('entry_date', startDate)
+    if (endDate) timeQuery = timeQuery.lte('entry_date', endDate)
+
+    const { data: allTimeEntries } = await timeQuery
+
+    // Build performance data per attorney (in-memory filtering)
     const performance = []
 
     for (const memberId of memberIds) {
-      // Active cases
-      const { count: activeCases } = await supabase
-        .from('cases')
-        .select('*', { count: 'exact', head: true })
-        .eq('attorney_id', memberId)
-        .eq('status', 'active')
+      const memberCases = (allCases || []).filter(c => c.attorney_id === memberId)
+      const activeCases = memberCases.filter(c => c.status === 'active').length
+      const caseCount = memberCases.length
 
-      // Time entries (billable hours)
-      let timeQuery = supabase
-        .from('time_entries')
-        .select('duration_minutes, billable, amount, activity_type')
-        .eq('attorney_id', memberId)
-        .eq('billable', true)
-
-      if (startDate) timeQuery = timeQuery.gte('entry_date', startDate)
-      if (endDate) timeQuery = timeQuery.lte('entry_date', endDate)
-
-      const { data: timeEntries } = await timeQuery
-
-      const billableHours = (timeEntries || []).reduce(
+      const memberTimeEntries = (allTimeEntries || []).filter(t => t.attorney_id === memberId)
+      const billableHours = memberTimeEntries.reduce(
         (sum, t) => sum + (t.duration_minutes || 0) / 60, 0
       )
-      const revenue = (timeEntries || []).reduce(
+      const revenue = memberTimeEntries.reduce(
         (sum, t) => sum + (t.amount || 0), 0
       )
 
-      // Case values
-      const { data: cases } = await supabase
-        .from('cases')
-        .select('id')
-        .eq('attorney_id', memberId)
-
-      const caseCount = cases?.length || 0
       const avgCaseValue = caseCount > 0 ? revenue / caseCount : 0
 
       // Utilization (assuming 8hr day, ~22 working days)
@@ -122,7 +119,7 @@ export async function GET(request: NextRequest) {
         full_name: name,
         email: prof?.email || '',
         initials,
-        active_cases: activeCases || 0,
+        active_cases: activeCases,
         billable_hours: Math.round(billableHours * 10) / 10,
         revenue: Math.round(revenue * 100) / 100,
         avg_case_value: Math.round(avgCaseValue * 100) / 100,
