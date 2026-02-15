@@ -19,6 +19,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Bell,
+  Users,
+  ClipboardList,
+  Library,
+  PieChart,
+  Activity,
+  DollarSign,
+  CreditCard,
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useUnreadCounts } from '@/hooks/useUnreadCounts'
@@ -32,6 +39,11 @@ interface Profile {
   role: string
   full_name: string
   email: string
+  current_firm_id: string | null
+}
+
+interface FirmInfo {
+  name: string
 }
 
 const attorneyNavItems = [
@@ -58,6 +70,7 @@ export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [profile, setProfile] = useState<Profile | null>(null)
+  const [firmInfo, setFirmInfo] = useState<FirmInfo | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const pathname = usePathname()
   const router = useRouter()
@@ -75,11 +88,22 @@ export default function Sidebar() {
       setUserId(user.id)
       const { data } = await supabase
         .from('profiles')
-        .select('role, full_name, email')
+        .select('role, full_name, email, current_firm_id')
         .eq('id', user.id)
         .single()
 
-      if (data) setProfile(data)
+      if (data) {
+        setProfile(data)
+        // Load firm info if user belongs to a firm
+        if (data.current_firm_id) {
+          const { data: firm } = await supabase
+            .from('firms')
+            .select('name')
+            .eq('id', data.current_firm_id)
+            .single()
+          if (firm) setFirmInfo(firm)
+        }
+      }
     }
   }
 
@@ -88,7 +112,21 @@ export default function Sidebar() {
     router.push('/login')
   }
 
-  const navItems = profile?.role === 'admin' ? attorneyNavItems : clientNavItems
+  const navItems = profile?.role === 'admin'
+    ? profile.current_firm_id
+      ? [
+          ...attorneyNavItems.slice(0, -1),
+          { name: 'Firm Overview', href: '/dashboard/firm', icon: PieChart },
+          { name: 'My Tasks', href: '/dashboard/my-tasks', icon: ClipboardList },
+          { name: 'Templates', href: '/dashboard/templates', icon: Library },
+          { name: 'Workload', href: '/dashboard/workload', icon: Activity },
+          { name: 'Financial', href: '/dashboard/reports/financial', icon: DollarSign },
+          { name: 'Team', href: '/dashboard/team', icon: Users },
+          { name: 'Subscription', href: '/dashboard/settings/subscription', icon: CreditCard },
+          ...attorneyNavItems.slice(-1),
+        ]
+      : attorneyNavItems
+    : clientNavItems
 
   const getInitials = (name: string) => {
     return name
@@ -119,6 +157,9 @@ export default function Sidebar() {
         className="h-12 w-auto"
       />
     </div>
+  )}
+  {firmInfo && !isCollapsed && (
+    <p className="text-xs text-gray-500 mt-1 truncate">{firmInfo.name}</p>
   )}
 </div>
 
