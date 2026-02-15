@@ -19,11 +19,11 @@ async function getAuthenticatedClient() {
 // GET /api/documents/[documentId]/versions
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ documentId: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient()
-    const { documentId } = await params
+    const { id: documentId } = await params
 
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -58,11 +58,11 @@ export async function GET(
 // POST /api/documents/[documentId]/versions
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ documentId: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient()
-    const { documentId } = await params
+    const { id: documentId } = await params
 
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
