@@ -236,6 +236,49 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       if (body[f] !== undefined) updateData[f] = body[f]
     }
 
+    // Get old status before updating (for timeline events)
+    let oldStatus: string | null = null
+    if (body.status) {
+      const { data: current } = await supabase
+        .from('settlement_proposals')
+        .select('status, case_id, firm_id, title, created_by_party')
+        .eq('id', id)
+        .single()
+      oldStatus = current?.status || null
+
+      // Auto-create timeline events for status changes
+      if (current && body.status !== oldStatus) {
+        const eventTypes: Record<string, string> = {
+          accepted: 'terms_accepted',
+          rejected: 'terms_rejected',
+          expired: 'expiration',
+          withdrawn: 'withdrawn',
+          received: 'proposal_received',
+        }
+        const eventType = eventTypes[body.status]
+        if (eventType) {
+          const titles: Record<string, string> = {
+            terms_accepted: `Accepted: ${current.title}`,
+            terms_rejected: `Rejected: ${current.title}`,
+            expiration: `Expired: ${current.title}`,
+            withdrawn: `Withdrawn: ${current.title}`,
+            proposal_received: `Received: ${current.title}`,
+          }
+          await supabase.from('negotiation_events').insert({
+            case_id: current.case_id,
+            firm_id: current.firm_id,
+            event_type: eventType,
+            event_date: new Date().toISOString(),
+            proposal_id: id,
+            title: titles[eventType],
+            from_party: current.created_by_party || 'both',
+            is_milestone: eventType === 'terms_accepted',
+            created_by: user.id,
+          })
+        }
+      }
+    }
+
     const { data, error } = await supabase
       .from('settlement_proposals')
       .update(updateData)
