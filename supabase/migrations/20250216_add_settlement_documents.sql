@@ -252,15 +252,15 @@ CREATE POLICY "Users can create versions of their case documents"
 -- ============================================================================
 CREATE OR REPLACE TRIGGER set_settlement_template_sections_updated
   BEFORE UPDATE ON settlement_template_sections
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE OR REPLACE TRIGGER set_document_signatures_updated
   BEFORE UPDATE ON document_signatures
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE OR REPLACE TRIGGER set_document_review_comments_updated
   BEFORE UPDATE ON document_review_comments
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================================================
 -- Seed California MSA Template Sections
