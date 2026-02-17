@@ -1,11 +1,11 @@
 -- Session 17 CP3: Settlement Agreement Generation, Document Workflow & Analytics
 -- Builds on existing generated_documents and document_templates tables
--- Adds: template sections (state-specific content), signatures, review comments
+-- Adds: template sections (state-specific content), signatures (enhanced), review comments, versions
 
 -- ============================================================================
 -- Settlement Template Sections (state-specific MSA clause text)
 -- ============================================================================
-CREATE TABLE settlement_template_sections (
+CREATE TABLE IF NOT EXISTS settlement_template_sections (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
   -- Which state/template this belongs to
@@ -37,8 +37,10 @@ CREATE TABLE settlement_template_sections (
 );
 
 -- ============================================================================
--- Document Signatures
+-- Document Signatures (drop existing limited schema, recreate with full fields)
 -- ============================================================================
+DROP TABLE IF EXISTS document_signatures CASCADE;
+
 CREATE TABLE document_signatures (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
@@ -78,9 +80,9 @@ CREATE TABLE document_signatures (
 );
 
 -- ============================================================================
--- Document Review Comments
+-- Document Review Comments (separate from existing document_comments)
 -- ============================================================================
-CREATE TABLE document_review_comments (
+CREATE TABLE IF NOT EXISTS document_review_comments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
   document_id UUID NOT NULL REFERENCES generated_documents(id) ON DELETE CASCADE,
@@ -111,7 +113,7 @@ CREATE TABLE document_review_comments (
 -- ============================================================================
 -- Settlement Document Versions (track content changes)
 -- ============================================================================
-CREATE TABLE settlement_document_versions (
+CREATE TABLE IF NOT EXISTS settlement_document_versions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
   document_id UUID NOT NULL REFERENCES generated_documents(id) ON DELETE CASCADE,
@@ -133,13 +135,13 @@ CREATE TABLE settlement_document_versions (
 -- ============================================================================
 -- Indexes
 -- ============================================================================
-CREATE INDEX idx_settlement_template_sections_state ON settlement_template_sections(state_code);
-CREATE INDEX idx_settlement_template_sections_order ON settlement_template_sections(state_code, section_order);
-CREATE INDEX idx_document_signatures_document ON document_signatures(document_id);
-CREATE INDEX idx_document_signatures_status ON document_signatures(status);
-CREATE INDEX idx_document_review_comments_document ON document_review_comments(document_id);
-CREATE INDEX idx_document_review_comments_author ON document_review_comments(author_id);
-CREATE INDEX idx_settlement_document_versions_doc ON settlement_document_versions(document_id);
+CREATE INDEX IF NOT EXISTS idx_settlement_template_sections_state ON settlement_template_sections(state_code);
+CREATE INDEX IF NOT EXISTS idx_settlement_template_sections_order ON settlement_template_sections(state_code, section_order);
+CREATE INDEX IF NOT EXISTS idx_document_signatures_document ON document_signatures(document_id);
+CREATE INDEX IF NOT EXISTS idx_document_signatures_status ON document_signatures(status);
+CREATE INDEX IF NOT EXISTS idx_document_review_comments_document ON document_review_comments(document_id);
+CREATE INDEX IF NOT EXISTS idx_document_review_comments_author ON document_review_comments(author_id);
+CREATE INDEX IF NOT EXISTS idx_settlement_document_versions_doc ON settlement_document_versions(document_id);
 
 -- ============================================================================
 -- RLS Policies
@@ -150,12 +152,14 @@ ALTER TABLE document_review_comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE settlement_document_versions ENABLE ROW LEVEL SECURITY;
 
 -- Template sections: readable by all authenticated users (system data)
+DROP POLICY IF EXISTS "Authenticated users can read template sections" ON settlement_template_sections;
 CREATE POLICY "Authenticated users can read template sections"
   ON settlement_template_sections FOR SELECT
   TO authenticated
   USING (true);
 
 -- Signatures: access through document's case
+DROP POLICY IF EXISTS "Users can view signatures for their case documents" ON document_signatures;
 CREATE POLICY "Users can view signatures for their case documents"
   ON document_signatures FOR SELECT
   TO authenticated
@@ -168,6 +172,7 @@ CREATE POLICY "Users can view signatures for their case documents"
     )
   );
 
+DROP POLICY IF EXISTS "Users can manage signatures for their case documents" ON document_signatures;
 CREATE POLICY "Users can manage signatures for their case documents"
   ON document_signatures FOR ALL
   TO authenticated
@@ -181,6 +186,7 @@ CREATE POLICY "Users can manage signatures for their case documents"
   );
 
 -- Review comments: access through document's case
+DROP POLICY IF EXISTS "Users can view comments on their case documents" ON document_review_comments;
 CREATE POLICY "Users can view comments on their case documents"
   ON document_review_comments FOR SELECT
   TO authenticated
@@ -193,6 +199,7 @@ CREATE POLICY "Users can view comments on their case documents"
     )
   );
 
+DROP POLICY IF EXISTS "Users can add comments to their case documents" ON document_review_comments;
 CREATE POLICY "Users can add comments to their case documents"
   ON document_review_comments FOR INSERT
   TO authenticated
@@ -206,12 +213,14 @@ CREATE POLICY "Users can add comments to their case documents"
     )
   );
 
+DROP POLICY IF EXISTS "Users can update their own comments" ON document_review_comments;
 CREATE POLICY "Users can update their own comments"
   ON document_review_comments FOR UPDATE
   TO authenticated
   USING (author_id = auth.uid());
 
 -- Document versions: access through document's case
+DROP POLICY IF EXISTS "Users can view versions of their case documents" ON settlement_document_versions;
 CREATE POLICY "Users can view versions of their case documents"
   ON settlement_document_versions FOR SELECT
   TO authenticated
@@ -224,6 +233,7 @@ CREATE POLICY "Users can view versions of their case documents"
     )
   );
 
+DROP POLICY IF EXISTS "Users can create versions of their case documents" ON settlement_document_versions;
 CREATE POLICY "Users can create versions of their case documents"
   ON settlement_document_versions FOR INSERT
   TO authenticated
@@ -494,7 +504,9 @@ Date: ____________________          ________________________________________
                                     Attorney for Respondent',
 'Signature block for Petitioner, Respondent, and their attorneys.',
 ARRAY['petitioner_name', 'respondent_name'],
-true, 'Execution signature block');
+true, 'Execution signature block')
+
+ON CONFLICT (state_code, section_key) DO NOTHING;
 
 -- Texas basic template sections (abbreviated - key differences from CA)
 INSERT INTO settlement_template_sections (state_code, section_key, section_title, section_order, content_template, required_variables, is_required, description) VALUES
@@ -552,4 +564,6 @@ SIGNED on ____________________
 ________________________________________
 JUDGE PRESIDING',
 ARRAY['petitioner_name', 'respondent_name'],
-true, 'Texas signature block with judge signature');
+true, 'Texas signature block with judge signature')
+
+ON CONFLICT (state_code, section_key) DO NOTHING;
