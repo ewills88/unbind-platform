@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+.github
+.env.local
+.env*.local
+*.md
+tests
+e2e
+coverage
+playwright-report
+backups
+supabase/.temp
+session_*.docx
+nul
