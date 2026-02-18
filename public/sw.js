@@ -1,4 +1,4 @@
-const CACHE_NAME = 'unbind-client-v1';
+const CACHE_NAME = 'unbind-portal-v2';
 const STATIC_ASSETS = [
   '/offline.html',
 ];
@@ -66,7 +66,7 @@ self.addEventListener('fetch', (event) => {
 
 // Push notification handling
 self.addEventListener('push', (event) => {
-  let data = { title: 'Unbind', body: 'You have a new notification', url: '/client' };
+  let data = { title: 'Unbind', body: 'You have a new notification', url: '/portal/dashboard' };
 
   try {
     data = event.data.json();
@@ -76,10 +76,13 @@ self.addEventListener('push', (event) => {
 
   const options = {
     body: data.body,
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/icon-192x192.png',
+    icon: data.icon || '/icons/icon-192x192.png',
+    badge: data.badge || '/icons/icon-192x192.png',
     vibrate: [200, 100, 200],
-    data: { url: data.url || '/client' },
+    data: {
+      url: (data.data && data.data.url) || data.url || '/portal/dashboard',
+      notificationId: data.data && data.data.notificationId,
+    },
     actions: [
       { action: 'view', title: 'View' },
       { action: 'dismiss', title: 'Dismiss' },
@@ -95,7 +98,7 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  const url = event.notification.data?.url || '/client';
+  const url = event.notification.data?.url || '/portal/dashboard';
 
   if (event.action === 'dismiss') return;
 
@@ -103,7 +106,7 @@ self.addEventListener('notificationclick', (event) => {
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
       // Focus existing window if available
       for (const client of windowClients) {
-        if (client.url.includes('/client') && 'focus' in client) {
+        if ((client.url.includes('/portal') || client.url.includes('/client')) && 'focus' in client) {
           client.navigate(url);
           return client.focus();
         }

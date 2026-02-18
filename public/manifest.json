@@ -2,7 +2,7 @@
   "name": "Unbind - Your Divorce Portal",
   "short_name": "Unbind",
   "description": "Track your divorce case, communicate with your attorney, and manage documents",
-  "start_url": "/client",
+  "start_url": "/portal/dashboard",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",
@@ -32,19 +32,25 @@
       "name": "Messages",
       "short_name": "Messages",
       "description": "Message your attorney",
-      "url": "/client/messages"
+      "url": "/portal/messages"
     },
     {
-      "name": "Upload Document",
-      "short_name": "Upload",
-      "description": "Upload a document",
-      "url": "/client/documents/upload"
+      "name": "Documents",
+      "short_name": "Documents",
+      "description": "View shared documents",
+      "url": "/portal/documents"
     },
     {
       "name": "Tasks",
       "short_name": "Tasks",
       "description": "View your tasks",
-      "url": "/client/tasks"
+      "url": "/portal/tasks"
+    },
+    {
+      "name": "Billing",
+      "short_name": "Billing",
+      "description": "View invoices and payments",
+      "url": "/portal/billing"
     }
   ],
   "categories": ["legal", "productivity", "lifestyle"]
