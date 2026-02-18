@@ -6,7 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "test:unit": "vitest run --exclude e2e --exclude tests/integration --exclude tests/security",
+    "test:watch": "vitest watch",
+    "test:ui": "vitest --ui",
+    "test:integration": "vitest run tests/integration",
+    "test:security": "vitest run tests/security",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:a11y": "playwright test e2e/accessibility.spec.ts",
+    "test:all": "npm run test:unit && npm run test:integration && npm run test:e2e",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -53,15 +66,34 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
+    "@faker-js/faker": "^10.3.0",
+    "@playwright/test": "^1.58.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20",
     "@types/pdf-parse": "^1.1.5",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/supertest": "^6.0.3",
     "@types/uuid": "^10.0.0",
+    "@vitejs/plugin-react": "^5.1.4",
+    "@vitest/coverage-v8": "^4.0.18",
+    "@vitest/ui": "^4.0.18",
+    "axe-core": "^4.11.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
+    "factory.ts": "^1.4.2",
+    "jsdom": "^28.1.0",
+    "msw": "^2.12.10",
+    "playwright": "^1.58.2",
     "postcss": "^8",
+    "supertest": "^7.2.2",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.0.18",
+    "whatwg-fetch": "^3.6.20"
   }
 }

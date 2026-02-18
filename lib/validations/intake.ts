@@ -87,8 +87,8 @@ const childInfoSchema = z.object({
   custodyNotes: z.string().optional(),
 })
 
-// Step 3: Children & Custody
-export const childrenCustodySchema = z.object({
+// Step 3: Children & Custody (base object, before refinement)
+const childrenCustodyBaseSchema = z.object({
   hasMinorChildren: z.boolean(),
   children: z.array(childInfoSchema).default([]),
 
@@ -105,7 +105,9 @@ export const childrenCustodySchema = z.object({
   relocationConcerns: z.boolean().default(false),
   relocationDetails: z.string().optional(),
   parentingConcerns: z.string().optional(),
-}).refine(
+})
+
+export const childrenCustodySchema = childrenCustodyBaseSchema.refine(
   (data: { hasMinorChildren: boolean; children: unknown[] }) => !data.hasMinorChildren || data.children.length > 0,
   { message: 'Please add at least one child', path: ['children'] }
 )
@@ -186,7 +188,7 @@ export const completeIntakeSchema = z.object({
 // Partial schemas for auto-save (all fields optional)
 export const partialPersonalInfoSchema = personalInfoSchema.partial()
 export const partialMarriageDetailsSchema = marriageDetailsSchema.partial()
-export const partialChildrenCustodySchema = childrenCustodySchema.partial()
+export const partialChildrenCustodySchema = childrenCustodyBaseSchema.partial()
 export const partialFinancialOverviewSchema = financialOverviewSchema.partial()
 export const partialLegalGoalsSchema = legalGoalsSchema.partial()
 
