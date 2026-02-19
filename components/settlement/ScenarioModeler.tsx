@@ -194,7 +194,7 @@ export default function ScenarioModeler({ caseId }: Props) {
         body: JSON.stringify({ _action: 'convert' }),
       })
       if (res.ok) {
-        const d = await res.json()
+        const _d = await res.json()
         router.push(`/dashboard/cases/${caseId}/settlement/new`)
         fetchData()
       }

@@ -287,12 +287,11 @@ export class TylerEFilingService {
   // Case Search
   // ============================================================
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async searchCases(params: {
     courtLocationCode: string
     caseNumber?: string
     partyName?: string
-  }): Promise<any[]> {
+  }): Promise<Record<string, unknown>[]> {
     const queryParams = new URLSearchParams()
     if (params.caseNumber) queryParams.set('caseNumber', params.caseNumber)
     if (params.partyName) queryParams.set('partyName', params.partyName)

@@ -256,7 +256,7 @@ function PaymentForm({ invoice, amount, onSuccess, onError }: PaymentFormProps) 
           onSuccess(paymentIntent.id)
         }, 1500)
       }
-    } catch (err) {
+    } catch {
       onError('An unexpected error occurred')
       setProcessing(false)
     }

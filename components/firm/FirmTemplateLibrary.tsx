@@ -9,7 +9,6 @@ import {
   Scale,
   TrendingUp,
   Loader2,
-  Plus,
 } from 'lucide-react'
 import {
   FirmTemplate,

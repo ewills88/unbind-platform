@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import {
   Users, Plus, Calendar, MapPin, Video, Clock, Loader2,
   ChevronDown, ChevronUp, Trash2, X, FileText, AlertCircle,
-  CheckCircle, MessageSquare, Mic,
+  MessageSquare, Mic,
 } from 'lucide-react'
 import type {
   Deposition, DeponentType, DepositionLocationType, DepositionStatus,
@@ -15,12 +15,6 @@ import {
   DEPOSITION_STATUS_INFO, DEPONENT_TYPE_INFO,
   LOCATION_TYPE_INFO, NOTE_TYPE_INFO,
 } from '@/types/discovery'
-
-function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric', month: 'short', day: 'numeric',
-  })
-}
 
 function formatDateTime(dateString: string): string {
   return new Date(dateString).toLocaleString('en-US', {

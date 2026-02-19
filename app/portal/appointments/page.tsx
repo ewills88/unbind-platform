@@ -9,15 +9,9 @@ import {
 } from 'lucide-react'
 import {
   ClientAppointment, AppointmentType, AvailableSlot,
-  AppointmentLocationType, AppointmentStatus,
+  AppointmentLocationType,
   APPOINTMENT_LOCATION_LABELS, APPOINTMENT_STATUS_LABELS,
 } from '@/types/portal'
-
-function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('en-US', {
-    month: 'short', day: 'numeric', year: 'numeric',
-  })
-}
 
 function formatTime(dateStr: string): string {
   return new Date(dateStr).toLocaleTimeString('en-US', {

@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import {
   Users, Loader2, AlertCircle, CheckCircle2,
-  Clock, MapPin, Mail,
 } from 'lucide-react'
 import {
   SERVICE_METHOD_INFO,

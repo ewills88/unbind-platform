@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import {
-  Calendar, Plus, Loader2, X, Clock, MapPin,
-  Video, Phone, Monitor, Building, User, ChevronDown,
-  ChevronUp, CheckCircle2, AlertTriangle, Gavel,
+  Calendar, Plus, Loader2, X,
+  Video, Phone, Monitor, Building, User,
+  CheckCircle2, AlertTriangle, Gavel,
   ExternalLink, Circle,
 } from 'lucide-react'
 import {

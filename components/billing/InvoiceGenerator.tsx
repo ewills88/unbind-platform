@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import {
-  FileText, DollarSign, Calendar, Check, AlertCircle,
+  FileText, Check, AlertCircle,
   RefreshCw, ChevronRight, X
 } from 'lucide-react'
 import {

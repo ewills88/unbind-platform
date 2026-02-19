@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import {
   FileText, Download, Send, CheckCircle2, XCircle, Clock,
-  MessageSquare, PenTool, ArrowLeft, Loader2, Eye,
-  ChevronDown, ChevronUp, AlertCircle, RotateCcw,
+  MessageSquare, PenTool, ArrowLeft, Loader2,
+  ChevronDown, ChevronUp, RotateCcw,
 } from 'lucide-react'
 import type {
   SettlementDocument,

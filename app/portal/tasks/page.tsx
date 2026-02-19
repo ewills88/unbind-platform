@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   CheckSquare, Clock, Upload, FileText, AlertCircle,
-  ChevronDown, ChevronUp, Loader2, Filter, CheckCircle,
+  ChevronDown, ChevronUp, Loader2, CheckCircle,
   XCircle, Play, Send, ClipboardList,
 } from 'lucide-react'
 import { EnhancedClientTask, TaskStats } from '@/types/portal'

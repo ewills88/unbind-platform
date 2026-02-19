@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import {
   TrendingUp,
   TrendingDown,
@@ -9,7 +8,6 @@ import {
   HelpCircle,
   Info,
   Loader2,
-  ArrowRight,
 } from 'lucide-react'
 import {
   PieChart,
@@ -31,8 +29,8 @@ interface FinancialData {
   net_worth: number
   assets: Asset[]
   debts: Debt[]
-  income: any[]
-  expenses: any[]
+  income: Record<string, unknown>[]
+  expenses: Record<string, unknown>[]
   division_scenario: DivisionScenario | null
 }
 

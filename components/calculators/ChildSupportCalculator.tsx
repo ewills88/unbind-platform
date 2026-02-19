@@ -12,7 +12,7 @@ interface ChildSupportCalculatorProps {
 }
 
 export default function ChildSupportCalculator({
-  caseId,
+  caseId: _caseId,
   stateCode,
   hasChildren,
 }: ChildSupportCalculatorProps) {

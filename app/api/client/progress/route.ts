@@ -29,7 +29,7 @@ async function getAuthenticatedClient() {
 }
 
 // GET /api/client/progress - Get progress for the client's case
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient()
 

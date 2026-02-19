@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     for (const firm of firms) {
       try {
-        const { data, error } = await computeDailySnapshot(firm.id)
+        const { data: _data, error } = await computeDailySnapshot(firm.id)
         results.push({
           firm_id: firm.id,
           status: error ? 'error' : 'success',

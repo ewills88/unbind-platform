@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
 import {
   FileText, Clock, AlertTriangle, CheckCircle, Users,
-  Calendar, Loader2, ArrowRight, TrendingUp,
+  Loader2, ArrowRight,
   BarChart3, MapPin, Video,
 } from 'lucide-react'
 import { DISCOVERY_TYPE_INFO, DEPOSITION_STATUS_INFO } from '@/types/discovery'

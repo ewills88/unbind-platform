@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  FileText, CheckSquare, Mail, Loader2, AlertCircle, Plus, X,
+  FileText, CheckSquare, Mail, Loader2, AlertCircle, Plus,
 } from 'lucide-react'
 
 type TemplateTab = 'task' | 'email' | 'document'
@@ -47,11 +47,11 @@ interface DocTemplate {
 }
 
 export default function AdminTemplatesPage() {
-  const router = useRouter()
+  const _router = useRouter()
   const [tab, setTab] = useState<TemplateTab>('task')
   const [taskTemplates, setTaskTemplates] = useState<TaskTemplate[]>([])
-  const [emailTemplates, setEmailTemplates] = useState<EmailTemplate[]>([])
-  const [docTemplates, setDocTemplates] = useState<DocTemplate[]>([])
+  const [_emailTemplates, setEmailTemplates] = useState<EmailTemplate[]>([])
+  const [_docTemplates, setDocTemplates] = useState<DocTemplate[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -59,7 +59,7 @@ export default function AdminTemplatesPage() {
 
   const fetchTemplates = async () => {
     try {
-      const [taskRes, emailRes, docRes] = await Promise.all([
+      const [_taskRes, _emailRes, _docRes] = await Promise.all([
         fetch('/api/admin/settings').then(r => r.ok ? r.json() : { data: null }),
         fetch('/api/admin/settings').then(r => r.ok ? r.json() : { data: null }),
         fetch('/api/admin/settings').then(r => r.ok ? r.json() : { data: null }),

@@ -3,12 +3,11 @@
 import { useState, useEffect } from 'react'
 import {
   X, Send, Loader2, ChevronRight, ChevronLeft,
-  AlertTriangle, DollarSign, FileText, CheckCircle2,
+  AlertTriangle, FileText,
   Info, Lock,
 } from 'lucide-react'
 import {
   EFILING_PROVIDER_INFO,
-  formatEFilingFee,
   type EFilingPaymentAccount,
 } from '@/types/efiling'
 
@@ -50,7 +49,7 @@ interface CredentialInfo {
 }
 
 export default function EFilingSubmitModal({
-  caseId, filingId, filingName, firmId, stateCode, onClose, onSubmitted
+  caseId: _caseId, filingId, filingName, firmId, stateCode, onClose, onSubmitted
 }: Props) {
   const [step, setStep] = useState(1)
   const [submitting, setSubmitting] = useState(false)

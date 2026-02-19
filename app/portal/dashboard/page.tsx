@@ -6,9 +6,9 @@ import Link from 'next/link'
 import {
   MessageSquare, FileText, Calendar, CheckSquare,
   ArrowRight, AlertTriangle, Clock, DollarSign,
-  TrendingUp, Activity, User, Loader2,
+  Activity, User, Loader2,
 } from 'lucide-react'
-import { PortalDashboardData, ACTIVITY_TYPE_ICONS, CONVERSATION_TYPE_LABELS } from '@/types/portal'
+import { PortalDashboardData, ACTIVITY_TYPE_ICONS } from '@/types/portal'
 import { STAGE_DEFINITIONS, STAGE_ORDER, CaseStage } from '@/types/client'
 
 function formatDate(dateStr: string): string {
@@ -88,8 +88,6 @@ export default function PortalDashboardPage() {
   const stageIndex = data.progress
     ? STAGE_ORDER.indexOf(data.progress.current_stage as CaseStage)
     : 0
-  const totalStages = STAGE_ORDER.length
-
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Welcome Banner */}

@@ -21,7 +21,7 @@ export default function SignaturePanel({
   documentId,
   isAttorney,
   currentUserId,
-  documentStatus,
+  documentStatus: _documentStatus,
   onSignatureComplete
 }: SignaturePanelProps) {
   const [signatures, setSignatures] = useState<DocumentSignature[]>([])

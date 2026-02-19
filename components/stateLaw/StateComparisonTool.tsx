@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Scale, ArrowLeftRight } from 'lucide-react'
+import { ArrowLeftRight } from 'lucide-react'
 import { compareStates, getComparableStates } from '@/lib/stateComparison'
 
 export default function StateComparisonTool() {

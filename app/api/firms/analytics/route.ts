@@ -60,9 +60,9 @@ export async function GET(request: NextRequest) {
       prevPeriodEnd = new Date(now.getFullYear(), now.getMonth(), 0)
     }
 
-    const periodStartStr = periodStart.toISOString()
-    const prevPeriodStartStr = prevPeriodStart.toISOString()
-    const prevPeriodEndStr = prevPeriodEnd.toISOString()
+    const _periodStartStr = periodStart.toISOString()
+    const _prevPeriodStartStr = prevPeriodStart.toISOString()
+    const _prevPeriodEndStr = prevPeriodEnd.toISOString()
 
     // Fetch firm case IDs ONCE
     const { data: firmCases } = await supabase

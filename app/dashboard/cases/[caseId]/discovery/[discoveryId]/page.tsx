@@ -4,9 +4,9 @@ import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
 import {
-  ArrowLeft, Plus, Loader2, AlertTriangle, CheckSquare, Clock,
+  ArrowLeft, Plus, Loader2, AlertTriangle, Clock,
   FileText, ChevronDown, ChevronUp, X, Save, Trash2,
-  Download, History,
+  Download,
 } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'
 import type {
@@ -36,7 +36,7 @@ export default function DiscoveryDetailPage() {
   const [filterStatus, setFilterStatus] = useState<string>('all')
   const [selectedItems, setSelectedItems] = useState<string[]>([])
   const [showAddItems, setShowAddItems] = useState(false)
-  const [stateCode, setStateCode] = useState('CA')
+  const [stateCode, _setStateCode] = useState('CA')
 
   const fetchData = useCallback(async () => {
     try {

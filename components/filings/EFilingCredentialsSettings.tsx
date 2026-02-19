@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react'
 import {
   FileText, Plus, RefreshCw, Loader2, X,
-  CheckCircle2, AlertTriangle, Lock, Edit,
-  ExternalLink,
+  CheckCircle2, AlertTriangle, Lock,
 } from 'lucide-react'
 import {
   EFILING_PROVIDER_INFO,

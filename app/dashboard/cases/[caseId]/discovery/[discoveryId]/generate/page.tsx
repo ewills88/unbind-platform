@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
 import {
-  ArrowLeft, Download, FileText, Loader2, AlertTriangle, CheckCircle,
+  ArrowLeft, Download, Loader2, AlertTriangle, CheckCircle,
 } from 'lucide-react'
 import type { DiscoveryRequest, DiscoveryItem, DiscoveryType } from '@/types/discovery'
 import { DISCOVERY_TYPE_INFO } from '@/types/discovery'

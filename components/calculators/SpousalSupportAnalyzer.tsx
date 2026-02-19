@@ -11,7 +11,7 @@ interface SpousalSupportAnalyzerProps {
 }
 
 export default function SpousalSupportAnalyzerComponent({
-  caseId,
+  caseId: _caseId,
   stateCode,
 }: SpousalSupportAnalyzerProps) {
   const [input, setInput] = useState<SpousalSupportInput>({

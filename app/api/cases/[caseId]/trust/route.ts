@@ -142,7 +142,7 @@ export async function POST(
     }
 
     const body = await request.json()
-    const { action, amount, description, invoice_id, payment_method, check_number } = body
+    const { action, amount, description, invoice_id, check_number } = body
 
     if (!action || !amount) {
       return NextResponse.json(

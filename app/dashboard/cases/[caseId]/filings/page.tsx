@@ -20,7 +20,7 @@ export default function CaseFilingsPage() {
   const [selectedFilingId, setSelectedFilingId] = useState<string | null>(null)
   const [showNewFiling, setShowNewFiling] = useState(false)
   const [stateCode, setStateCode] = useState('CA')
-  const [spouseName, setSpouseName] = useState('')
+  const [spouseName, _setSpouseName] = useState('')
   const [refreshKey, setRefreshKey] = useState(0)
 
   // Fetch case info for state_code and spouse_name

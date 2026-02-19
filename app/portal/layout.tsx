@@ -7,7 +7,7 @@ import { createClient } from '@supabase/supabase-js'
 import {
   Home, MessageSquare, FileText, CheckSquare,
   DollarSign, Calendar, HelpCircle, LogOut,
-  MoreHorizontal, Menu, X, Bell,
+  MoreHorizontal, Bell,
 } from 'lucide-react'
 
 const supabase = createClient(

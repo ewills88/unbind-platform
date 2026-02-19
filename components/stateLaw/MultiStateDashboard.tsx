@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Map, Briefcase, AlertTriangle, Clock, Info, ChevronRight } from 'lucide-react'
+import { Map, Info, ChevronRight } from 'lucide-react'
 import StateComparisonTool from './StateComparisonTool'
 import { STATE_NAMES } from '@/types/stateLaw'
 

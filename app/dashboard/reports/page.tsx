@@ -5,8 +5,7 @@ import Sidebar from '@/components/layout/Sidebar'
 import {
   DollarSign, Users, Briefcase, Loader2, Download,
   TrendingUp, Clock, AlertTriangle, BarChart3,
-  PieChart, FileText, ChevronDown, ChevronUp,
-  Scale, Wallet, Receipt, Target, UserCheck,
+  Scale, Wallet, Receipt, Target,
   Calendar, Play, Pause, Trash2, Plus, X,
 } from 'lucide-react'
 import {
@@ -19,7 +18,7 @@ import { Progress } from '@/components/ui/progress'
 
 // Types from analytics services
 import type { RevenueReport, ARAgingReport, CollectionsReport, ProfitabilityReport, TrustAccountReport } from '@/lib/analytics/financialAnalytics'
-import type { AttorneyPerformanceReport, TeamPerformanceReport, ProductivityTrendReport } from '@/lib/analytics/attorneyAnalytics'
+import type { TeamPerformanceReport, ProductivityTrendReport } from '@/lib/analytics/attorneyAnalytics'
 import type { CaseLifecycleReport, CaseOutcomesReport, WorkloadReport } from '@/lib/analytics/caseAnalytics'
 
 type ReportCategory = 'financial' | 'attorney' | 'cases' | 'scheduled'

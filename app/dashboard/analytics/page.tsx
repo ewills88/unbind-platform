@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Sidebar from '@/components/layout/Sidebar'
 import {
-  DollarSign, Briefcase, Clock, TrendingUp, TrendingDown,
+  DollarSign, Briefcase, Clock, TrendingUp,
   Minus, Target, BarChart3, FileText, Loader2,
   ChevronDown, ChevronUp, ArrowUpRight, ArrowDownRight,
-  Users, PieChart, Calendar, Download, Plus, Star,
+  Users, PieChart, Star,
   AlertTriangle, CheckCircle2, XCircle,
 } from 'lucide-react'
 import {

@@ -6,7 +6,7 @@ import {
   ClipboardList, Loader2, AlertCircle, Filter, ChevronLeft, ChevronRight,
   User, Clock, FileText, Settings, Shield, Eye,
 } from 'lucide-react'
-import type { AuditLog, AuditAction } from '@/types/admin'
+import type { AuditLog } from '@/types/admin'
 
 const ACTION_ICONS: Record<string, typeof User> = {
   create: FileText,

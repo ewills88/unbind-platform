@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import {
   BarChart3, TrendingUp, Clock, FileText, Users,
   DollarSign, Scale, Loader2, CalendarDays,
-  CheckCircle2, XCircle, ArrowUpRight, ArrowDownRight,
 } from 'lucide-react'
 import { formatCurrency } from '@/types/settlement'
 

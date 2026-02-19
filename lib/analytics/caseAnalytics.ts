@@ -2,7 +2,7 @@
 // Case lifecycle, outcomes, and workload analysis
 
 import { createClient } from '@supabase/supabase-js'
-import { differenceInDays, startOfMonth, endOfMonth, subMonths } from 'date-fns'
+import { differenceInDays } from 'date-fns'
 
 function getServiceClient() {
   return createClient(

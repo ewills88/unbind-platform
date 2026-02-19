@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  CreditCard, Loader2, AlertCircle, Check, ExternalLink, ArrowUpRight,
+  Loader2, AlertCircle, Check, ExternalLink, ArrowUpRight,
   Receipt, Zap,
 } from 'lucide-react'
 import type { Subscription, SubscriptionPlan, SubscriptionInvoice } from '@/types/admin'

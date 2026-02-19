@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
-  Settings, Users, Shield, CreditCard, Columns3, FileText,
+  Users, Shield, CreditCard, Columns3, FileText,
   Puzzle, ClipboardList, Loader2, AlertCircle,
   Building2, ArrowRight,
 } from 'lucide-react'

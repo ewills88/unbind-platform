@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
-import { MessageSquare, Phone, Clock, ArrowLeft, Loader2, User } from 'lucide-react'
+import { MessageSquare, Phone, Clock, Loader2, User } from 'lucide-react'
 import { MessageThread } from '@/components/messaging'
 
 const supabase = createClient(

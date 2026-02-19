@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
-import { generateSettlementAgreement, buildVariables } from '@/lib/settlement/documentGenerator'
+import { generateSettlementAgreement } from '@/lib/settlement/documentGenerator'
 
 async function getAuthenticatedClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -184,11 +184,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     // Generate the document
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { buffer, renderedSections, variables } = await generateSettlementAgreement(
       fullProposal,
       caseInfo,
-      sections as any,
+      sections as unknown[],
       selected_sections,
       section_overrides
     )

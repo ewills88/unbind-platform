@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Scale, Plus, Trash2, Calculator, ArrowRight } from 'lucide-react'
-import { Asset, ClassifiedAsset, PropertyDivisionResult, EquitableDistributionFactors, EquitableDistributionResult } from '@/types/calculators'
+import { Asset, PropertyDivisionResult, EquitableDistributionFactors, EquitableDistributionResult } from '@/types/calculators'
 import { calculateCommunityPropertyDivision } from '@/lib/communityPropertyCalculator'
 import { calculateEquitableDistribution } from '@/lib/equitableDistributionCalculator'
 
@@ -21,7 +21,7 @@ const EMPTY_ASSET: Omit<Asset, 'id'> = {
 }
 
 export default function PropertyDivisionCalculator({
-  caseId,
+  caseId: _caseId,
   stateCode,
   marriageDate,
   separationDate,

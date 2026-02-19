@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     // Calculate date ranges
     const now = new Date()
     let periodStart: Date
-    let periodEnd: Date = now
+    const periodEnd: Date = now
     let prevPeriodStart: Date
     let prevPeriodEnd: Date
 

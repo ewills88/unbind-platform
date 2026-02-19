@@ -2,10 +2,10 @@
 
 import { useState, useMemo } from 'react'
 import {
-  CheckCircle2, Circle, Clock, AlertTriangle, FileText, ChevronDown, ChevronRight,
+  CheckCircle2, Circle, Clock, FileText, ChevronDown, ChevronRight,
   Calendar, ListChecks, Info,
 } from 'lucide-react'
-import { generateProcedureChecklist, GeneratedTask } from '@/lib/procedureGenerator'
+import { generateProcedureChecklist } from '@/lib/procedureGenerator'
 import { categorizeDeadlines, calculateProgress, getDeadlineLabel, getDeadlineColor } from '@/lib/deadlineMonitor'
 import { ProcedureTask, PROCEDURE_TYPE_INFO } from '@/types/procedures'
 

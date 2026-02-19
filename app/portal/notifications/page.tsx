@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation'
 import {
   Bell, MessageSquare, FileText, CheckSquare, Calendar,
   CreditCard, Briefcase, Clock, Loader2, CheckCheck,
-  AlertCircle, Archive, ChevronRight,
+  AlertCircle, ChevronRight,
 } from 'lucide-react'
-import { ClientNotification, NotificationCategory } from '@/types/portal'
+import { ClientNotification } from '@/types/portal'
 
 function formatRelativeTime(dateStr: string): string {
   const now = new Date()

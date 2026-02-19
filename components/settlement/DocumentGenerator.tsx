@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import {
   FileText, ChevronRight, ChevronLeft, Check, Download,
-  AlertCircle, Eye, Loader2,
+  AlertCircle, Loader2,
 } from 'lucide-react'
 import type {
   SettlementProposal,
@@ -35,7 +35,7 @@ export default function DocumentGenerator({ caseId, onGenerated }: Props) {
     includeSignatureBlock: true,
   })
 
-  const [previewSections, setPreviewSections] = useState<{ key: string; title: string; content: string }[]>([])
+  const [_previewSections, _setPreviewSections] = useState<{ key: string; title: string; content: string }[]>([])
 
   // Fetch proposals
   useEffect(() => {

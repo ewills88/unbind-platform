@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Bell, Check, CheckCheck, MessageSquare, FileText, DollarSign, Calendar, Trophy, ClipboardList } from 'lucide-react'
+import { Bell, CheckCheck, MessageSquare, FileText, DollarSign, Calendar, Trophy, ClipboardList } from 'lucide-react'
 import { ClientNotification, NotificationType } from '@/types/client'
 
 interface Props {

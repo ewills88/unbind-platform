@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import {
   FileText, Clock, AlertTriangle, CheckCircle2,
-  Plus, Filter, Loader2, ChevronRight,
+  Plus, Loader2, ChevronRight,
   Scale, DollarSign, Users, Search as SearchIcon,
   Gavel, FileDown, File,
 } from 'lucide-react'
@@ -12,8 +12,6 @@ import {
   FILING_CATEGORY_INFO,
   FILING_PRIORITY_INFO,
   formatFilingFee,
-  getDeadlineUrgency,
-  formatDeadlineCountdown,
   type FilingStatus,
   type FilingCategory,
   type CaseFiling,

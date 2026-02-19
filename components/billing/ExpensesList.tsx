@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import {
   Receipt, Plus, Filter, Search, Calendar,
-  DollarSign, RefreshCw, Edit2, Trash2, Check,
-  FileText, Paperclip
+  RefreshCw, Edit2, Trash2, Check,
+  Paperclip
 } from 'lucide-react'
 import {
   Expense,

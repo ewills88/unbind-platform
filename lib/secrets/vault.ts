@@ -79,7 +79,7 @@ export async function loadSecrets(): Promise<void> {
     })
 
     console.log('Secrets loaded successfully')
-  } catch (error) {
+  } catch {
     console.warn('AWS Secrets Manager not available, using environment variables')
   }
 }

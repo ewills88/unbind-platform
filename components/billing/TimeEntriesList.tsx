@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import {
   Clock, Plus, Filter, Search, Calendar,
-  DollarSign, RefreshCw, Edit2, Trash2, Check
+  RefreshCw, Edit2, Trash2, Check
 } from 'lucide-react'
 import {
   TimeEntry,
@@ -279,7 +279,7 @@ interface TimeEntryRowProps {
   onUpdate: () => void
 }
 
-function TimeEntryRow({ entry, onUpdate }: TimeEntryRowProps) {
+function TimeEntryRow({ entry, onUpdate: _onUpdate }: TimeEntryRowProps) {
   const activityInfo = ACTIVITY_TYPE_INFO[entry.activity_type]
 
   return (

@@ -30,7 +30,7 @@ async function getAuthenticatedClient() {
 }
 
 // GET /api/client/dashboard - Aggregated dashboard data for client
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient()
 
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get pending tasks (limit 5)
-    let pendingTasks: any[] = []
+    let pendingTasks: Record<string, unknown>[] = []
     if (caseData) {
       const { data: tasks } = await supabase
         .from('client_tasks')
@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
         .from('message_unread_counts')
         .select('unread_count')
         .eq('user_id', user.id)
-      unreadMessages = unreadData?.reduce((sum: number, row: any) => sum + (row.unread_count || 0), 0) || 0
+      unreadMessages = unreadData?.reduce((sum: number, row: Record<string, unknown>) => sum + ((row.unread_count as number) || 0), 0) || 0
     } catch {
       // Table may not exist yet
     }
@@ -138,7 +138,7 @@ export async function GET(request: NextRequest) {
           .in('status', ['sent', 'overdue'])
         if (invoices) {
           outstandingAmount = invoices.reduce(
-            (sum: number, inv: any) => sum + ((inv.total_amount || 0) - (inv.amount_paid || 0)),
+            (sum: number, inv: Record<string, unknown>) => sum + (((inv.total_amount as number) || 0) - ((inv.amount_paid as number) || 0)),
             0
           )
         }

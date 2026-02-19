@@ -12,7 +12,7 @@ import type {
 } from '@/types/discovery'
 import {
   DISCOVERY_TYPE_INFO, DISCOVERY_STATUS_INFO, SERVICE_METHOD_INFO,
-  SET_NUMBER_OPTIONS, generateDiscoveryTitle,
+  SET_NUMBER_OPTIONS,
 } from '@/types/discovery'
 import type { ServiceMethod } from '@/types/discovery'
 

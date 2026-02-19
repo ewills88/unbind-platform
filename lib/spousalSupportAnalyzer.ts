@@ -149,7 +149,7 @@ function getCA4320Factors(
 
 function generateCARecommendations(
   duration: { years: number; months: number },
-  isWifeHighEarner: boolean
+  _isWifeHighEarner: boolean
 ): string[] {
   const recs: string[] = []
   if (duration.years >= 10) {

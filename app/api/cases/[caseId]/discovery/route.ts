@@ -178,9 +178,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function createDiscoveryCalendarEvents(
-  supabase: any,
+  supabase: ReturnType<typeof createClient>,
   caseId: string,
   discovery: { id: string; title: string },
   deadline: { dueDate: string; statutoryReference: string; warnings: string[] }

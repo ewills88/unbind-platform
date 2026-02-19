@@ -3,8 +3,8 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  FileText, Plus, Loader2, ArrowRight, Send, Copy,
-  CheckCircle, XCircle, Clock, Trash2, BarChart3,
+  FileText, Plus, Loader2, Send, Copy,
+  CheckCircle, XCircle, Trash2, BarChart3,
 } from 'lucide-react'
 import type { SettlementProposal, ProposalStatus } from '@/types/settlement'
 import { PROPOSAL_STATUS_INFO, formatCurrency } from '@/types/settlement'
@@ -67,7 +67,7 @@ export default function CaseSettlementTab({ caseId }: Props) {
         body: JSON.stringify({ _action: 'counter' }),
       })
       if (res.ok) {
-        const d = await res.json()
+        const _d = await res.json()
         router.push(`/dashboard/cases/${caseId}/settlement/new`)
         fetchProposals()
       }
@@ -186,7 +186,7 @@ export default function CaseSettlementTab({ caseId }: Props) {
 // ProposalCard
 // ============================================================================
 function ProposalCard({
-  proposal, caseId, onStatusChange, onCounter, onDelete, onView,
+  proposal, caseId: _caseId, onStatusChange, onCounter, onDelete, onView: _onView,
 }: {
   proposal: SettlementProposal
   caseId: string
@@ -196,7 +196,7 @@ function ProposalCard({
   onView: () => void
 }) {
   const statusInfo = PROPOSAL_STATUS_INFO[proposal.status]
-  const support = proposal.spousal_support?.[0]
+  const _support = proposal.spousal_support?.[0]
   const custody = proposal.custody?.[0]
 
   return (

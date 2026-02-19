@@ -14,7 +14,7 @@ interface ResidencyCheckerProps {
 }
 
 export default function ResidencyChecker({
-  caseId,
+  caseId: _caseId,
   stateCode,
   initialStateMoveIn,
   initialCountyMoveIn,

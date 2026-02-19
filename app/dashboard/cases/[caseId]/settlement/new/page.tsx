@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
 import {
@@ -71,7 +71,7 @@ export default function NewProposalPage() {
 
   // Step 2: Property
   const [propertyItems, setPropertyItems] = useState<PropertyRow[]>([])
-  const [showAddProperty, setShowAddProperty] = useState(false)
+  const [_showAddProperty, _setShowAddProperty] = useState(false)
 
   // Step 3: Spousal support
   const [supportType, setSupportType] = useState<SpousalSupportType>('none')
@@ -98,13 +98,13 @@ export default function NewProposalPage() {
   const [childcareCost, setChildcareCost] = useState(0)
   const [childcareSplit, setChildcareSplit] = useState('50/50')
   const [extraCap, setExtraCap] = useState(0)
-  const [extraSplit, setExtraSplit] = useState('50/50')
+  const [extraSplit, _setExtraSplit] = useState('50/50')
 
   // Step 5: Custody
   const [legalCustody, setLegalCustody] = useState<LegalCustodyType>('joint')
   const [physicalCustody, setPhysicalCustody] = useState<PhysicalCustodyType>('joint')
   const [scheduleType, setScheduleType] = useState<ScheduleType>('week_on_week_off')
-  const [scheduleDesc, setScheduleDesc] = useState('')
+  const [scheduleDesc, _setScheduleDesc] = useState('')
   const [husbandPct, setHusbandPct] = useState(50)
   const [wifePct, setWifePct] = useState(50)
   const [exchangeDay, setExchangeDay] = useState('')

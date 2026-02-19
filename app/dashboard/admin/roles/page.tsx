@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  Shield, Plus, Loader2, AlertCircle, Check, X, Lock,
+  Shield, Plus, Loader2, AlertCircle, X, Lock,
 } from 'lucide-react'
 import type { Role, Permission } from '@/types/admin'
 import { PERMISSION_CATEGORIES } from '@/types/admin'

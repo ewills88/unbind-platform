@@ -9,16 +9,15 @@ import {
   Calendar,
   ArrowRight,
   AlertTriangle,
-  Phone,
   User,
 } from 'lucide-react'
 import ProgressTracker from '@/components/client/ProgressTracker'
 import TaskCard from '@/components/client/TaskCard'
-import { ClientDashboardData, ClientTask } from '@/types/client'
+import { ClientDashboardData } from '@/types/client'
 import { formatShortDate } from '@/lib/dates'
 
 export default function ClientDashboardPage() {
-  const router = useRouter()
+  const _router = useRouter()
   const [data, setData] = useState<ClientDashboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

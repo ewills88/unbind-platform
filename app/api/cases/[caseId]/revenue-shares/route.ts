@@ -42,7 +42,7 @@ export async function GET(
 
     // Get user names for each share
     const userIds = Array.from(new Set((shares || []).map(s => s.user_id)))
-    let userMap: Record<string, string> = {}
+    const userMap: Record<string, string> = {}
 
     if (userIds.length > 0) {
       const { data: profiles } = await supabase

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
 async function getAuthenticatedClient() {
@@ -374,9 +374,8 @@ function calculateElapsedSeconds(timer: {
   return elapsed
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function saveTimeEntry(
-  supabase: any,
+  supabase: SupabaseClient,
   userId: string,
   timer: {
     case_id: string

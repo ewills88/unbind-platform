@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import {
-  Shield, Plus, Download, Loader2, X, FileText,
+  Shield, Plus, Download, Loader2, X,
   Edit, Trash2, Search,
 } from 'lucide-react'
 import type { PrivilegeLogEntry, PrivilegeType } from '@/types/discovery'

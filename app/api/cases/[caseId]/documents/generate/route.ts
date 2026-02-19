@@ -8,6 +8,7 @@ import {
   resolveDataPath,
   getFieldDisplayName
 } from '@/types/document-templates'
+import { generateDocxBuffer } from '@/lib/documents/generateDocx'
 
 async function getAuthenticatedClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -453,9 +454,35 @@ export async function POST(
       p_user_id: user.id
     })
 
-    // TODO: Actually generate the document file using docxtemplater
-    // For now, we just save the data and return success
-    // The file generation will be implemented in Checkpoint 2
+    // Generate the actual .docx file
+    try {
+      const docxBuffer = await generateDocxBuffer(template as DocumentTemplate, filledData)
+      const fileName = `${caseData.case_number || caseId}/${generatedDoc.id}.docx`
+
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('case-documents')
+        .upload(fileName, docxBuffer, {
+          contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          upsert: true,
+        })
+
+      if (!uploadError) {
+        // Update the generated document record with the file path
+        await supabase
+          .from('generated_documents')
+          .update({ file_path: fileName })
+          .eq('id', generatedDoc.id)
+
+        generatedDoc.file_path = fileName
+      } else {
+        console.error('Document upload error:', uploadError)
+        // Non-fatal: document record exists, file upload failed
+      }
+    } catch (genError) {
+      console.error('Document file generation error:', genError)
+      // Non-fatal: document record exists, file generation failed
+    }
 
     return NextResponse.json({
       document: generatedDoc,

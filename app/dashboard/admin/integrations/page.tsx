@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  Puzzle, Loader2, AlertCircle, Check, X, ExternalLink,
+  Puzzle, Loader2, AlertCircle, Check, X,
   Calendar, HardDrive, Mail, Calculator, CreditCard, Phone,
   PenTool, Video, Briefcase,
 } from 'lucide-react'

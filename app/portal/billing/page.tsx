@@ -3,9 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  CreditCard, DollarSign, Clock, AlertCircle, CheckCircle,
+  CreditCard, DollarSign, AlertCircle, CheckCircle,
   Loader2, Plus, Trash2, Star, X, Receipt, ArrowRight,
-  ChevronDown, ChevronUp,
 } from 'lucide-react'
 import {
   PortalInvoiceSummary, PortalPaymentMethod, PaymentHistoryItem,

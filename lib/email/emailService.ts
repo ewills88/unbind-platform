@@ -115,7 +115,6 @@ export function isQuietHours(
   }
 
   // Calculate next active time
-  const nextActive = new Date(now)
   // Set to end of quiet hours
   const endDate = new Date(now)
   endDate.setHours(endH, endM, 0, 0)

@@ -1,7 +1,6 @@
 import Decimal from 'decimal.js'
 import {
   Asset,
-  ClassifiedAsset,
   EquitableDistributionFactors,
   EquitableDistributionResult,
 } from '@/types/calculators'

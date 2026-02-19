@@ -3,14 +3,12 @@
 import { useState, useEffect } from 'react'
 import {
   Wallet, Plus, Minus, RefreshCw, Calendar, ArrowUpRight,
-  ArrowDownRight, FileText, AlertCircle, DollarSign, X,
-  Check, Clock
+  ArrowDownRight, FileText, AlertCircle, DollarSign, X
 } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/types/billing'
 import {
   TrustAccount,
   TrustTransaction,
-  TrustTransactionType,
   TRUST_TRANSACTION_INFO
 } from '@/types/payments'
 

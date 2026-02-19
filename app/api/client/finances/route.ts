@@ -29,7 +29,7 @@ async function getAuthenticatedClient() {
 }
 
 // GET /api/client/finances - Get financial overview for client's case
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient()
 
@@ -91,8 +91,8 @@ export async function GET(request: NextRequest) {
     const netWorth = totalAssets - totalDebts
 
     // Group assets by ownership
-    const clientAssets = (assets || []).filter(a => a.ownership === 'client' || a.ownership === 'joint')
-    const spouseAssets = (assets || []).filter(a => a.ownership === 'spouse' || a.ownership === 'joint')
+    const _clientAssets = (assets || []).filter(a => a.ownership === 'client' || a.ownership === 'joint')
+    const _spouseAssets = (assets || []).filter(a => a.ownership === 'spouse' || a.ownership === 'joint')
 
     return NextResponse.json({
       case_id: caseData.id,

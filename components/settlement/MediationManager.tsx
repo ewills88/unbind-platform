@@ -3,12 +3,11 @@
 import { useEffect, useState, useCallback } from 'react'
 import {
   Plus, X, Loader2, Users, Calendar, MapPin, Video, Clock,
-  CheckCircle, XCircle, ArrowRight, Play, FileText, Trash2,
-  ChevronDown, ChevronUp, Send,
+  CheckCircle, XCircle, ArrowRight, Play,
 } from 'lucide-react'
 import type {
   MediationSession, MediationPosition, MediationOffer,
-  MediationStatus, MediationOutcome, MediationLocationType,
+  MediationOutcome, MediationLocationType,
   PositionPriority, PositionCategory, OfferResponse,
 } from '@/types/settlement'
 import {
@@ -354,7 +353,7 @@ function ScheduleMediationModal({
 // ============================================================================
 function SessionDetailDrawer({
   sessionId,
-  caseId,
+  caseId: _caseId,
   onClose,
   onUpdate,
 }: {

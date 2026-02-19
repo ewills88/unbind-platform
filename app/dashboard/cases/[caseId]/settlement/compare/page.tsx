@@ -4,8 +4,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
 import {
-  ArrowLeft, Loader2, BarChart3, ArrowUpDown, AlertTriangle,
-  CheckCircle, DollarSign, Home, Users, List,
+  ArrowLeft, Loader2, BarChart3, AlertTriangle,
+  DollarSign, Home, Users, List,
 } from 'lucide-react'
 import type { SettlementProposal } from '@/types/settlement'
 import {
@@ -385,7 +385,7 @@ function ProposalHeader({ proposal, label }: { proposal: SettlementProposal; lab
 // PropertySummary
 // ============================================================================
 function PropertySummary({ proposal }: { proposal: SettlementProposal }) {
-  const diff = proposal.total_to_husband - proposal.total_to_wife
+  const _diff = proposal.total_to_husband - proposal.total_to_wife
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-2 gap-2">

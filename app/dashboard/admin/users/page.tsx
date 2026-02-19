@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Users, UserPlus, Loader2, AlertCircle, Mail, MoreVertical,
-  Shield, Clock, X, Search, ChevronDown,
+  Shield, Clock, X, Search,
 } from 'lucide-react'
 import type { EnhancedFirmMember } from '@/types/admin'
 import { FIRM_MEMBER_ROLE_INFO } from '@/types/firm'

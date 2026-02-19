@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import {
   FileText, Plus, Filter, Search, Calendar,
-  DollarSign, RefreshCw, Eye, Send, MoreVertical,
+  RefreshCw, Eye, Send, MoreVertical,
   CheckCircle, Clock, AlertTriangle, XCircle,
   Download, Mail
 } from 'lucide-react'

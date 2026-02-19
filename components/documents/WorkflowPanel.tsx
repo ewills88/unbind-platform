@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import {
   CheckCircle, Clock, AlertCircle, Send, UserPlus, X,
-  ChevronRight, FileText, Eye, ArrowRight
+  FileText, Eye, ArrowRight
 } from 'lucide-react'
 import {
   WorkflowStatus,
@@ -123,7 +123,7 @@ export default function WorkflowPanel({
   onStatusChange
 }: WorkflowPanelProps) {
   const [assignments, setAssignments] = useState<DocumentAssignment[]>([])
-  const [loading, setLoading] = useState(false)
+  const [_loading, _setLoading] = useState(false)
   const [showAssignModal, setShowAssignModal] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
@@ -203,7 +203,7 @@ export default function WorkflowPanel({
             const StageIcon = stageConfig.icon
             const isPast = index < currentStageIndex
             const isCurrent = index === currentStageIndex
-            const isFuture = index > currentStageIndex
+            const _isFuture = index > currentStageIndex
 
             return (
               <div key={stage} className="flex items-center">

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   MessageSquare, Plus, Send, Loader2, ArrowLeft, X,
-  Clock, ChevronDown, FileText, AlertCircle, Search,
+  FileText, Search,
 } from 'lucide-react'
 import {
   PortalConversationWithDetails, PortalMessageWithSender,
@@ -202,7 +202,7 @@ export default function PortalMessagesPage() {
     }
   }
 
-  const useTemplate = (template: TemplateItem) => {
+  const applyTemplate = (template: TemplateItem) => {
     setNewMessage(template.content)
     setShowTemplates(false)
     textareaRef.current?.focus()
@@ -470,7 +470,7 @@ export default function PortalMessagesPage() {
                       {templates.map((t) => (
                         <button
                           key={t.id}
-                          onClick={() => useTemplate(t)}
+                          onClick={() => applyTemplate(t)}
                           className="w-full text-left p-2 text-xs text-gray-700 hover:bg-white rounded transition-colors"
                         >
                           <span className="font-medium">{t.title}</span>
