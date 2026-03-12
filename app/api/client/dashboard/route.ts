@@ -68,28 +68,36 @@ export async function GET(_request: NextRequest) {
       attorneyName = attorney?.full_name || null
     }
 
-    // Get progress
+    // Get progress (table may not exist yet)
     let progress = null
     if (caseData) {
-      const { data: progressData } = await supabase
-        .from('client_progress')
-        .select('*')
-        .eq('case_id', caseData.id)
-        .single()
-      progress = progressData
+      try {
+        const { data: progressData } = await supabase
+          .from('client_progress')
+          .select('*')
+          .eq('case_id', caseData.id)
+          .single()
+        progress = progressData
+      } catch {
+        // client_progress table may not exist
+      }
     }
 
-    // Get pending tasks (limit 5)
+    // Get pending tasks (limit 5, table may not exist yet)
     let pendingTasks: Record<string, unknown>[] = []
     if (caseData) {
-      const { data: tasks } = await supabase
-        .from('client_tasks')
-        .select('*')
-        .eq('case_id', caseData.id)
-        .in('status', ['pending', 'in_progress'])
-        .order('due_date', { ascending: true, nullsFirst: false })
-        .limit(5)
-      pendingTasks = tasks || []
+      try {
+        const { data: tasks } = await supabase
+          .from('client_tasks')
+          .select('*')
+          .eq('case_id', caseData.id)
+          .in('status', ['pending', 'in_progress'])
+          .order('due_date', { ascending: true, nullsFirst: false })
+          .limit(5)
+        pendingTasks = tasks || []
+      } catch {
+        // client_tasks table may not exist
+      }
     }
 
     // Get unread message count
@@ -107,24 +115,32 @@ export async function GET(_request: NextRequest) {
     // Get document count
     let documentCount = 0
     if (caseData) {
-      const { count } = await supabase
-        .from('documents')
-        .select('*', { count: 'exact', head: true })
-        .eq('case_id', caseData.id)
-      documentCount = count || 0
+      try {
+        const { count } = await supabase
+          .from('documents')
+          .select('*', { count: 'exact', head: true })
+          .eq('case_id', caseData.id)
+        documentCount = count || 0
+      } catch {
+        // documents table may not exist
+      }
     }
 
-    // Get next appointment
+    // Get next appointment (table may not exist yet)
     let nextAppointment = null
     if (caseData) {
-      const { data: events } = await supabase
-        .from('events')
-        .select('id, title, start_time')
-        .eq('case_id', caseData.id)
-        .gte('start_time', new Date().toISOString())
-        .order('start_time', { ascending: true })
-        .limit(1)
-      nextAppointment = events?.[0] || null
+      try {
+        const { data: events } = await supabase
+          .from('events')
+          .select('id, title, start_time')
+          .eq('case_id', caseData.id)
+          .gte('start_time', new Date().toISOString())
+          .order('start_time', { ascending: true })
+          .limit(1)
+        nextAppointment = events?.[0] || null
+      } catch {
+        // events table may not exist
+      }
     }
 
     // Get outstanding invoice amount

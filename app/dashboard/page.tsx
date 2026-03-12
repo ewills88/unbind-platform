@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
+import { ChevronDown, ChevronUp, Activity } from 'lucide-react'
 import Sidebar from '@/components/layout/Sidebar'
 import ActiveCasesOverview from '@/components/dashboard/ActiveCasesOverview'
 import QuickActions from '@/components/dashboard/QuickActions'
@@ -11,7 +12,6 @@ import CaseProgressTracker from '@/components/dashboard/CaseProgressTracker'
 import DocumentAnalytics from '@/components/dashboard/DocumentAnalytics'
 import { UpcomingDeadlines } from '@/components/events'
 import ClientBillingSection from '@/components/billing/ClientBillingSection'
-import MultiStateDashboard from '@/components/stateLaw/MultiStateDashboard'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -26,41 +26,38 @@ interface Profile {
   phone: string | null
 }
 
-function MultiStateDashboardWrapper() {
-  const router = useRouter()
-  const [casesByState, setCasesByState] = useState<{ state: string; count: number; cases: { id: string; client_name: string; status: string; filing_date: string | null }[] }[]>([])
-
-  useEffect(() => {
-    async function fetchCases() {
-      const { data: cases } = await supabase
-        .from('cases')
-        .select('id, client_name, status, filing_date, state')
-        .in('status', ['consultation', 'active', 'settlement'])
-        .order('created_at', { ascending: false })
-      if (!cases) return
-
-      const byState: Record<string, typeof cases> = {}
-      for (const c of cases) {
-        const st = c.state || 'Unknown'
-        if (!byState[st]) byState[st] = []
-        byState[st].push(c)
-      }
-      setCasesByState(
-        Object.entries(byState).map(([state, cs]) => ({
-          state,
-          count: cs.length,
-          cases: cs.map((c) => ({ id: c.id, client_name: c.client_name, status: c.status, filing_date: c.filing_date })),
-        }))
-      )
-    }
-    fetchCases()
-  }, [])
+function RightSidebar() {
+  const [activityOpen, setActivityOpen] = useState(false)
 
   return (
-    <MultiStateDashboard
-      casesByState={casesByState}
-      onCaseClick={(id) => router.push(`/dashboard/cases/${id}`)}
-    />
+    <aside className="hidden xl:block w-80 border-l border-gray-200 bg-white overflow-y-auto">
+      <div className="p-6 space-y-6">
+        <UpcomingDeadlines limit={5} />
+
+        {/* Collapsible Recent Activity */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <button
+            onClick={() => setActivityOpen(!activityOpen)}
+            className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <Activity className="w-4 h-4 text-gray-500" />
+              <span className="text-sm font-semibold text-gray-900">Recent Activity</span>
+            </div>
+            {activityOpen ? (
+              <ChevronUp className="w-4 h-4 text-gray-400" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            )}
+          </button>
+          {activityOpen && (
+            <div className="border-t border-gray-200">
+              <RecentActivity />
+            </div>
+          )}
+        </div>
+      </div>
+    </aside>
   )
 }
 
@@ -159,28 +156,20 @@ export default function DashboardPage() {
                 <QuickActions />
               </div>
 
+              {/* All Cases Overview - Primary content */}
+              <div className="mb-6">
+                <ActiveCasesOverview />
+              </div>
+
               {/* Document Analytics */}
               <div className="mb-6">
                 <DocumentAnalytics />
               </div>
-              
-              {/* Active Cases Overview */}
-              <ActiveCasesOverview />
-
-              {/* Multi-State Dashboard */}
-              <div className="mt-6">
-                <MultiStateDashboardWrapper />
-              </div>
             </div>
           </main>
 
-          {/* Right Sidebar - Deadlines & Activity */}
-          <aside className="hidden xl:block w-80 border-l border-gray-200 bg-white overflow-y-auto">
-            <div className="p-6 space-y-6">
-              <UpcomingDeadlines limit={5} />
-              <RecentActivity />
-            </div>
-          </aside>
+          {/* Right Sidebar - Deadlines & Collapsible Activity */}
+          <RightSidebar />
         </div>
       ) : (
         /* Client Dashboard */

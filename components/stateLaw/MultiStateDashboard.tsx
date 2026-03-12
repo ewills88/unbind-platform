@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Map, Info, ChevronRight } from 'lucide-react'
-import StateComparisonTool from './StateComparisonTool'
 import { STATE_NAMES } from '@/types/stateLaw'
 
 interface CaseByState {
@@ -138,8 +137,6 @@ export default function MultiStateDashboard({ casesByState, onCaseClick }: Multi
         </table>
       </div>
 
-      {/* State comparison */}
-      <StateComparisonTool />
     </div>
   )
 }

@@ -47,7 +47,7 @@ const mobileTabItems: NavItem[] = [
 ]
 
 // Pages that don't need the layout shell (login, callback)
-const noLayoutPages = ['/portal/login', '/portal/auth']
+const noLayoutPages = ['/portal/login', '/portal/auth', '/portal/accept-invite']
 
 export default function PortalLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()

@@ -196,7 +196,7 @@ export default function ActiveCasesOverview() {
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
       {/* Header */}
       <div className="p-6 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Active Cases</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">All Cases</h2>
         
         {/* Summary Cards */}
         <div className="grid grid-cols-4 gap-4 mb-4">

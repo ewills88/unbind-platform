@@ -67,80 +67,109 @@ export async function GET() {
       firmName = firm?.name || null
     }
 
-    // Get progress
+    // Get progress (table may not exist yet)
     let progress = null
     if (caseData) {
-      const { data: progressData } = await supabase
-        .from('client_progress')
-        .select('current_stage, overall_completion_percentage, estimated_completion_date')
-        .eq('case_id', caseData.id)
-        .single()
-      progress = progressData
+      try {
+        const { data: progressData } = await supabase
+          .from('client_progress')
+          .select('current_stage, overall_completion_percentage, estimated_completion_date')
+          .eq('case_id', caseData.id)
+          .single()
+        progress = progressData
+      } catch {
+        // client_progress table may not exist
+      }
     }
 
-    // Get pending task count
+    // Get pending task count (table may not exist yet)
     let pendingTasks = 0
     if (caseData) {
-      const { count } = await supabase
-        .from('client_tasks')
-        .select('*', { count: 'exact', head: true })
-        .eq('case_id', caseData.id)
-        .in('status', ['pending', 'in_progress'])
-      pendingTasks = count || 0
+      try {
+        const { count } = await supabase
+          .from('client_tasks')
+          .select('*', { count: 'exact', head: true })
+          .eq('case_id', caseData.id)
+          .in('status', ['pending', 'in_progress'])
+        pendingTasks = count || 0
+      } catch {
+        // client_tasks table may not exist
+      }
     }
 
-    // Get unread conversation count
+    // Get unread conversation count (table may not exist yet)
     let unreadConversations = 0
     if (caseData) {
-      const { data: convos } = await supabase
-        .from('portal_conversations')
-        .select('client_unread_count')
-        .eq('case_id', caseData.id)
-        .eq('status', 'open')
-        .gt('client_unread_count', 0)
-      unreadConversations = convos?.length || 0
+      try {
+        const { data: convos } = await supabase
+          .from('portal_conversations')
+          .select('client_unread_count')
+          .eq('case_id', caseData.id)
+          .eq('status', 'open')
+          .gt('client_unread_count', 0)
+        unreadConversations = convos?.length || 0
+      } catch {
+        // portal_conversations table may not exist
+      }
     }
 
     // Get recent activity (last 10 entries visible to client)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let recentActivity: any[] = []
     if (caseData) {
-      const { data: activity } = await supabase
-        .from('case_activity_log')
-        .select('*')
-        .eq('case_id', caseData.id)
-        .eq('is_visible_to_client', true)
-        .order('created_at', { ascending: false })
-        .limit(10)
-      recentActivity = activity || []
+      try {
+        const { data: activity } = await supabase
+          .from('case_activity_log')
+          .select('*')
+          .eq('case_id', caseData.id)
+          .eq('is_visible_to_client', true)
+          .order('created_at', { ascending: false })
+          .limit(10)
+        recentActivity = activity || []
+      } catch {
+        // case_activity_log table may not exist
+      }
     }
 
-    // Get upcoming events (next 5)
+    // Get upcoming events (next 5, table may not exist yet)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let upcomingEvents: any[] = []
     if (caseData) {
-      const { data: events } = await supabase
-        .from('case_events')
-        .select('id, title, event_date, event_type')
-        .eq('case_id', caseData.id)
-        .eq('status', 'upcoming')
-        .gte('event_date', new Date().toISOString())
-        .order('event_date', { ascending: true })
-        .limit(5)
-      upcomingEvents = events || []
+      try {
+        const { data: events } = await supabase
+          .from('case_events')
+          .select('id, title, event_date, event_type')
+          .eq('case_id', caseData.id)
+          .eq('status', 'upcoming')
+          .gte('event_date', new Date().toISOString())
+          .order('event_date', { ascending: true })
+          .limit(5)
+        upcomingEvents = events || []
+      } catch {
+        // case_events table may not exist
+      }
     }
 
     // Get recent documents (last 5)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let recentDocuments: any[] = []
     if (caseData) {
-      const { data: docs } = await supabase
-        .from('documents')
-        .select('id, file_name, created_at')
-        .eq('case_id', caseData.id)
-        .order('created_at', { ascending: false })
-        .limit(5)
-      recentDocuments = docs || []
+      try {
+        const { data: docs } = await supabase
+          .from('documents')
+          .select('id, original_filename, created_at')
+          .eq('case_id', caseData.id)
+          .order('created_at', { ascending: false })
+          .limit(5)
+        // Map original_filename to file_name for the PortalDashboardData type
+        recentDocuments = (docs || []).map((d: { id: string; original_filename: string; created_at: string }) => ({
+          id: d.id,
+          file_name: d.original_filename,
+          created_at: d.created_at,
+        }))
+      } catch {
+        // documents table may not exist or column mismatch
+      }
     }
 
     // Get outstanding balance

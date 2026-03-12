@@ -53,6 +53,7 @@ const attorneyNavItems = [
   { name: 'Messages', href: '/dashboard/messages', icon: MessageSquare },
   { name: 'Calendar', href: '/dashboard/calendar', icon: Calendar },
   { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
+  { name: 'Resources', href: '/dashboard/resources', icon: BookOpen },
   { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
@@ -112,21 +113,26 @@ export default function Sidebar() {
     router.push('/login')
   }
 
-  const navItems = profile?.role === 'admin'
-    ? profile.current_firm_id
-      ? [
-          ...attorneyNavItems.slice(0, -1),
-          { name: 'Firm Overview', href: '/dashboard/firm', icon: PieChart },
-          { name: 'My Tasks', href: '/dashboard/my-tasks', icon: ClipboardList },
-          { name: 'Templates', href: '/dashboard/templates', icon: Library },
-          { name: 'Workload', href: '/dashboard/workload', icon: Activity },
-          { name: 'Financial', href: '/dashboard/reports/financial', icon: DollarSign },
-          { name: 'Team', href: '/dashboard/team', icon: Users },
-          { name: 'Subscription', href: '/dashboard/settings/subscription', icon: CreditCard },
-          ...attorneyNavItems.slice(-1),
-        ]
-      : attorneyNavItems
-    : clientNavItems
+  // Default to attorney nav while profile is loading to prevent flash of client nav items.
+  // The Sidebar remounts on every page navigation (no shared layout), so profile is
+  // briefly null on each transition. Without this guard, attorneys see Tasks/Resources flash.
+  const navItems = !profile
+    ? attorneyNavItems
+    : profile.role === 'admin'
+      ? profile.current_firm_id
+        ? [
+            ...attorneyNavItems.slice(0, -1),
+            { name: 'Firm Overview', href: '/dashboard/firm', icon: PieChart },
+            { name: 'My Tasks', href: '/dashboard/my-tasks', icon: ClipboardList },
+            { name: 'Templates', href: '/dashboard/templates', icon: Library },
+            { name: 'Workload', href: '/dashboard/workload', icon: Activity },
+            { name: 'Financial', href: '/dashboard/reports/financial', icon: DollarSign },
+            { name: 'Team', href: '/dashboard/team', icon: Users },
+            { name: 'Subscription', href: '/dashboard/settings/subscription', icon: CreditCard },
+            ...attorneyNavItems.slice(-1),
+          ]
+        : attorneyNavItems
+      : clientNavItems
 
   const getInitials = (name: string) => {
     return name

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   Upload,
   MessageSquare,
@@ -17,16 +17,11 @@ interface QuickAction {
   description: string
   icon: LucideIcon
   color: string
-  onClick: () => void
+  href: string
 }
 
 export default function QuickActions() {
-  const [toast, setToast] = useState<string | null>(null)
-
-  const showToast = (message: string) => {
-    setToast(message)
-    setTimeout(() => setToast(null), 3000)
-  }
+  const router = useRouter()
 
   const actions: QuickAction[] = [
     {
@@ -35,7 +30,7 @@ export default function QuickActions() {
       description: 'Add files to a case',
       icon: Upload,
       color: 'blue',
-      onClick: () => showToast('Document upload coming soon!'),
+      href: '/dashboard/documents',
     },
     {
       id: 'message',
@@ -43,7 +38,7 @@ export default function QuickActions() {
       description: 'Send a quick message',
       icon: MessageSquare,
       color: 'green',
-      onClick: () => showToast('Messaging feature coming soon!'),
+      href: '/dashboard/messages',
     },
     {
       id: 'court-date',
@@ -51,7 +46,7 @@ export default function QuickActions() {
       description: 'Add to calendar',
       icon: Calendar,
       color: 'purple',
-      onClick: () => showToast('Calendar feature coming soon!'),
+      href: '/dashboard/calendar',
     },
     {
       id: 'task',
@@ -59,7 +54,7 @@ export default function QuickActions() {
       description: 'Quick task creation',
       icon: CheckSquare,
       color: 'orange',
-      onClick: () => showToast('Task creation coming soon!'),
+      href: '/dashboard/my-tasks',
     },
     {
       id: 'new-case',
@@ -67,7 +62,7 @@ export default function QuickActions() {
       description: 'Launch case wizard',
       icon: PlusCircle,
       color: 'indigo',
-      onClick: () => showToast('New case wizard coming soon!'),
+      href: '/dashboard/cases',
     },
     {
       id: 'templates',
@@ -75,7 +70,7 @@ export default function QuickActions() {
       description: 'Access documents',
       icon: FileText,
       color: 'pink',
-      onClick: () => showToast('Document templates coming soon!'),
+      href: '/dashboard/templates',
     },
   ]
 
@@ -94,14 +89,14 @@ export default function QuickActions() {
   return (
     <div className="space-y-3">
       <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Quick Actions</h2>
-      
+
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {actions.map((action) => {
           const Icon = action.icon
           return (
             <button
               key={action.id}
-              onClick={action.onClick}
+              onClick={() => router.push(action.href)}
               className="group bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md hover:border-gray-300 transition-all text-center"
             >
               <div className={`inline-flex p-3 rounded-lg ${getColorClasses(action.color)} transition-colors mb-2`}>
@@ -114,13 +109,6 @@ export default function QuickActions() {
           )
         })}
       </div>
-
-      {/* Toast Notification */}
-      {toast && (
-        <div className="fixed bottom-4 right-4 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in">
-          {toast}
-        </div>
-      )}
     </div>
   )
 }

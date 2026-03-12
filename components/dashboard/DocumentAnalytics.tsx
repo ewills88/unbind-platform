@@ -21,9 +21,7 @@ interface Analytics {
   totalDocuments: number
   uploadedThisWeek: number
   categoryCounts: { category: string; count: number }[]
-  largestFiles: { filename: string; size: number; id: string }[]
-  mostActiveCases: { case_name: string; count: number; case_id: string }[]
-  recentUploads: { filename: string; uploaded_at: string; category: string; id: string }[]
+  totalFileSize: number
 }
 
 export default function DocumentAnalytics() {
@@ -32,9 +30,7 @@ export default function DocumentAnalytics() {
     totalDocuments: 0,
     uploadedThisWeek: 0,
     categoryCounts: [],
-    largestFiles: [],
-    mostActiveCases: [],
-    recentUploads: [],
+    totalFileSize: 0,
   })
   const [loading, setLoading] = useState(true)
 
@@ -50,10 +46,7 @@ export default function DocumentAnalytics() {
       // Get all documents for this attorney
       const { data: documents, error } = await supabase
         .from('documents')
-        .select(`
-          *,
-          case:case_id(id, client_name, spouse_name)
-        `)
+        .select('id, original_filename, file_size, category, uploaded_at, case_id')
         .eq('uploader_id', user.id)
 
       if (error) throw error
@@ -79,55 +72,14 @@ export default function DocumentAnalytics() {
         count,
       })).sort((a, b) => b.count - a.count)
 
-      // Get largest files (top 5)
-      const largestFiles = documents
-        ?.sort((a, b) => b.file_size - a.file_size)
-        .slice(0, 5)
-        .map(d => ({
-          filename: d.original_filename,
-          size: d.file_size,
-          id: d.id,
-        })) || []
-
-      // Get most active cases (by document count)
-      const caseCounts: { [key: string]: { name: string; count: number; id: string } } = {}
-      documents?.forEach(doc => {
-        if (doc.case) {
-          const caseId = doc.case_id
-          const caseName = `${doc.case.client_name} v. ${doc.case.spouse_name}`
-          if (!caseCounts[caseId]) {
-            caseCounts[caseId] = { name: caseName, count: 0, id: caseId }
-          }
-          caseCounts[caseId].count++
-        }
-      })
-      const mostActiveCases = Object.values(caseCounts)
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 5)
-        .map(c => ({
-          case_name: c.name,
-          count: c.count,
-          case_id: c.id,
-        }))
-
-      // Get recent uploads (last 5)
-      const recentUploads = documents
-        ?.sort((a, b) => new Date(b.uploaded_at).getTime() - new Date(a.uploaded_at).getTime())
-        .slice(0, 5)
-        .map(d => ({
-          filename: d.original_filename,
-          uploaded_at: d.uploaded_at,
-          category: d.category || 'other',
-          id: d.id,
-        })) || []
+      // Calculate total file size for average
+      const totalFileSize = documents?.reduce((sum, d) => sum + (d.file_size || 0), 0) || 0
 
       setAnalytics({
         totalDocuments,
         uploadedThisWeek,
         categoryCounts: categoryCountsArray,
-        largestFiles,
-        mostActiveCases,
-        recentUploads,
+        totalFileSize,
       })
     } catch (error) {
       console.error('Error loading analytics:', error)
@@ -142,18 +94,6 @@ export default function DocumentAnalytics() {
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
-  }
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60))
-
-    if (diffInHours < 1) return 'Just now'
-    if (diffInHours < 24) return `${diffInHours}h ago`
-    if (diffInHours < 48) return 'Yesterday'
-    if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`
-    return date.toLocaleDateString()
   }
 
   const getCategoryLabel = (category: string) => {
@@ -243,10 +183,7 @@ export default function DocumentAnalytics() {
               <p className="text-sm text-gray-600">Avg File Size</p>
               <p className="text-2xl font-bold text-gray-900">
                 {analytics.totalDocuments > 0
-                  ? formatFileSize(
-                      analytics.largestFiles.reduce((sum, f) => sum + f.size, 0) /
-                        Math.min(analytics.totalDocuments, 5)
-                    )
+                  ? formatFileSize(analytics.totalFileSize / analytics.totalDocuments)
                   : '0 KB'}
               </p>
             </div>
@@ -254,107 +191,31 @@ export default function DocumentAnalytics() {
         </div>
       </div>
 
-      {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Documents by Category */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Documents by Category</h3>
-          {analytics.categoryCounts.length === 0 ? (
-            <p className="text-gray-500 text-sm">No documents uploaded yet</p>
-          ) : (
-            <div className="space-y-3">
-              {analytics.categoryCounts.map((cat) => (
-                <div key={cat.category}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-700">
-                      {getCategoryLabel(cat.category)}
-                    </span>
-                    <span className="text-sm text-gray-600">{cat.count}</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className={`h-2 rounded-full bg-${getCategoryColor(cat.category)}-500 transition-all`}
-                      style={{ width: `${(cat.count / getMaxCount()) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Largest Files */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Largest Files</h3>
-          {analytics.largestFiles.length === 0 ? (
-            <p className="text-gray-500 text-sm">No files uploaded yet</p>
-          ) : (
-            <div className="space-y-3">
-              {analytics.largestFiles.map((file, index) => (
-                <div key={file.id} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <span className="text-xs font-medium text-gray-400">#{index + 1}</span>
-                    <FileText className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                    <span className="text-sm text-gray-900 truncate">{file.filename}</span>
-                  </div>
-                  <span className="text-sm font-medium text-gray-600 ml-2">
-                    {formatFileSize(file.size)}
+      {/* Documents by Category */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Documents by Category</h3>
+        {analytics.categoryCounts.length === 0 ? (
+          <p className="text-gray-500 text-sm">No documents uploaded yet</p>
+        ) : (
+          <div className="space-y-3">
+            {analytics.categoryCounts.map((cat) => (
+              <div key={cat.category}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-sm font-medium text-gray-700">
+                    {getCategoryLabel(cat.category)}
                   </span>
+                  <span className="text-sm text-gray-600">{cat.count}</span>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Most Active Cases */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Most Active Cases</h3>
-          {analytics.mostActiveCases.length === 0 ? (
-            <p className="text-gray-500 text-sm">No cases with documents yet</p>
-          ) : (
-            <div className="space-y-3">
-              {analytics.mostActiveCases.map((case_, index) => (
-                <div key={case_.case_id} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <span className="text-xs font-medium text-gray-400">#{index + 1}</span>
-                    <Folder className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    <span className="text-sm text-gray-900 truncate">{case_.case_name}</span>
-                  </div>
-                  <span className="text-sm font-medium text-blue-600 ml-2">
-                    {case_.count} docs
-                  </span>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className={`h-2 rounded-full bg-${getCategoryColor(cat.category)}-500 transition-all`}
+                    style={{ width: `${(cat.count / getMaxCount()) * 100}%` }}
+                  />
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Recent Uploads */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Uploads</h3>
-          {analytics.recentUploads.length === 0 ? (
-            <p className="text-gray-500 text-sm">No recent uploads</p>
-          ) : (
-            <div className="space-y-3">
-              {analytics.recentUploads.map((upload) => (
-                <div key={upload.id} className="flex items-start justify-between gap-2">
-                  <div className="flex items-start gap-2 flex-1 min-w-0">
-                    <FileText className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
-                    <div className="min-w-0">
-                      <p className="text-sm text-gray-900 truncate">{upload.filename}</p>
-                      <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-${getCategoryColor(upload.category)}-100 text-${getCategoryColor(upload.category)}-700`}>
-                        {getCategoryLabel(upload.category)}
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-xs text-gray-500 whitespace-nowrap">
-                    {formatDate(upload.uploaded_at)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

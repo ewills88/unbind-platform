@@ -35,6 +35,7 @@ import PropertyDivisionCalculator from '@/components/calculators/PropertyDivisio
 import ChildSupportCalculator from '@/components/calculators/ChildSupportCalculator'
 import SpousalSupportAnalyzerComponent from '@/components/calculators/SpousalSupportAnalyzer'
 import ProcedureChecklist from '@/components/procedures/ProcedureChecklist'
+import InviteClientForm from '@/components/dashboard/InviteClientForm'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -478,6 +479,11 @@ export default function CaseDetailPage() {
                         </div>
                       )}
                     </div>
+
+                    {/* Client Portal Access */}
+                    {userRole === 'admin' && (
+                      <InviteClientForm caseId={caseId} />
+                    )}
                   </div>
                 </div>
               )}

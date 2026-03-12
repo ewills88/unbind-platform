@@ -733,3 +733,31 @@ export const NOTIFICATION_TYPE_INFO: Record<string, { label: string; description
   case_update: { label: 'Case Updates', description: 'When there are updates to your case' },
   deadline_approaching: { label: 'Deadlines', description: 'When important deadlines are approaching' },
 }
+
+// ============================================================
+// Client Invitation Types
+// ============================================================
+
+export type ClientInviteStatus = 'pending' | 'accepted' | 'expired' | 'revoked'
+
+export interface InviteClientRequest {
+  caseId: string
+  clientEmail: string
+  clientName?: string
+}
+
+export interface InviteClientResponse {
+  success: boolean
+  message: string
+  inviteStatus?: ClientInviteStatus
+  error?: string
+}
+
+export interface InviteStatus {
+  caseId: string
+  clientEmail: string | null
+  clientName: string | null
+  status: ClientInviteStatus | null
+  invitedAt: string | null
+  clientId: string | null
+}
