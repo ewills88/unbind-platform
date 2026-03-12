@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Map, Info, ChevronRight } from 'lucide-react'
 import { STATE_NAMES } from '@/types/stateLaw'
+import { getStateRules } from '@/lib/data/stateRules'
 
 interface CaseByState {
   state: string
@@ -15,10 +16,19 @@ interface MultiStateDashboardProps {
   onCaseClick?: (caseId: string) => void
 }
 
-const STATE_NOTES: Record<string, string> = {
-  CA: '6-month waiting period from service. Mandatory financial disclosures required within 60 days.',
-  TX: '60-day waiting period from filing. Community property state with "just and right" division.',
-  FL: '20-day waiting period (waivable). Equitable distribution. 2023 alimony reforms in effect.',
+function getStateNote(code: string): string | null {
+  const rules = getStateRules(code)
+  if (!rules) return null
+  const waitingInfo = rules.waitingPeriod > 0
+    ? `${rules.waitingPeriod}-day waiting period from ${rules.waitingPeriodStart}.`
+    : 'No waiting period.'
+  const propertyInfo = rules.propertyDivision === 'community'
+    ? 'Community property state.'
+    : 'Equitable distribution.'
+  const separationInfo = rules.separationRequired
+    ? ` Separation required${rules.separationPeriod ? ` (${rules.separationPeriod} days)` : ''}.`
+    : ''
+  return `${waitingInfo} ${propertyInfo}${separationInfo}`
 }
 
 export default function MultiStateDashboard({ casesByState, onCaseClick }: MultiStateDashboardProps) {
@@ -70,10 +80,10 @@ export default function MultiStateDashboard({ casesByState, onCaseClick }: Multi
       </div>
 
       {/* State-specific note */}
-      {activeState !== 'all' && STATE_NOTES[activeState] && (
+      {activeState !== 'all' && getStateNote(activeState) && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-2">
           <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-blue-800">{STATE_NOTES[activeState]}</p>
+          <p className="text-sm text-blue-800">{getStateNote(activeState)}</p>
         </div>
       )}
 

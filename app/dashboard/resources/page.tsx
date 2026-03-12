@@ -12,21 +12,21 @@ import {
 const resourceSections = [
   {
     title: 'State Rules',
-    description: 'Compare divorce law requirements across states — waiting periods, property division, residency rules, and more.',
+    description: 'Compare divorce law requirements across all 50 states — waiting periods, property division, residency rules, and more.',
     icon: Scale,
     color: 'blue',
     href: '/dashboard/resources/state-rules',
   },
   {
     title: 'Support Calculators',
-    description: 'Estimate child support, spousal support, and property division using state-specific formulas.',
+    description: 'Estimate child support, spousal support, and property division using state-specific formulas for every jurisdiction.',
     icon: Calculator,
     color: 'green',
     href: '/dashboard/resources/calculators',
   },
   {
     title: 'Forms Library',
-    description: 'Browse and auto-fill state-specific court forms for your cases.',
+    description: 'Browse and auto-fill state-specific court forms. Available for CA, TX, FL with more states coming soon.',
     icon: FileText,
     color: 'purple',
     href: '/dashboard/resources/forms',

@@ -6,7 +6,8 @@ import Sidebar from '@/components/layout/Sidebar'
 import ChildSupportCalculator from '@/components/calculators/ChildSupportCalculator'
 import SpousalSupportAnalyzer from '@/components/calculators/SpousalSupportAnalyzer'
 import PropertyDivisionCalculator from '@/components/calculators/PropertyDivisionCalculator'
-import { ChevronLeft, Calculator, Heart, Home } from 'lucide-react'
+import { ChevronLeft, Calculator, Heart, Home, AlertTriangle } from 'lucide-react'
+import { getAllStates, getStateRules } from '@/lib/data/stateRules'
 
 const tabs = [
   { id: 'child-support', label: 'Child Support', icon: Calculator },
@@ -16,15 +17,14 @@ const tabs = [
 
 type TabId = typeof tabs[number]['id']
 
-const states = [
-  { code: 'CA', name: 'California' },
-  { code: 'TX', name: 'Texas' },
-  { code: 'FL', name: 'Florida' },
-]
+const DETAILED_CALCULATOR_STATES = ['CA', 'TX', 'FL']
 
 export default function CalculatorsPage() {
   const [activeTab, setActiveTab] = useState<TabId>('child-support')
   const [selectedState, setSelectedState] = useState('CA')
+  const allStates = getAllStates()
+  const hasDetailedCalculator = DETAILED_CALCULATOR_STATES.includes(selectedState)
+  const rules = getStateRules(selectedState)
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -51,12 +51,29 @@ export default function CalculatorsPage() {
                 onChange={(e) => setSelectedState(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               >
-                {states.map((s) => (
+                {allStates.map((s) => (
                   <option key={s.code} value={s.code}>{s.name}</option>
                 ))}
               </select>
             </div>
           </div>
+
+          {/* Disclaimer for states without custom calculator */}
+          {!hasDetailedCalculator && rules && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-amber-900">
+                  Estimated calculations for {rules.name}
+                </p>
+                <p className="text-sm text-amber-800 mt-1">
+                  {rules.name} uses the {rules.childSupportGuideline.toLowerCase()} for child support.
+                  These calculations are estimates based on general guidelines.
+                  Consult state-specific worksheets and local counsel for accuracy.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Tab Navigation */}
           <div className="border-b border-gray-200 mb-6">

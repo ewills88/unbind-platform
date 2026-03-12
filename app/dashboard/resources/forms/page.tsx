@@ -3,19 +3,18 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Sidebar from '@/components/layout/Sidebar'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, AlertTriangle } from 'lucide-react'
 import FormFiller from '@/components/forms/FormFiller'
+import { getAllStates } from '@/lib/data/stateRules'
+import { getDetailedStates } from '@/lib/stateData'
+
+const STATES_WITH_FORMS = getDetailedStates() // CA, TX, FL currently
 
 export default function FormsLibraryPage() {
   const [selectedState, setSelectedState] = useState('CA')
-
-  const states = [
-    { code: 'CA', name: 'California' },
-    { code: 'TX', name: 'Texas' },
-    { code: 'FL', name: 'Florida' },
-    { code: 'NY', name: 'New York' },
-    { code: 'IL', name: 'Illinois' },
-  ]
+  const allStates = getAllStates()
+  const hasFormsAvailable = STATES_WITH_FORMS.includes(selectedState)
+  const stateName = allStates.find((s) => s.code === selectedState)?.name || selectedState
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -42,14 +41,44 @@ export default function FormsLibraryPage() {
                 onChange={(e) => setSelectedState(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               >
-                {states.map((s) => (
-                  <option key={s.code} value={s.code}>{s.name}</option>
+                {allStates.map((s) => (
+                  <option key={s.code} value={s.code}>
+                    {s.name}{STATES_WITH_FORMS.includes(s.code) ? '' : ' (coming soon)'}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
 
-          <FormFiller stateCode={selectedState} caseId="" />
+          {hasFormsAvailable ? (
+            <FormFiller stateCode={selectedState} caseId="" />
+          ) : (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 text-center">
+              <AlertTriangle className="w-8 h-8 text-amber-500 mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-amber-900 mb-2">
+                Forms coming soon for {stateName}
+              </h3>
+              <p className="text-sm text-amber-800 max-w-md mx-auto">
+                State-specific court forms for {stateName} are being added.
+                In the meantime, you can view {stateName} state requirements using the
+                State Rules comparison tool, or use our document templates.
+              </p>
+              <div className="mt-4 flex justify-center gap-3">
+                <Link
+                  href="/dashboard/resources/state-rules"
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                >
+                  View State Rules
+                </Link>
+                <Link
+                  href="/dashboard/templates"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  Document Templates
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
