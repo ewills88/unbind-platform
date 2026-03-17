@@ -13,6 +13,7 @@ import {
   MessageSquare,
   AlertCircle,
 } from 'lucide-react'
+import NewCaseModal from '@/components/cases/NewCaseModal'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -41,6 +42,7 @@ export default function CasesPage() {
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [showNewCaseModal, setShowNewCaseModal] = useState(false)
 
   useEffect(() => {
     loadCases()
@@ -117,7 +119,7 @@ export default function CasesPage() {
               </p>
             </div>
             <button
-              onClick={() => router.push('/dashboard/cases/new')}
+              onClick={() => setShowNewCaseModal(true)}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
@@ -233,6 +235,11 @@ export default function CasesPage() {
             </div>
           )}
         </div>
+
+        <NewCaseModal
+          open={showNewCaseModal}
+          onOpenChange={setShowNewCaseModal}
+        />
       </main>
     </div>
   )

@@ -23,6 +23,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import DocumentUpload from '@/components/dashboard/DocumentUpload'
+import NewCaseModal from '@/components/cases/NewCaseModal'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -36,7 +37,7 @@ interface CaseOption {
   status: string
 }
 
-type ModalType = 'upload' | 'court-date' | 'task' | null
+type ModalType = 'upload' | 'court-date' | 'task' | 'new-case' | null
 
 export default function QuickActions() {
   const router = useRouter()
@@ -198,7 +199,7 @@ export default function QuickActions() {
       title: 'New Case',
       icon: PlusCircle,
       color: 'indigo',
-      action: () => router.push('/dashboard/cases'),
+      action: () => setActiveModal('new-case'),
     },
     {
       id: 'templates',
@@ -445,6 +446,12 @@ export default function QuickActions() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* New Case Modal */}
+      <NewCaseModal
+        open={activeModal === 'new-case'}
+        onOpenChange={(open) => !open && closeModal()}
+      />
 
       {/* Toast Notification */}
       {toast && (

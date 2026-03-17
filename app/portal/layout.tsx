@@ -35,7 +35,7 @@ const navItems: NavItem[] = [
   { name: 'Appointments', href: '/portal/appointments', icon: Calendar },
   { name: 'Billing', href: '/portal/billing', icon: DollarSign },
   { name: 'Notifications', href: '/portal/notifications', icon: Bell },
-  { name: 'Help', href: '/client/resources', icon: HelpCircle },
+  { name: 'Resources', href: '/portal/resources', icon: HelpCircle },
 ]
 
 const mobileTabItems: NavItem[] = [
@@ -178,7 +178,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                 Contact your attorney or visit our help center.
               </p>
               <Link
-                href="/client/resources"
+                href="/portal/resources"
                 className="text-xs font-medium text-blue-600 hover:text-blue-800 mt-2 inline-block"
               >
                 Get Help →

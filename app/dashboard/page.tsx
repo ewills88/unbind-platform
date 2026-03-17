@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
-import { ChevronDown, ChevronUp, Activity } from 'lucide-react'
+import { ChevronDown, ChevronUp, Activity, PanelRightClose, PanelRightOpen } from 'lucide-react'
 import Sidebar from '@/components/layout/Sidebar'
 import ActiveCasesOverview from '@/components/dashboard/ActiveCasesOverview'
 import QuickActions from '@/components/dashboard/QuickActions'
@@ -28,34 +28,67 @@ interface Profile {
 
 function RightSidebar() {
   const [activityOpen, setActivityOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('rightSidebarCollapsed') === 'true'
+    }
+    return false
+  })
+
+  const toggleCollapsed = () => {
+    const next = !collapsed
+    setCollapsed(next)
+    localStorage.setItem('rightSidebarCollapsed', String(next))
+  }
 
   return (
-    <aside className="hidden xl:block w-80 border-l border-gray-200 bg-white overflow-y-auto">
-      <div className="p-6 space-y-6">
-        <UpcomingDeadlines limit={5} />
-
-        {/* Collapsible Recent Activity */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <button
-            onClick={() => setActivityOpen(!activityOpen)}
-            className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
-          >
-            <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-gray-500" />
-              <span className="text-sm font-semibold text-gray-900">Recent Activity</span>
-            </div>
-            {activityOpen ? (
-              <ChevronUp className="w-4 h-4 text-gray-400" />
-            ) : (
-              <ChevronDown className="w-4 h-4 text-gray-400" />
-            )}
-          </button>
-          {activityOpen && (
-            <div className="border-t border-gray-200">
-              <RecentActivity />
-            </div>
+    <aside className={`hidden xl:flex border-l border-gray-200 bg-white transition-all duration-300 ${
+      collapsed ? 'w-12' : 'w-80'
+    }`}>
+      {/* Collapse toggle */}
+      <div className={`flex flex-col ${collapsed ? 'w-12 items-center pt-4' : 'w-full'}`}>
+        <button
+          onClick={toggleCollapsed}
+          className={`flex items-center justify-center p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors ${
+            collapsed ? 'mx-auto' : 'ml-auto mr-2 mt-2'
+          }`}
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {collapsed ? (
+            <PanelRightOpen className="w-4 h-4" />
+          ) : (
+            <PanelRightClose className="w-4 h-4" />
           )}
-        </div>
+        </button>
+
+        {!collapsed && (
+          <div className="flex-1 overflow-y-auto p-6 pt-2 space-y-6">
+            <UpcomingDeadlines limit={5} />
+
+            {/* Collapsible Recent Activity */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              <button
+                onClick={() => setActivityOpen(!activityOpen)}
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm font-semibold text-gray-900">Recent Activity</span>
+                </div>
+                {activityOpen ? (
+                  <ChevronUp className="w-4 h-4 text-gray-400" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-gray-400" />
+                )}
+              </button>
+              {activityOpen && (
+                <div className="border-t border-gray-200">
+                  <RecentActivity />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </aside>
   )
