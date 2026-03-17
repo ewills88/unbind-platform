@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
 // Create authenticated Supabase client
-async function getAuthenticatedClient() {
+async function getAuthenticatedClient(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
@@ -12,6 +12,19 @@ async function getAuthenticatedClient() {
     return { client: null, user: null }
   }
 
+  // Try Authorization header first (from client-side session), then fall back to cookies
+  const authHeader = request.headers.get('authorization')
+  const accessToken = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null
+
+  if (accessToken) {
+    const supabase = createClient(url, key)
+    const { data: { user }, error } = await supabase.auth.getUser(accessToken)
+    if (!error && user) {
+      return { client: supabase, user }
+    }
+  }
+
+  // Fallback to cookie-based auth
   const cookieStore = await cookies()
   const supabase = createClient(url, key, {
     global: {
@@ -21,7 +34,6 @@ async function getAuthenticatedClient() {
     }
   })
 
-  // Verify user is authenticated
   const { data: { user }, error } = await supabase.auth.getUser()
 
   if (error || !user) {
@@ -34,7 +46,7 @@ async function getAuthenticatedClient() {
 export async function POST(request: NextRequest) {
   try {
     // Verify authentication
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
 
     if (!user) {
       return NextResponse.json(

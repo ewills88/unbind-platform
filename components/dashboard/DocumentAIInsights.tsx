@@ -21,8 +21,14 @@ import {
   Clock,
   TrendingUp
 } from 'lucide-react'
+import { createClient } from '@supabase/supabase-js'
 import { DocumentSummary, DocumentExtraction, DocumentAIInsights as InsightsType } from '@/types/ai'
 import { TagBadge } from '@/components/tags'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
 interface DocumentAIInsightsProps {
   documentId: string
@@ -71,11 +77,18 @@ export default function DocumentAIInsights({
     try {
       console.log('🚀 Starting analysis:', { documentId, filename, mimeType, type })
 
+      // Get current session token for API auth
+      const { data: { session } } = await supabase.auth.getSession()
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`
+      }
+
       const response = await fetch('/api/analyze-document', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers,
         body: JSON.stringify({
           documentId,
           fileUrl,
@@ -161,7 +174,10 @@ export default function DocumentAIInsights({
 
       onAnalysisComplete?.()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Analysis failed')
+      const msg = err instanceof Error ? err.message : 'Analysis failed'
+      setError(msg.includes('Unauthorized') || msg.includes('logged in')
+        ? 'Session expired. Please refresh the page and try again.'
+        : msg)
     } finally {
       setLoading(false)
     }

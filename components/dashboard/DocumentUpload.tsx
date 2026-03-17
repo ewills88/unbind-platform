@@ -91,6 +91,25 @@ export default function DocumentUpload({ caseId, onUploadComplete }: DocumentUpl
         prev.map(f => f.file === file ? { ...f, progress: 50 } : f)
       )
 
+      // Check for duplicate filename in the same case
+      const { data: existingDocs } = await supabase
+        .from('documents')
+        .select('id, original_filename')
+        .eq('case_id', caseId)
+        .eq('original_filename', file.name)
+
+      if (existingDocs && existingDocs.length > 0) {
+        const overwrite = confirm(
+          `A document named "${file.name}" already exists in this case. Upload anyway with a modified name?`
+        )
+        if (!overwrite) {
+          // Clean up the uploaded storage file
+          await supabase.storage.from('case-documents').remove([storagePath])
+          setUploadingFiles(prev => prev.filter(f => f.file !== file))
+          return
+        }
+      }
+
       // Insert document record
       const { data: docData, error: dbError } = await supabase
         .from('documents')
@@ -119,11 +138,18 @@ export default function DocumentUpload({ caseId, onUploadComplete }: DocumentUpl
 
       // 🎯 TRIGGER AI ANALYSIS
       console.log('🤖 Calling AI analysis API...')
-      
+
       try {
+        // Get auth token for API call
+        const { data: { session } } = await supabase.auth.getSession()
+        const aiHeaders: Record<string, string> = { 'Content-Type': 'application/json' }
+        if (session?.access_token) {
+          aiHeaders['Authorization'] = `Bearer ${session.access_token}`
+        }
+
         const aiResponse = await fetch('/api/analyze-document', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: aiHeaders,
           body: JSON.stringify({
             documentId: docData.id,
             fileUrl: publicUrl,

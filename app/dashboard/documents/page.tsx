@@ -239,6 +239,7 @@ export default function DocumentsPage() {
 
   const handleViewModeChange = (mode: ViewMode) => {
     setViewMode(mode)
+    setShowAnalytics(false)
     localStorage.setItem('documentViewMode', mode)
   }
 
@@ -586,10 +587,17 @@ export default function DocumentsPage() {
 
   const filteredDocuments = getSortedDocuments(
     documents.filter(doc => {
-      // Search filter
-      const matchesSearch =
-        doc.original_filename.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      // Search filter - match filename, description, category label, or case name
+      const query = searchQuery.toLowerCase()
+      const categoryLabel = getCategoryLabel(doc.category).toLowerCase()
+      const caseName = (doc as Record<string, unknown>).case
+        ? `${((doc as Record<string, unknown>).case as Record<string, string>)?.client_name || ''} ${((doc as Record<string, unknown>).case as Record<string, string>)?.spouse_name || ''}`.toLowerCase()
+        : ''
+      const matchesSearch = !searchQuery ||
+        doc.original_filename.toLowerCase().includes(query) ||
+        doc.description?.toLowerCase().includes(query) ||
+        categoryLabel.includes(query) ||
+        caseName.includes(query)
 
       // Tag filter - document must have ALL selected tags
       const matchesTags = tagFilter.length === 0 || tagFilter.every(tagId =>
@@ -848,13 +856,31 @@ export default function DocumentsPage() {
             <div className="mb-8">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Upload New Documents</h2>
-                <DocumentUpload
-                  caseId={selectedCase === 'all' ? cases[0].id : selectedCase}
-                  onUploadComplete={() => {
-                    loadDocuments()
-                    setShowUpload(false)
-                  }}
-                />
+                {selectedCase === 'all' ? (
+                  <div className="text-center py-6">
+                    <FolderOpen className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+                    <p className="text-gray-700 font-medium mb-1">Select a case first</p>
+                    <p className="text-sm text-gray-500 mb-4">Documents must be assigned to a case. Use the case filter above to select one.</p>
+                    <select
+                      onChange={(e) => { if (e.target.value) setSelectedCase(e.target.value) }}
+                      className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      defaultValue=""
+                    >
+                      <option value="" disabled>Choose a case...</option>
+                      {cases.map(c => (
+                        <option key={c.id} value={c.id}>{c.client_name} v. {c.spouse_name}</option>
+                      ))}
+                    </select>
+                  </div>
+                ) : (
+                  <DocumentUpload
+                    caseId={selectedCase}
+                    onUploadComplete={() => {
+                      loadDocuments()
+                      setShowUpload(false)
+                    }}
+                  />
+                )}
               </div>
             </div>
           )}

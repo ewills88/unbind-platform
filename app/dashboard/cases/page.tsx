@@ -172,8 +172,9 @@ export default function CasesPage() {
               {filteredCases.map((c) => (
                 <button
                   key={c.id}
+                  type="button"
                   onClick={() => router.push(`/dashboard/cases/${c.id}`)}
-                  className="w-full text-left p-4 hover:bg-gray-50 transition-colors"
+                  className="w-full text-left p-4 hover:bg-gray-50 transition-colors cursor-pointer focus:outline-none focus:bg-blue-50"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
