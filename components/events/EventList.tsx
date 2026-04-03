@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { Plus, Filter, Calendar, AlertCircle, CheckCircle2, RefreshCw, List, GitBranch } from 'lucide-react'
@@ -58,7 +60,7 @@ export default function EventList({ caseId, currentUserId }: EventListProps) {
       if (statusFilter !== 'all') params.append('status', statusFilter)
       if (typeFilter !== 'all') params.append('event_type', typeFilter)
 
-      const response = await fetch(`/api/cases/${caseId}/events?${params.toString()}`)
+      const response = await authFetch(`/api/cases/${caseId}/events?${params.toString()}`)
 
       if (!response.ok) {
         throw new Error('Failed to load events')
@@ -111,7 +113,7 @@ export default function EventList({ caseId, currentUserId }: EventListProps) {
   const handleCreateEvent = async (data: CreateEventRequest) => {
     setIsSubmitting(true)
     try {
-      const response = await fetch(`/api/cases/${caseId}/events`, {
+      const response = await authFetch(`/api/cases/${caseId}/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -137,7 +139,7 @@ export default function EventList({ caseId, currentUserId }: EventListProps) {
 
     setIsSubmitting(true)
     try {
-      const response = await fetch(`/api/events/${editingEvent.id}`, {
+      const response = await authFetch(`/api/events/${editingEvent.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -160,7 +162,7 @@ export default function EventList({ caseId, currentUserId }: EventListProps) {
 
   const handleStatusChange = async (eventId: string, status: 'completed' | 'cancelled') => {
     try {
-      const response = await fetch(`/api/events/${eventId}`, {
+      const response = await authFetch(`/api/events/${eventId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: status === 'completed' ? 'completed' : 'upcoming' })
@@ -180,7 +182,7 @@ export default function EventList({ caseId, currentUserId }: EventListProps) {
     if (!confirm('Are you sure you want to delete this event?')) return
 
     try {
-      const response = await fetch(`/api/events/${eventId}`, {
+      const response = await authFetch(`/api/events/${eventId}`, {
         method: 'DELETE'
       })
 

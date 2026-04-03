@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   X, Send, Loader2, ChevronRight, ChevronLeft,
@@ -75,8 +77,8 @@ export default function EFilingSubmitModal({
     async function load() {
       try {
         const [credsRes, courtsRes] = await Promise.all([
-          fetch(`/api/efiling/credentials?firm_id=${firmId}`),
-          fetch(`/api/courts?state_code=${stateCode}`),
+          authFetch(`/api/efiling/credentials?firm_id=${firmId}`),
+          authFetch(`/api/courts?state_code=${stateCode}`),
         ])
 
         if (credsRes.ok) {
@@ -108,8 +110,7 @@ export default function EFilingSubmitModal({
 
     async function loadCodes() {
       try {
-        const res = await fetch(
-          `/api/efiling/codes?firm_id=${firmId}&court_location_code=${courtLocationCode}&type=filing`
+        const res = await authFetch(`/api/efiling/codes?firm_id=${firmId}&court_location_code=${courtLocationCode}&type=filing`
         )
         if (res.ok) {
           const json = await res.json()
@@ -127,7 +128,7 @@ export default function EFilingSubmitModal({
     setError(null)
 
     try {
-      const res = await fetch('/api/efiling/submit', {
+      const res = await authFetch('/api/efiling/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

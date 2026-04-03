@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   FileText,
@@ -57,7 +59,7 @@ export default function GeneratedDocumentsList({
       const params = new URLSearchParams()
       if (filterStatus) params.set('status', filterStatus)
 
-      const response = await fetch(`/api/cases/${caseId}/documents/generated?${params}`)
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated?${params}`)
       if (!response.ok) throw new Error('Failed to fetch documents')
 
       const data = await response.json()
@@ -72,7 +74,7 @@ export default function GeneratedDocumentsList({
 
   const handleStatusChange = async (documentId: string, newStatus: GeneratedDocumentStatus) => {
     try {
-      const response = await fetch(`/api/cases/${caseId}/documents/generated/${documentId}`, {
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
@@ -94,7 +96,7 @@ export default function GeneratedDocumentsList({
     if (!confirm('Are you sure you want to delete this document?')) return
 
     try {
-      const response = await fetch(`/api/cases/${caseId}/documents/generated/${documentId}`, {
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}`, {
         method: 'DELETE'
       })
 

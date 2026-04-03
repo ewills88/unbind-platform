@@ -24,6 +24,7 @@ import {
 import { createClient } from '@supabase/supabase-js'
 import { DocumentSummary, DocumentExtraction, DocumentAIInsights as InsightsType } from '@/types/ai'
 import { TagBadge } from '@/components/tags'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -86,7 +87,7 @@ export default function DocumentAIInsights({
         headers['Authorization'] = `Bearer ${session.access_token}`
       }
 
-      const response = await fetch('/api/analyze-document', {
+      const response = await authFetch('/api/analyze-document', {
         method: 'POST',
         headers,
         body: JSON.stringify({

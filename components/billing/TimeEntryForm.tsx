@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState } from 'react'
 import { X, Clock, DollarSign, AlertCircle } from 'lucide-react'
 import {
@@ -56,7 +58,7 @@ export default function TimeEntryForm({
     try {
       setLoading(true)
 
-      const response = await fetch(`/api/cases/${caseId}/time-entries`, {
+      const response = await authFetch(`/api/cases/${caseId}/time-entries`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

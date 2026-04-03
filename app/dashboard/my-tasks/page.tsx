@@ -22,6 +22,7 @@ import {
   getDaysUntilDue,
 } from '@/types/collaboration'
 import { Label } from '@/components/ui/label'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 export default function MyTasksPage() {
   const router = useRouter()
@@ -38,7 +39,7 @@ export default function MyTasksPage() {
     try {
       const params = new URLSearchParams()
       if (statusFilter !== 'active') params.set('status', statusFilter)
-      const res = await fetch(`/api/delegated-tasks?${params}`)
+      const res = await authFetch(`/api/delegated-tasks?${params}`)
       const data = await res.json()
       setTasks(data.tasks || [])
     } finally {
@@ -56,7 +57,7 @@ export default function MyTasksPage() {
 
   const handleStatusChange = async (taskId: string, newStatus: string, extra?: Record<string, unknown>) => {
     try {
-      const res = await fetch(`/api/delegated-tasks/${taskId}`, {
+      const res = await authFetch(`/api/delegated-tasks/${taskId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus, ...extra }),

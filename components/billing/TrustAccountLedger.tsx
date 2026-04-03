@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   Wallet, Plus, Minus, RefreshCw, Calendar, ArrowUpRight,
@@ -34,7 +36,7 @@ export default function TrustAccountLedger({
   async function fetchTrustAccount() {
     try {
       setLoading(true)
-      const response = await fetch(`/api/cases/${caseId}/trust`)
+      const response = await authFetch(`/api/cases/${caseId}/trust`)
       if (response.ok) {
         const data = await response.json()
         setTrustAccount(data.trust_account)
@@ -49,7 +51,7 @@ export default function TrustAccountLedger({
 
   async function handleDeposit(amount: number, description: string) {
     try {
-      const response = await fetch(`/api/cases/${caseId}/trust`, {
+      const response = await authFetch(`/api/cases/${caseId}/trust`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -70,7 +72,7 @@ export default function TrustAccountLedger({
 
   async function handleWithdraw(amount: number, description: string) {
     try {
-      const response = await fetch(`/api/cases/${caseId}/trust`, {
+      const response = await authFetch(`/api/cases/${caseId}/trust`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -10,6 +10,7 @@ import {
   CheckCircle2, ArrowRight, Loader2
 } from 'lucide-react'
 import { z } from 'zod'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const betaSignupSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -119,7 +120,7 @@ export default function BetaSignupPage() {
 
     setLoading(true)
     try {
-      const response = await fetch('/api/beta/signup', {
+      const response = await authFetch('/api/beta/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parsed.data),

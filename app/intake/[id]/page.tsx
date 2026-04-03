@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { Loader2, AlertCircle } from 'lucide-react'
 import IntakeWizard from '@/components/intake/IntakeWizard'
 import { ClientIntake } from '@/types/intake'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 export default function IntakePage() {
   const params = useParams()
@@ -18,7 +19,7 @@ export default function IntakePage() {
   useEffect(() => {
     const fetchIntake = async () => {
       try {
-        const response = await fetch(`/api/intakes/${intakeId}`)
+        const response = await authFetch(`/api/intakes/${intakeId}`)
 
         if (!response.ok) {
           if (response.status === 404) {

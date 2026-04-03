@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import type { SettlementProposal, ProposalStatus } from '@/types/settlement'
 import { PROPOSAL_STATUS_INFO, formatCurrency } from '@/types/settlement'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -26,7 +27,7 @@ export default function CaseSettlementTab({ caseId }: Props) {
 
   const fetchProposals = useCallback(async () => {
     try {
-      const res = await fetch(`/api/cases/${caseId}/proposals`)
+      const res = await authFetch(`/api/cases/${caseId}/proposals`)
       if (res.ok) {
         const d = await res.json()
         setProposals(d.data || [])
@@ -43,13 +44,13 @@ export default function CaseSettlementTab({ caseId }: Props) {
   async function handleStatusChange(id: string, status: ProposalStatus) {
     try {
       if (status === 'sent') {
-        await fetch(`/api/proposals/${id}`, {
+        await authFetch(`/api/proposals/${id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ _action: 'send' }),
         })
       } else {
-        await fetch(`/api/proposals/${id}`, {
+        await authFetch(`/api/proposals/${id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status }),
@@ -61,7 +62,7 @@ export default function CaseSettlementTab({ caseId }: Props) {
 
   async function handleCounter(id: string) {
     try {
-      const res = await fetch(`/api/proposals/${id}`, {
+      const res = await authFetch(`/api/proposals/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _action: 'counter' }),
@@ -77,7 +78,7 @@ export default function CaseSettlementTab({ caseId }: Props) {
   async function handleDelete(id: string) {
     if (!confirm('Delete this proposal?')) return
     try {
-      await fetch(`/api/proposals/${id}`, { method: 'DELETE' })
+      await authFetch(`/api/proposals/${id}`, { method: 'DELETE' })
       fetchProposals()
     } catch { /* silently handle */ }
   }

@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import { X, DollarSign, Percent, FileText } from 'lucide-react'
 import {
@@ -42,7 +44,7 @@ export default function DebtForm({ caseId, debt, onSuccess, onCancel }: DebtForm
   useEffect(() => {
     const loadAssets = async () => {
       try {
-        const response = await fetch(`/api/cases/${caseId}/assets`)
+        const response = await authFetch(`/api/cases/${caseId}/assets`)
         if (response.ok) {
           const data = await response.json()
           setAssets(data.assets || [])

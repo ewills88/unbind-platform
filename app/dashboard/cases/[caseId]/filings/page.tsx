@@ -9,6 +9,7 @@ import NewFilingModal from '@/components/filings/NewFilingModal'
 import FilingChecklist from '@/components/filings/FilingChecklist'
 import HearingManager from '@/components/filings/HearingManager'
 import FormFiller from '@/components/forms/FormFiller'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 type PageTab = 'filings' | 'checklist' | 'forms' | 'hearings'
 
@@ -27,7 +28,7 @@ export default function CaseFilingsPage() {
   useEffect(() => {
     async function loadCase() {
       try {
-        const res = await fetch(`/api/cases/${caseId}/filings`)
+        const res = await authFetch(`/api/cases/${caseId}/filings`)
         if (res.ok) {
           const json = await res.json()
           if (json.state_code) setStateCode(json.state_code)

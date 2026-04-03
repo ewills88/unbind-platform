@@ -20,6 +20,7 @@ import {
 import { Label } from '@/components/ui/label'
 import { formatCurrency } from '@/types/billing'
 import { REVENUE_SHARE_TYPE_INFO, CreateRevenueShareRequest } from '@/types/analytics'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface TeamMember {
   user_id: string
@@ -59,8 +60,8 @@ export default function RevenueSharingModal({ caseId, isOpen, onClose }: Revenue
     setLoading(true)
     try {
       const [teamRes, sharesRes] = await Promise.all([
-        fetch('/api/firms/members'),
-        fetch(`/api/cases/${caseId}/revenue-shares`),
+        authFetch('/api/firms/members'),
+        authFetch(`/api/cases/${caseId}/revenue-shares`),
       ])
 
       const teamData = await teamRes.json()
@@ -124,7 +125,7 @@ export default function RevenueSharingModal({ caseId, isOpen, onClose }: Revenue
     if (totalPercentage > 100) return
     setSaving(true)
     try {
-      const res = await fetch(`/api/cases/${caseId}/revenue-shares`, {
+      const res = await authFetch(`/api/cases/${caseId}/revenue-shares`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ shares }),

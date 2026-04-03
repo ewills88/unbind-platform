@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect, useMemo } from 'react'
 import {
   FileText, Loader2, ExternalLink, Download, Eye,
@@ -34,9 +36,9 @@ export default function FormFiller({ caseId, stateCode }: Props) {
     async function load() {
       try {
         const [formsRes, filledRes, packetsRes] = await Promise.all([
-          fetch(`/api/forms?state_code=${stateCode}`),
-          fetch(`/api/cases/${caseId}/filled-forms`),
-          fetch(`/api/forms/packets?state_code=${stateCode}`),
+          authFetch(`/api/forms?state_code=${stateCode}`),
+          authFetch(`/api/cases/${caseId}/filled-forms`),
+          authFetch(`/api/forms/packets?state_code=${stateCode}`),
         ])
 
         if (formsRes.ok) {
@@ -63,7 +65,7 @@ export default function FormFiller({ caseId, stateCode }: Props) {
   async function handleFillForm(formId: string) {
     setFilling(formId)
     try {
-      const res = await fetch('/api/forms/fill', {
+      const res = await authFetch('/api/forms/fill', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -6,6 +6,7 @@ import {
   Columns3, Plus, Loader2, AlertCircle, Trash2, X, GripVertical,
 } from 'lucide-react'
 import type { CustomFieldDefinition, CustomFieldEntityType, CustomFieldType } from '@/types/admin'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const ENTITY_TYPES: { key: CustomFieldEntityType; label: string }[] = [
   { key: 'case', label: 'Cases' },
@@ -54,7 +55,7 @@ export default function AdminCustomFieldsPage() {
   const fetchFields = async () => {
     setLoading(true)
     try {
-      const res = await fetch(`/api/admin/custom-fields?entityType=${entityType}`)
+      const res = await authFetch(`/api/admin/custom-fields?entityType=${entityType}`)
       if (res.status === 401) { router.push('/login'); return }
       if (res.status === 403) { setError('Access denied'); setLoading(false); return }
       if (!res.ok) throw new Error('Failed')
@@ -86,7 +87,7 @@ export default function AdminCustomFieldsPage() {
         }))
       }
 
-      const res = await fetch('/api/admin/custom-fields', {
+      const res = await authFetch('/api/admin/custom-fields', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -102,7 +103,7 @@ export default function AdminCustomFieldsPage() {
   const handleDelete = async (fieldId: string) => {
     if (!confirm('Delete this custom field?')) return
     try {
-      await fetch('/api/admin/custom-fields', {
+      await authFetch('/api/admin/custom-fields', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fieldId }),

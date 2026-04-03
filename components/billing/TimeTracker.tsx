@@ -6,6 +6,7 @@ import {
   RefreshCw, Briefcase
 } from 'lucide-react'
 import { ActiveTimer, ActivityType, ACTIVITY_TYPE_INFO, formatDuration } from '@/types/billing'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface TimeTrackerProps {
   onTimerStop?: (entry: unknown) => void
@@ -24,7 +25,7 @@ export default function TimeTracker({ onTimerStop, className = '' }: TimeTracker
   // Fetch current timer state
   const fetchTimer = useCallback(async () => {
     try {
-      const response = await fetch('/api/timer')
+      const response = await authFetch('/api/timer')
       if (response.ok) {
         const data = await response.json()
         setTimer(data.timer)
@@ -59,7 +60,7 @@ export default function TimeTracker({ onTimerStop, className = '' }: TimeTracker
 
   async function handleAction(action: string, caseId?: string) {
     try {
-      const response = await fetch('/api/timer', {
+      const response = await authFetch('/api/timer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -102,7 +103,7 @@ export default function TimeTracker({ onTimerStop, className = '' }: TimeTracker
     if (!timer) return
 
     try {
-      await fetch('/api/timer', {
+      await authFetch('/api/timer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

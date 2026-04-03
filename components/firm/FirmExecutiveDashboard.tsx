@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
@@ -46,10 +48,10 @@ export default function FirmExecutiveDashboard() {
     setLoading(true)
     try {
       const [metricsRes, pipelineRes, perfRes, finRes] = await Promise.all([
-        fetch(`/api/firms/analytics?range=${timeRange}`),
-        fetch('/api/firms/analytics/pipeline'),
-        fetch('/api/firms/analytics/performance'),
-        fetch('/api/firms/analytics/financial'),
+        authFetch(`/api/firms/analytics?range=${timeRange}`),
+        authFetch('/api/firms/analytics/pipeline'),
+        authFetch('/api/firms/analytics/performance'),
+        authFetch('/api/firms/analytics/financial'),
       ])
 
       const [metricsData, pipelineData, perfData, finData] = await Promise.all([

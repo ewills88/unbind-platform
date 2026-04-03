@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import { Loader2, UserPlus, AlertCircle } from 'lucide-react'
 import {
@@ -54,8 +56,8 @@ export default function CaseAssignmentModal({
     setError(null)
     try {
       const [membersRes, assignmentsRes] = await Promise.all([
-        fetch('/api/firms/members'),
-        fetch(`/api/cases/${caseId}/assignments`),
+        authFetch('/api/firms/members'),
+        authFetch(`/api/cases/${caseId}/assignments`),
       ])
 
       const membersData = await membersRes.json()
@@ -124,7 +126,7 @@ export default function CaseAssignmentModal({
 
     setSaving(true)
     try {
-      const res = await fetch(`/api/cases/${caseId}/assign`, {
+      const res = await authFetch(`/api/cases/${caseId}/assign`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ assignments: validAssignments }),

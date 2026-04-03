@@ -20,7 +20,7 @@ export function verifyResidency(input: ResidencyInput): ResidencyResult {
       state_required_days: 0,
       county_required_days: 0,
       missing_documents: [],
-      recommendations: [`State "${input.stateCode}" is not yet supported. Currently supported: CA, TX, FL.`],
+      recommendations: [`State "${input.stateCode}" is not recognized. Please use a valid 2-letter state code.`],
     }
   }
 

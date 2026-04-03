@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { PortalDashboardData, ACTIVITY_TYPE_ICONS } from '@/types/portal'
 import { STAGE_DEFINITIONS, STAGE_ORDER, CaseStage } from '@/types/client'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString('en-US', {
@@ -44,7 +45,7 @@ export default function PortalDashboardPage() {
 
   const fetchDashboard = async () => {
     try {
-      const res = await fetch('/api/portal/dashboard')
+      const res = await authFetch('/api/portal/dashboard')
       if (res.status === 401) {
         router.push('/portal/login')
         return

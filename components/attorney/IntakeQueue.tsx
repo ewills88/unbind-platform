@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
@@ -54,8 +56,7 @@ export default function IntakeQueue() {
   const fetchIntakes = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(
-        `/api/attorney/intakes?filter=${filter}&sort=${sort}`
+      const response = await authFetch(`/api/attorney/intakes?filter=${filter}&sort=${sort}`
       )
       if (response.ok) {
         const data = await response.json()

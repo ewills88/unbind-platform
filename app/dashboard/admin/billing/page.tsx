@@ -7,6 +7,7 @@ import {
   Receipt, Zap,
 } from 'lucide-react'
 import type { Subscription, SubscriptionPlan, SubscriptionInvoice } from '@/types/admin'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 export default function AdminBillingPage() {
   const router = useRouter()
@@ -23,8 +24,8 @@ export default function AdminBillingPage() {
   const fetchData = async () => {
     try {
       const [subRes, invRes] = await Promise.all([
-        fetch('/api/admin/subscription'),
-        fetch('/api/admin/subscription?type=invoices'),
+        authFetch('/api/admin/subscription'),
+        authFetch('/api/admin/subscription?type=invoices'),
       ])
       if (subRes.status === 401) { router.push('/login'); return }
       if (subRes.status === 403) { setError('Access denied'); setLoading(false); return }
@@ -45,7 +46,7 @@ export default function AdminBillingPage() {
   const handleUpgrade = async (planId: string, cycle: 'monthly' | 'annual') => {
     setUpgrading(true)
     try {
-      const res = await fetch('/api/admin/subscription', {
+      const res = await authFetch('/api/admin/subscription', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'checkout', planId, billingCycle: cycle }),
@@ -60,7 +61,7 @@ export default function AdminBillingPage() {
 
   const handleManageBilling = async () => {
     try {
-      const res = await fetch('/api/admin/subscription', {
+      const res = await authFetch('/api/admin/subscription', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'portal' }),

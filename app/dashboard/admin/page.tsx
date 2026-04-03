@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -42,8 +44,8 @@ export default function AdminDashboardPage() {
   const fetchStats = async () => {
     try {
       const [usersRes, subRes] = await Promise.all([
-        fetch('/api/admin/users'),
-        fetch('/api/admin/subscription'),
+        authFetch('/api/admin/users'),
+        authFetch('/api/admin/subscription'),
       ])
 
       if (usersRes.status === 401) {

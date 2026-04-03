@@ -11,6 +11,7 @@ import MediationManager from '@/components/settlement/MediationManager'
 import DocumentGenerator from '@/components/settlement/DocumentGenerator'
 import DocumentDetail from '@/components/settlement/DocumentDetail'
 import SettlementAnalytics from '@/components/settlement/SettlementAnalytics'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 type TabKey = 'proposals' | 'timeline' | 'scenarios' | 'mediation' | 'documents' | 'analytics'
 
@@ -97,7 +98,7 @@ function DocumentsTab({ caseId, onSelectDoc }: { caseId: string; onSelectDoc: (i
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/cases/${caseId}/settlement-documents`)
+        const res = await authFetch(`/api/cases/${caseId}/settlement-documents`)
         if (res.ok) {
           const json = await res.json()
           setDocs(json.data || [])

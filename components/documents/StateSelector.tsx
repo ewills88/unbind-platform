@@ -6,6 +6,7 @@ import {
   ExternalLink, ChevronDown, ChevronUp
 } from 'lucide-react'
 import { StateRequirements } from '@/types/document-collaboration'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface StateSelectorProps {
   currentState: string
@@ -45,7 +46,7 @@ export default function StateSelector({
   async function fetchStates() {
     try {
       setLoading(true)
-      const response = await fetch('/api/states')
+      const response = await authFetch('/api/states')
       if (response.ok) {
         const data = await response.json()
         setStates(data.states || [])

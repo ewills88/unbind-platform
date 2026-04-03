@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import type { AllFirmSettings } from '@/types/admin'
 import { US_TIMEZONES, BILLING_INCREMENT_OPTIONS, CASE_NUMBER_FORMAT_OPTIONS } from '@/types/admin'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 type SettingsTab = 'profile' | 'billing' | 'cases' | 'notifications'
 
@@ -32,7 +33,7 @@ export default function AdminSettingsPage() {
 
   const fetchSettings = async () => {
     try {
-      const res = await fetch('/api/admin/settings')
+      const res = await authFetch('/api/admin/settings')
       if (res.status === 401) { router.push('/login'); return }
       if (res.status === 403) { setError('Access denied'); setLoading(false); return }
       if (!res.ok) throw new Error('Failed to load settings')
@@ -50,7 +51,7 @@ export default function AdminSettingsPage() {
     setSaving(true)
     setSaved(false)
     try {
-      const res = await fetch('/api/admin/settings', {
+      const res = await authFetch('/api/admin/settings', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ section, updates }),

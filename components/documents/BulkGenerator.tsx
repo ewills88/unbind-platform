@@ -6,6 +6,7 @@ import {
   ChevronRight, Download, FolderOpen
 } from 'lucide-react'
 import { PACKAGE_TEMPLATES, PackageTemplate, DocumentPackage } from '@/types/document-collaboration'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface BulkGeneratorProps {
   caseId: string
@@ -52,7 +53,7 @@ export default function BulkGenerator({
   async function fetchTemplates() {
     try {
       setLoading(true)
-      const response = await fetch(`/api/states/${stateCode}?templates=true`)
+      const response = await authFetch(`/api/states/${stateCode}?templates=true`)
       if (response.ok) {
         const data = await response.json()
         setAvailableTemplates(data.templates || [])
@@ -96,7 +97,7 @@ export default function BulkGenerator({
       setStep('generating')
       setError(null)
 
-      const response = await fetch(`/api/cases/${caseId}/documents/packages`, {
+      const response = await authFetch(`/api/cases/${caseId}/documents/packages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,22 +1,6 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
 import { logAudit } from '@/lib/admin/auditService'
-
-async function getAuthenticatedClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (!url || !key) return { client: null, user: null }
-
-  const cookieStore = await cookies()
-  const supabase = createClient(url, key, {
-    global: { headers: { cookie: cookieStore.toString() } },
-  })
-
-  const { data: { user }, error } = await supabase.auth.getUser()
-  if (error || !user) return { client: null, user: null }
-  return { client: supabase, user }
-}
+import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 async function checkAdminAccess(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,9 +29,9 @@ async function checkAdminAccess(
 }
 
 // GET /api/admin/integrations
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -76,7 +60,7 @@ export async function GET() {
 // POST /api/admin/integrations - Connect integration
 export async function POST(req: Request) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -158,7 +142,7 @@ export async function POST(req: Request) {
 // PATCH /api/admin/integrations - Update integration settings
 export async function PATCH(req: Request) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -194,7 +178,7 @@ export async function PATCH(req: Request) {
 // DELETE /api/admin/integrations - Disconnect
 export async function DELETE(req: Request) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

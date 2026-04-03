@@ -106,8 +106,8 @@ export default function PerformanceDashboard() {
   const fetchData = useCallback(async () => {
     try {
       const [healthRes, metricsRes] = await Promise.all([
-        fetch('/api/health'),
-        fetch('/api/metrics'),
+        authFetch('/api/health'),
+        authFetch('/api/metrics'),
       ]);
 
       if (healthRes.ok) {

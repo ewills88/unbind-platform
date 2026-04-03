@@ -11,6 +11,7 @@ import type {
   DocumentGenerationState,
 } from '@/types/settlement'
 import { SETTLEMENT_SECTIONS, formatCurrency } from '@/types/settlement'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface Props {
   caseId: string
@@ -41,7 +42,7 @@ export default function DocumentGenerator({ caseId, onGenerated }: Props) {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/cases/${caseId}/proposals`)
+        const res = await authFetch(`/api/cases/${caseId}/proposals`)
         if (res.ok) {
           const json = await res.json()
           setProposals(json.data || [])
@@ -59,7 +60,7 @@ export default function DocumentGenerator({ caseId, onGenerated }: Props) {
   useEffect(() => {
     async function loadTemplates() {
       try {
-        const res = await fetch(`/api/settlement-templates?state_code=${state.stateCode}`)
+        const res = await authFetch(`/api/settlement-templates?state_code=${state.stateCode}`)
         if (res.ok) {
           const json = await res.json()
           setTemplates(json.data || [])
@@ -79,7 +80,7 @@ export default function DocumentGenerator({ caseId, onGenerated }: Props) {
     setError(null)
 
     try {
-      const res = await fetch(`/api/cases/${caseId}/settlement-documents`, {
+      const res = await authFetch(`/api/cases/${caseId}/settlement-documents`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

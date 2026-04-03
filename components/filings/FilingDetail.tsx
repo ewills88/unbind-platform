@@ -27,6 +27,7 @@ import {
 } from '@/types/filings'
 import ServiceRecordForm from './ServiceRecordForm'
 import EFilingSubmitModal from './EFilingSubmitModal'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -60,7 +61,7 @@ export default function FilingDetail({ caseId, filingId, spouseName, onBack }: P
 
   async function loadFiling() {
     try {
-      const res = await fetch(`/api/cases/${caseId}/filings/${filingId}`)
+      const res = await authFetch(`/api/cases/${caseId}/filings/${filingId}`)
       if (res.ok) {
         const json = await res.json()
         setFiling(json.data)
@@ -97,7 +98,7 @@ export default function FilingDetail({ caseId, filingId, spouseName, onBack }: P
     if (!filing) return
     setUpdating(true)
     try {
-      const res = await fetch(`/api/cases/${caseId}/filings/${filingId}`, {
+      const res = await authFetch(`/api/cases/${caseId}/filings/${filingId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -114,7 +115,7 @@ export default function FilingDetail({ caseId, filingId, spouseName, onBack }: P
 
   async function completeDeadline(deadlineId: string) {
     try {
-      await fetch(`/api/cases/${caseId}/filings/${filingId}/deadlines`, {
+      await authFetch(`/api/cases/${caseId}/filings/${filingId}/deadlines`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ deadline_id: deadlineId, action: 'complete' }),
@@ -127,7 +128,7 @@ export default function FilingDetail({ caseId, filingId, spouseName, onBack }: P
 
   async function waiveDeadline(deadlineId: string) {
     try {
-      await fetch(`/api/cases/${caseId}/filings/${filingId}/deadlines`, {
+      await authFetch(`/api/cases/${caseId}/filings/${filingId}/deadlines`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ deadline_id: deadlineId, action: 'waive' }),

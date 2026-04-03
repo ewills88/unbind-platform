@@ -7,6 +7,7 @@ import MessageComposer from './MessageComposer'
 import TypingIndicator from './TypingIndicator'
 import MessageSearch from './MessageSearch'
 import { useMessages } from '@/hooks/useMessages'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface MessageThreadProps {
   caseId: string
@@ -61,7 +62,7 @@ export default function MessageThread({
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const response = await fetch(`/api/documents?case_id=${caseId}`)
+        const response = await authFetch(`/api/documents?case_id=${caseId}`)
         if (response.ok) {
           const data = await response.json()
           setAvailableDocuments(data.documents || [])

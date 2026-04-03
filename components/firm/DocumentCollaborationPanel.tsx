@@ -15,6 +15,7 @@ import {
   formatRelativeTime,
 } from '@/types/collaboration'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface DocumentCollaborationPanelProps {
   documentId: string
@@ -35,8 +36,8 @@ export default function DocumentCollaborationPanel({
     setLoading(true)
     try {
       const [commentsRes, versionsRes] = await Promise.all([
-        fetch(`/api/documents/${documentId}/comments`),
-        fetch(`/api/documents/${documentId}/versions`),
+        authFetch(`/api/documents/${documentId}/comments`),
+        authFetch(`/api/documents/${documentId}/versions`),
       ])
       const commentsData = await commentsRes.json()
       const versionsData = await versionsRes.json()
@@ -108,7 +109,7 @@ function DocumentCommentsTab({
     if (!newComment.trim()) return
     setPosting(true)
     try {
-      const res = await fetch(`/api/documents/${documentId}/comments`, {
+      const res = await authFetch(`/api/documents/${documentId}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -199,7 +200,7 @@ function CommentCard({
     if (!reply.trim()) return
     setReplyPosting(true)
     try {
-      const res = await fetch(`/api/documents/${documentId}/comments`, {
+      const res = await authFetch(`/api/documents/${documentId}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

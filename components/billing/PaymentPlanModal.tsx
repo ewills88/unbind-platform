@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { X, Info, AlertTriangle, Calendar, CreditCard } from 'lucide-react'
@@ -84,7 +86,7 @@ export default function PaymentPlanModal({ invoice, caseId, onClose, onSuccess }
 
     try {
       const { data: { session } } = await supabase.auth.getSession()
-      const res = await fetch('/api/payment-plans', {
+      const res = await authFetch('/api/payment-plans', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -240,6 +240,7 @@ export default function CasesPage() {
         <NewCaseModal
           open={showNewCaseModal}
           onOpenChange={setShowNewCaseModal}
+          onCaseCreated={loadCases}
         />
       </main>
     </div>

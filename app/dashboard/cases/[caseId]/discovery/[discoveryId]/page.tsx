@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
@@ -41,8 +43,8 @@ export default function DiscoveryDetailPage() {
   const fetchData = useCallback(async () => {
     try {
       const [discRes, itemsRes] = await Promise.all([
-        fetch(`/api/discovery/${discoveryId}`),
-        fetch(`/api/discovery/${discoveryId}/items`),
+        authFetch(`/api/discovery/${discoveryId}`),
+        authFetch(`/api/discovery/${discoveryId}/items`),
       ])
 
       if (discRes.ok) {
@@ -55,7 +57,7 @@ export default function DiscoveryDetailPage() {
       }
 
       // Get case state_code
-      const caseRes = await fetch(`/api/cases/${caseId}/events?limit=0`)
+      const caseRes = await authFetch(`/api/cases/${caseId}/events?limit=0`)
       if (caseRes.ok) {
         // state_code will come from case context; fallback CA
       }
@@ -87,7 +89,7 @@ export default function DiscoveryDetailPage() {
     : 0
 
   async function handleBulkStatus(status: DiscoveryItemStatus) {
-    const res = await fetch('/api/discovery/items/bulk?action=bulk_status', {
+    const res = await authFetch('/api/discovery/items/bulk?action=bulk_status', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ item_ids: selectedItems, status }),
@@ -330,7 +332,7 @@ function DiscoveryItemEditor({
   async function handleSave() {
     setSaving(true)
     try {
-      const res = await fetch(`/api/discovery/items/${item.id}`, {
+      const res = await authFetch(`/api/discovery/items/${item.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -547,7 +549,7 @@ function ObjectionPickerModal({
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/discovery/objection-templates?state_code=${stateCode}`)
+        const res = await authFetch(`/api/discovery/objection-templates?state_code=${stateCode}`)
         if (res.ok) {
           const data = await res.json()
           setTemplates(data.data || [])
@@ -653,7 +655,7 @@ function AddItemsModal({
     setError('')
 
     try {
-      const res = await fetch(`/api/discovery/${discoveryId}/items`, {
+      const res = await authFetch(`/api/discovery/${discoveryId}/items`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(validItems),

@@ -27,6 +27,7 @@ import MarriageDetailsStep from './steps/MarriageDetailsStep'
 import ChildrenCustodyStep from './steps/ChildrenCustodyStep'
 import FinancialOverviewStep from './steps/FinancialOverviewStep'
 import LegalGoalsStep from './steps/LegalGoalsStep'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface IntakeWizardProps {
   intakeId: string
@@ -58,7 +59,7 @@ export default function IntakeWizard({ intakeId, initialData }: IntakeWizardProp
     setError(null)
 
     try {
-      const response = await fetch(`/api/intakes/${intakeId}`, {
+      const response = await authFetch(`/api/intakes/${intakeId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -131,7 +132,7 @@ export default function IntakeWizard({ intakeId, initialData }: IntakeWizardProp
     setValidationErrors({})
 
     try {
-      const response = await fetch(`/api/intakes/${intakeId}/submit`, {
+      const response = await authFetch(`/api/intakes/${intakeId}/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ intake_data: intakeData }),

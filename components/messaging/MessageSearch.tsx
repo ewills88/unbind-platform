@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Search, X, ChevronUp, ChevronDown, Loader2 } from 'lucide-react'
 import { MessageWithSender } from '@/types/messages'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface MessageSearchProps {
   caseId: string
@@ -52,8 +53,7 @@ export default function MessageSearch({
     debounceRef.current = setTimeout(async () => {
       setIsSearching(true)
       try {
-        const response = await fetch(
-          `/api/cases/${caseId}/messages?search=${encodeURIComponent(query)}&limit=50`
+        const response = await authFetch(`/api/cases/${caseId}/messages?search=${encodeURIComponent(query)}&limit=50`
         )
         if (response.ok) {
           const data = await response.json()

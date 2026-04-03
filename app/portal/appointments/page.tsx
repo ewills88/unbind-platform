@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
@@ -60,7 +62,7 @@ export default function PortalAppointmentsPage() {
 
   const fetchAppointments = async () => {
     try {
-      const res = await fetch(`/api/portal/appointments?filter=${filter}`)
+      const res = await authFetch(`/api/portal/appointments?filter=${filter}`)
       if (res.status === 401) {
         router.push('/portal/login')
         return
@@ -78,7 +80,7 @@ export default function PortalAppointmentsPage() {
 
   const fetchAppointmentTypes = async () => {
     try {
-      const res = await fetch('/api/portal/appointments/types')
+      const res = await authFetch('/api/portal/appointments/types')
       if (res.ok) {
         const data = await res.json()
         setAppointmentTypes(data.data || [])
@@ -102,7 +104,7 @@ export default function PortalAppointmentsPage() {
         start_date: startDate.toISOString(),
         end_date: endDate.toISOString(),
       })
-      const res = await fetch(`/api/portal/appointments/availability?${params}`)
+      const res = await authFetch(`/api/portal/appointments/availability?${params}`)
       if (res.ok) {
         const data = await res.json()
         setAvailableSlots(data.data || [])
@@ -144,7 +146,7 @@ export default function PortalAppointmentsPage() {
     setBooking(true)
     setError(null)
     try {
-      const res = await fetch('/api/portal/appointments', {
+      const res = await authFetch('/api/portal/appointments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -172,7 +174,7 @@ export default function PortalAppointmentsPage() {
     if (!cancelReason.trim()) return
     setCancelling(true)
     try {
-      const res = await fetch(`/api/portal/appointments/${appointmentId}/cancel`, {
+      const res = await authFetch(`/api/portal/appointments/${appointmentId}/cancel`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason: cancelReason }),

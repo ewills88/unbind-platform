@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Bell, BellOff, X } from 'lucide-react'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface Props {
   userId: string | null
@@ -48,7 +49,7 @@ export default function PushNotificationSetup({ userId }: Props) {
       })
 
       // Send subscription to server
-      await fetch('/api/push/subscribe', {
+      await authFetch('/api/push/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

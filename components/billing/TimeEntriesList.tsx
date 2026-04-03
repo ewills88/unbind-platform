@@ -13,6 +13,7 @@ import {
   formatCurrency,
   formatDate
 } from '@/types/billing'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 import TimeEntryForm from './TimeEntryForm'
 
 interface TimeEntriesListProps {
@@ -61,7 +62,7 @@ export default function TimeEntriesList({
         url += `activity_type=${filterActivity}&`
       }
 
-      const response = await fetch(url)
+      const response = await authFetch(url)
       if (response.ok) {
         const data = await response.json()
         setEntries(data.entries || [])

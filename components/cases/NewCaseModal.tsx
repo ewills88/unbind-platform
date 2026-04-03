@@ -23,9 +23,10 @@ const allStates = getAllStates()
 interface NewCaseModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onCaseCreated?: () => void
 }
 
-export default function NewCaseModal({ open, onOpenChange }: NewCaseModalProps) {
+export default function NewCaseModal({ open, onOpenChange, onCaseCreated }: NewCaseModalProps) {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -99,6 +100,7 @@ export default function NewCaseModal({ open, onOpenChange }: NewCaseModalProps) 
       if (insertError) throw insertError
 
       handleClose()
+      onCaseCreated?.()
       router.push(`/dashboard/cases/${data.id}`)
     } catch (err) {
       console.error('Error creating case:', err)

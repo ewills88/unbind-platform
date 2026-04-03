@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import type { FirmIntegration } from '@/types/admin'
 import { INTEGRATION_INFO } from '@/types/admin'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const ICON_MAP: Record<string, typeof Calendar> = {
   Calendar, HardDrive, Mail, Calculator, CreditCard, Phone,
@@ -30,7 +31,7 @@ export default function AdminIntegrationsPage() {
 
   const fetchIntegrations = async () => {
     try {
-      const res = await fetch('/api/admin/integrations')
+      const res = await authFetch('/api/admin/integrations')
       if (res.status === 401) { router.push('/login'); return }
       if (res.status === 403) { setError('Access denied'); setLoading(false); return }
       if (!res.ok) throw new Error('Failed')
@@ -42,7 +43,7 @@ export default function AdminIntegrationsPage() {
 
   const handleConnect = async (type: string, name: string) => {
     try {
-      const res = await fetch('/api/admin/integrations', {
+      const res = await authFetch('/api/admin/integrations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -59,7 +60,7 @@ export default function AdminIntegrationsPage() {
   const handleDisconnect = async (integrationId: string) => {
     if (!confirm('Disconnect this integration?')) return
     try {
-      await fetch('/api/admin/integrations', {
+      await authFetch('/api/admin/integrations', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ integrationId }),

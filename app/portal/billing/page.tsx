@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
@@ -63,9 +65,9 @@ export default function PortalBillingPage() {
   const fetchData = async () => {
     try {
       const [invRes, methRes, histRes] = await Promise.all([
-        fetch('/api/portal/billing/invoices'),
-        fetch('/api/portal/billing/payment-methods'),
-        fetch('/api/portal/billing/history'),
+        authFetch('/api/portal/billing/invoices'),
+        authFetch('/api/portal/billing/payment-methods'),
+        authFetch('/api/portal/billing/history'),
       ])
 
       if (invRes.status === 401) {
@@ -114,7 +116,7 @@ export default function PortalBillingPage() {
     setProcessing(true)
     setError(null)
     try {
-      const res = await fetch('/api/portal/billing/pay', {
+      const res = await authFetch('/api/portal/billing/pay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -138,7 +140,7 @@ export default function PortalBillingPage() {
 
   const handleSetDefault = async (methodId: string) => {
     try {
-      await fetch(`/api/portal/billing/payment-methods/${methodId}`, {
+      await authFetch(`/api/portal/billing/payment-methods/${methodId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ setDefault: true }),
@@ -151,7 +153,7 @@ export default function PortalBillingPage() {
 
   const handleDeleteMethod = async (methodId: string) => {
     try {
-      await fetch(`/api/portal/billing/payment-methods/${methodId}`, {
+      await authFetch(`/api/portal/billing/payment-methods/${methodId}`, {
         method: 'DELETE',
       })
       fetchData()
@@ -164,7 +166,7 @@ export default function PortalBillingPage() {
     setAddingCard(true)
     setError(null)
     try {
-      const setupRes = await fetch('/api/portal/billing/payment-methods/setup', {
+      const setupRes = await authFetch('/api/portal/billing/payment-methods/setup', {
         method: 'POST',
       })
       const setupData = await setupRes.json()

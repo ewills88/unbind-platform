@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
 import { calculateDeadline, calculateMonthDeadline, formatShortDate } from '@/lib/dates'
 import { EventType } from '@/types/events'
+import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 interface RouteParams {
   params: Promise<{ caseId: string }>
@@ -57,36 +56,10 @@ const EVENT_TITLE_MAP: Record<string, string> = {
   mediation_complete: 'Mediation Deadline',
 }
 
-async function getAuthenticatedClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-  if (!url || !key) {
-    return { client: null, user: null }
-  }
-
-  const cookieStore = await cookies()
-  const supabase = createClient(url, key, {
-    global: {
-      headers: {
-        cookie: cookieStore.toString()
-      }
-    }
-  })
-
-  const { data: { user }, error } = await supabase.auth.getUser()
-
-  if (error || !user) {
-    return { client: null, user: null }
-  }
-
-  return { client: supabase, user }
-}
-
 // POST /api/cases/[caseId]/events/calculate-deadline
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
 
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

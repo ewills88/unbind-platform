@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { X, Calendar, User, FileText, Sparkles, ChevronDown, ChevronUp, Check } from 'lucide-react'
 import { CreateEventRequest, EventType, CaseEventWithDetails, EVENT_TYPE_CONFIG } from '@/types/events'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface Profile {
   id: string
@@ -98,7 +99,7 @@ export default function EventForm({
 
     setLoadingSuggestions(true)
     try {
-      const response = await fetch(`/api/cases/${caseId}/events/calculate-deadline`, {
+      const response = await authFetch(`/api/cases/${caseId}/events/calculate-deadline`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -168,7 +169,7 @@ export default function EventForm({
 
         for (const suggestion of selectedSuggestions) {
           try {
-            await fetch(`/api/cases/${caseId}/events`, {
+            await authFetch(`/api/cases/${caseId}/events`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({

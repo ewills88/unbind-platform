@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 import { X, Receipt, Loader2 } from 'lucide-react'
 import {
   ExpenseItem,
@@ -45,7 +46,7 @@ export default function ExpenseForm({ caseId, expense, onSuccess, onCancel }: Ex
         ? `/api/cases/${caseId}/expenses?id=${expense.id}`
         : `/api/cases/${caseId}/expenses`
 
-      const response = await fetch(url, {
+      const response = await authFetch(url, {
         method: expense ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

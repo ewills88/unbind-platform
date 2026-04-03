@@ -27,6 +27,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const TASK_TYPE_ICONS: Record<DelegatedTaskType, React.ReactNode> = {
   review_document: <FileSearch className="w-4 h-4" />,
@@ -76,7 +77,7 @@ export default function TaskDelegationModal({
   const fetchMembers = async () => {
     setLoading(true)
     try {
-      const res = await fetch('/api/firms/members')
+      const res = await authFetch('/api/firms/members')
       const data = await res.json()
       setMembers(
         (data.members || []).filter((m: FirmMember) => m.status === 'active')
@@ -110,7 +111,7 @@ export default function TaskDelegationModal({
         time_estimate_minutes: timeEstimate,
       }
 
-      const res = await fetch(`/api/cases/${caseId}/delegate-task`, {
+      const res = await authFetch(`/api/cases/${caseId}/delegate-task`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

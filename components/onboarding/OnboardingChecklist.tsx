@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { CheckCircle2, Circle, X, ChevronDown, ChevronUp } from 'lucide-react'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface ChecklistItem {
   id: string
@@ -36,8 +37,8 @@ export default function OnboardingChecklist({ userId, role }: OnboardingChecklis
   const fetchData = useCallback(async () => {
     try {
       const [checklistRes, progressRes] = await Promise.all([
-        fetch(`/api/onboarding/checklist?role=${role}`),
-        fetch(`/api/onboarding/progress?userId=${userId}`),
+        authFetch(`/api/onboarding/checklist?role=${role}`),
+        authFetch(`/api/onboarding/progress?userId=${userId}`),
       ])
 
       if (checklistRes.ok) {
@@ -64,7 +65,7 @@ export default function OnboardingChecklist({ userId, role }: OnboardingChecklis
 
   const handleCompleteStep = async (stepKey: string) => {
     try {
-      const res = await fetch('/api/onboarding/complete-step', {
+      const res = await authFetch('/api/onboarding/complete-step', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, stepKey }),

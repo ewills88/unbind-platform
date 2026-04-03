@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
@@ -60,7 +62,7 @@ export default function ExportsPage() {
 
   async function fetchExports() {
     try {
-      const res = await fetch('/api/exports/quickbooks')
+      const res = await authFetch('/api/exports/quickbooks')
       if (res.ok) {
         const data = await res.json()
         setExports(data.exports || [])
@@ -87,7 +89,7 @@ export default function ExportsPage() {
     setSuccess('')
 
     try {
-      const res = await fetch('/api/exports/quickbooks', {
+      const res = await authFetch('/api/exports/quickbooks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

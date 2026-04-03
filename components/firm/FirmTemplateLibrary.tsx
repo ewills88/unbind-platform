@@ -25,6 +25,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const TEMPLATE_TYPE_ICONS: Record<string, React.ReactNode> = {
   petition: <FileText className="w-5 h-5 text-blue-600" />,
@@ -62,6 +63,7 @@ export default function FirmTemplateLibrary() {
   const [uploadTags, setUploadTags] = useState('')
   const [uploadContent, setUploadContent] = useState('')
   const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
 
   useEffect(() => {
     fetchTemplates()
@@ -70,7 +72,7 @@ export default function FirmTemplateLibrary() {
   const fetchTemplates = async () => {
     setLoading(true)
     try {
-      const res = await fetch('/api/firms/templates')
+      const res = await authFetch('/api/firms/templates')
       const data = await res.json()
       setTemplates(data.templates || [])
     } finally {
@@ -96,6 +98,7 @@ export default function FirmTemplateLibrary() {
   const handleUpload = async () => {
     if (!uploadName.trim()) return
     setUploading(true)
+    setUploadError('')
     try {
       const payload: CreateTemplateRequest = {
         template_name: uploadName.trim(),
@@ -108,7 +111,7 @@ export default function FirmTemplateLibrary() {
           : undefined,
       }
 
-      const res = await fetch('/api/firms/templates', {
+      const res = await authFetch('/api/firms/templates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -123,7 +126,12 @@ export default function FirmTemplateLibrary() {
         setUploadTags('')
         setUploadContent('')
         fetchTemplates()
+      } else {
+        const data = await res.json().catch(() => ({}))
+        setUploadError(data.error || 'Failed to create template')
       }
+    } catch {
+      setUploadError('Network error — please try again')
     } finally {
       setUploading(false)
     }
@@ -307,6 +315,9 @@ export default function FirmTemplateLibrary() {
                 className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
+            {uploadError && (
+              <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{uploadError}</p>
+            )}
           </div>
           <DialogFooter>
             <button

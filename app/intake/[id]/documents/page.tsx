@@ -6,6 +6,7 @@ import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react'
 import DocumentChecklist from '@/components/intake/DocumentChecklist'
 import IntakeProgress from '@/components/intake/IntakeProgress'
 import { ClientIntake } from '@/types/intake'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 export default function IntakeDocumentsPage() {
   const params = useParams()
@@ -19,7 +20,7 @@ export default function IntakeDocumentsPage() {
   useEffect(() => {
     const fetchIntake = async () => {
       try {
-        const response = await fetch(`/api/intakes/${intakeId}`)
+        const response = await authFetch(`/api/intakes/${intakeId}`)
 
         if (!response.ok) {
           if (response.status === 404) {

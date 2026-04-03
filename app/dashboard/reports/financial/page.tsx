@@ -12,6 +12,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatCurrency } from '@/types/billing'
 import { ARAgingData, FinancialSummary } from '@/types/analytics'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 export default function FinancialReports() {
   const [reportType, setReportType] = useState('revenue')
@@ -34,7 +35,7 @@ export default function FinancialReports() {
   const fetchFinancials = async () => {
     setLoading(true)
     try {
-      const res = await fetch(`/api/firms/analytics/financial?report=ar`)
+      const res = await authFetch(`/api/firms/analytics/financial?report=ar`)
       const data = await res.json()
       setSummary(data.summary || null)
       setArAging(data.ar_aging || null)

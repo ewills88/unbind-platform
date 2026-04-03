@@ -5,6 +5,7 @@
 
 import { useState } from 'react'
 import { ThumbsUp, ThumbsDown, Check } from 'lucide-react'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface ArticleFeedbackProps {
   articleId: string
@@ -19,7 +20,7 @@ export default function ArticleFeedback({ articleId }: ArticleFeedbackProps) {
   const handleFeedback = async (isHelpful: boolean) => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/help/articles/${articleId}/feedback`, {
+      const response = await authFetch(`/api/help/articles/${articleId}/feedback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ is_helpful: isHelpful, comment: comment || undefined }),

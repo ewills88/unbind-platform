@@ -10,6 +10,7 @@ import {
   AlertTriangle, Clock, Loader2, Webhook as WebhookIcon, CheckCircle, XCircle,
 } from 'lucide-react'
 import { Webhook, WebhookDelivery, WEBHOOK_EVENT_INFO, WebhookEventType } from '@/types/webhooks'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 function formatRelativeTime(dateString: string): string {
   const date = new Date(dateString)
@@ -41,7 +42,7 @@ export default function WebhooksPage() {
 
   const loadWebhooks = async () => {
     try {
-      const res = await fetch('/api/webhooks')
+      const res = await authFetch('/api/webhooks')
       if (res.ok) {
         const data = await res.json()
         setWebhooks(data.webhooks || [])
@@ -163,7 +164,7 @@ function WebhookCard({
   const handleTest = async () => {
     setTesting(true)
     try {
-      const res = await fetch(`/api/webhooks/${webhook.id}/test`, { method: 'POST' })
+      const res = await authFetch(`/api/webhooks/${webhook.id}/test`, { method: 'POST' })
       const data = await res.json()
       if (data.success) {
         showToast(`Test sent! Status: ${data.status} (${data.duration}ms)`)
@@ -178,7 +179,7 @@ function WebhookCard({
   }
 
   const handleToggle = async (enabled: boolean) => {
-    await fetch(`/api/webhooks/${webhook.id}`, {
+    await authFetch(`/api/webhooks/${webhook.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ is_active: enabled }),
@@ -188,13 +189,13 @@ function WebhookCard({
 
   const handleDelete = async () => {
     if (!confirm('Delete this webhook? This cannot be undone.')) return
-    await fetch(`/api/webhooks/${webhook.id}`, { method: 'DELETE' })
+    await authFetch(`/api/webhooks/${webhook.id}`, { method: 'DELETE' })
     onUpdate()
     showToast('Webhook deleted.')
   }
 
   const loadDeliveries = async () => {
-    const res = await fetch(`/api/webhooks/${webhook.id}`)
+    const res = await authFetch(`/api/webhooks/${webhook.id}`)
     if (res.ok) {
       const data = await res.json()
       setDeliveries(data.deliveries || [])
@@ -316,7 +317,7 @@ function CreateWebhookModal({ onClose, onCreated }: { onClose: () => void; onCre
     if (!name || !url || selectedEvents.length === 0) return
     setCreating(true)
     try {
-      const res = await fetch('/api/webhooks', {
+      const res = await authFetch('/api/webhooks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, url, events: selectedEvents, secret_key: secretKey }),

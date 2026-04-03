@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import type { PrivilegeLogEntry, PrivilegeType } from '@/types/discovery'
 import { PRIVILEGE_TYPE_INFO } from '@/types/discovery'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -47,7 +48,7 @@ export default function CasePrivilegeLogTab({ caseId }: Props) {
   async function handleDelete(id: string) {
     if (!confirm('Delete this privilege log entry?')) return
     try {
-      await fetch(`/api/cases/${caseId}/privilege-log?id=${id}`, { method: 'DELETE' })
+      await authFetch(`/api/cases/${caseId}/privilege-log?id=${id}`, { method: 'DELETE' })
       fetchEntries()
     } catch {
       // silently handle
@@ -56,7 +57,7 @@ export default function CasePrivilegeLogTab({ caseId }: Props) {
 
   async function handleExport(format: 'csv' | 'docx') {
     try {
-      const res = await fetch(`/api/cases/${caseId}/privilege-log/export?format=${format}`)
+      const res = await authFetch(`/api/cases/${caseId}/privilege-log/export?format=${format}`)
       if (!res.ok) return
 
       const blob = await res.blob()
@@ -271,7 +272,7 @@ function PrivilegeLogEntryModal({
     setSaving(true)
     try {
       if (isEdit) {
-        await fetch(`/api/cases/${caseId}/privilege-log`, {
+        await authFetch(`/api/cases/${caseId}/privilege-log`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -291,7 +292,7 @@ function PrivilegeLogEntryModal({
           }),
         })
       } else {
-        await fetch(`/api/cases/${caseId}/privilege-log`, {
+        await authFetch(`/api/cases/${caseId}/privilege-log`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

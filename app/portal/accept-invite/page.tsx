@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Loader2, CheckCircle, XCircle } from 'lucide-react'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 type Status = 'verifying' | 'success' | 'error'
 
@@ -27,7 +28,7 @@ function AcceptInviteContent() {
     }
 
     try {
-      const res = await fetch('/api/portal/auth/accept-invite', {
+      const res = await authFetch('/api/portal/auth/accept-invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token }),

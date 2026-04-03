@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { Tag } from '@/types/tags'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface UseTagsOptions {
   documentId?: string
@@ -22,7 +23,7 @@ export function useTags(options: UseTagsOptions = {}) {
       const params = new URLSearchParams()
       if (search) params.set('search', search)
 
-      const response = await fetch(`/api/tags?${params}`)
+      const response = await authFetch(`/api/tags?${params}`)
       if (!response.ok) throw new Error('Failed to fetch tags')
 
       const data = await response.json()
@@ -42,7 +43,7 @@ export function useTags(options: UseTagsOptions = {}) {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/documents/${docId}/tags`)
+      const response = await authFetch(`/api/documents/${docId}/tags`)
       if (!response.ok) throw new Error('Failed to fetch document tags')
 
       const data = await response.json()
@@ -62,7 +63,7 @@ export function useTags(options: UseTagsOptions = {}) {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/documents/${docId}/tags`, {
+      const response = await authFetch(`/api/documents/${docId}/tags`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tagIds })
@@ -87,7 +88,7 @@ export function useTags(options: UseTagsOptions = {}) {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/documents/${docId}/tags?tagId=${tagId}`, {
+      const response = await authFetch(`/api/documents/${docId}/tags?tagId=${tagId}`, {
         method: 'DELETE'
       })
 
@@ -110,7 +111,7 @@ export function useTags(options: UseTagsOptions = {}) {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch('/api/tags', {
+      const response = await authFetch('/api/tags', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, color })
@@ -134,7 +135,7 @@ export function useTags(options: UseTagsOptions = {}) {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch('/api/documents/bulk/tags', {
+      const response = await authFetch('/api/documents/bulk/tags', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ documentIds, addTagIds: tagIds })
@@ -156,7 +157,7 @@ export function useTags(options: UseTagsOptions = {}) {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch('/api/documents/bulk/tags', {
+      const response = await authFetch('/api/documents/bulk/tags', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ documentIds, removeTagIds: tagIds })

@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import type { NegotiationEvent, NegotiationEventType, NegotiationParty } from '@/types/settlement'
 import { EVENT_TYPE_INFO } from '@/types/settlement'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 function formatDateTime(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -293,7 +294,7 @@ function AddTimelineEventModal({
     if (!formData.title.trim()) return
     setSaving(true)
     try {
-      await fetch(`/api/cases/${caseId}/negotiation-timeline`, {
+      await authFetch(`/api/cases/${caseId}/negotiation-timeline`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

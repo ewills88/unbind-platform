@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   FileText,
@@ -80,8 +82,7 @@ export default function DocumentGenerator({
       setLoading(true)
       setError(null)
 
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generate?template_id=${selectedTemplate.id}`
+      const response = await authFetch(`/api/cases/${caseId}/documents/generate?template_id=${selectedTemplate.id}`
       )
 
       if (!response.ok) {
@@ -126,7 +127,7 @@ export default function DocumentGenerator({
       setGenerating(true)
       setError(null)
 
-      const response = await fetch(`/api/cases/${caseId}/documents/generate`, {
+      const response = await authFetch(`/api/cases/${caseId}/documents/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect, useCallback } from 'react'
 import {
   FileText, Download, Send, CheckCircle2, XCircle, Clock,
@@ -35,7 +37,7 @@ export default function DocumentDetail({ documentId, onBack }: Props) {
 
   const fetchDocument = useCallback(async () => {
     try {
-      const res = await fetch(`/api/settlement-documents/${documentId}`)
+      const res = await authFetch(`/api/settlement-documents/${documentId}`)
       if (res.ok) {
         const json = await res.json()
         setDoc(json.data)
@@ -52,7 +54,7 @@ export default function DocumentDetail({ documentId, onBack }: Props) {
   const handleAction = async (action: string, extra?: Record<string, unknown>) => {
     setActionLoading(true)
     try {
-      const res = await fetch(`/api/settlement-documents/${documentId}`, {
+      const res = await authFetch(`/api/settlement-documents/${documentId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _action: action, ...extra }),
@@ -68,7 +70,7 @@ export default function DocumentDetail({ documentId, onBack }: Props) {
   const handleSignatureUpdate = async (sigId: string, status: string) => {
     setActionLoading(true)
     try {
-      await fetch(`/api/settlement-documents/${documentId}/signatures`, {
+      await authFetch(`/api/settlement-documents/${documentId}/signatures`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ signature_id: sigId, status }),
@@ -82,7 +84,7 @@ export default function DocumentDetail({ documentId, onBack }: Props) {
   const handleAddComment = async () => {
     if (!newComment.trim()) return
     try {
-      await fetch(`/api/settlement-documents/${documentId}/comments`, {
+      await authFetch(`/api/settlement-documents/${documentId}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -101,7 +103,7 @@ export default function DocumentDetail({ documentId, onBack }: Props) {
   }
 
   const handleResolveComment = async (commentId: string, resolved: boolean) => {
-    await fetch(`/api/settlement-documents/${documentId}/comments`, {
+    await authFetch(`/api/settlement-documents/${documentId}/comments`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ comment_id: commentId, is_resolved: resolved }),

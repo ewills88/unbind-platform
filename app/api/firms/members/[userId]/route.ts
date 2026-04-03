@@ -1,34 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
 import { UpdateMemberRequest } from '@/types/firm'
 import { memberCan, resolvePermissions } from '@/lib/permissions'
-
-async function getAuthenticatedClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-  if (!url || !key) {
-    return { client: null, user: null }
-  }
-
-  const cookieStore = await cookies()
-  const supabase = createClient(url, key, {
-    global: {
-      headers: {
-        cookie: cookieStore.toString()
-      }
-    }
-  })
-
-  const { data: { user }, error } = await supabase.auth.getUser()
-
-  if (error || !user) {
-    return { client: null, user: null }
-  }
-
-  return { client: supabase, user }
-}
+import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getCallerMembership(supabase: any, userId: string) {
@@ -56,7 +29,7 @@ export async function PATCH(
   { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
     const { userId: targetUserId } = await params
 
     if (!user || !supabase) {
@@ -129,7 +102,7 @@ export async function DELETE(
   { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
     const { userId: targetUserId } = await params
 
     if (!user || !supabase) {

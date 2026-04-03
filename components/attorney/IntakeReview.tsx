@@ -29,6 +29,7 @@ import {
 } from '@/types/intake-workflow'
 import { IntakeData, STEP_LABELS } from '@/types/intake'
 import { DocumentChecklist as DocumentChecklistType } from '@/types/intake-documents'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface IntakeReviewProps {
   intakeId: string
@@ -61,7 +62,7 @@ export default function IntakeReview({ intakeId }: IntakeReviewProps) {
     setIsLoading(true)
     try {
       // Fetch intake
-      const intakeRes = await fetch(`/api/intakes/${intakeId}`)
+      const intakeRes = await authFetch(`/api/intakes/${intakeId}`)
       if (intakeRes.ok) {
         const data = await intakeRes.json()
         setIntake(data.intake)
@@ -71,7 +72,7 @@ export default function IntakeReview({ intakeId }: IntakeReviewProps) {
       }
 
       // Fetch documents
-      const docsRes = await fetch(`/api/intakes/${intakeId}/documents`)
+      const docsRes = await authFetch(`/api/intakes/${intakeId}/documents`)
       if (docsRes.ok) {
         const data = await docsRes.json()
         setDocuments(data.checklist)
@@ -127,7 +128,7 @@ export default function IntakeReview({ intakeId }: IntakeReviewProps) {
   const runConflictCheck = async () => {
     setIsCheckingConflicts(true)
     try {
-      const response = await fetch(`/api/intakes/${intakeId}/conflict-check`, {
+      const response = await authFetch(`/api/intakes/${intakeId}/conflict-check`, {
         method: 'POST',
       })
       if (response.ok) {
@@ -149,7 +150,7 @@ export default function IntakeReview({ intakeId }: IntakeReviewProps) {
 
     setIsRequestingInfo(true)
     try {
-      const response = await fetch(`/api/intakes/${intakeId}/request-info`, {
+      const response = await authFetch(`/api/intakes/${intakeId}/request-info`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: infoRequestMessage }),
@@ -180,7 +181,7 @@ export default function IntakeReview({ intakeId }: IntakeReviewProps) {
 
     setIsApproving(true)
     try {
-      const response = await fetch(`/api/intakes/${intakeId}/approve`, {
+      const response = await authFetch(`/api/intakes/${intakeId}/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -203,7 +204,7 @@ export default function IntakeReview({ intakeId }: IntakeReviewProps) {
     if (!conflictWaiverNotes) return
 
     try {
-      const response = await fetch(`/api/intakes/${intakeId}/conflict-check`, {
+      const response = await authFetch(`/api/intakes/${intakeId}/conflict-check`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ waiver_notes: conflictWaiverNotes }),

@@ -14,6 +14,7 @@ import {
 import { cn } from '@/lib/utils'
 import { formatShortDate } from '@/lib/dates'
 import { DOCUMENT_CATEGORIES } from '@/types/documents'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface ClientDocument {
   id: string
@@ -45,7 +46,7 @@ export default function ClientDocumentsPage() {
 
   const fetchDocuments = async () => {
     try {
-      const res = await fetch('/api/client/documents')
+      const res = await authFetch('/api/client/documents')
       if (res.ok) {
         const data = await res.json()
         setDocuments(data.documents || [])

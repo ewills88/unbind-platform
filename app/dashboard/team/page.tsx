@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/dialog'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const STATUS_STYLES: Record<FirmMemberStatus, { label: string; color: string; bgColor: string }> = {
   active: { label: 'Active', color: 'text-green-700', bgColor: 'bg-green-100' },
@@ -134,7 +135,7 @@ export default function TeamPage() {
 
   const fetchMembers = async () => {
     try {
-      const res = await fetch('/api/firms/members')
+      const res = await authFetch('/api/firms/members')
       if (!res.ok) throw new Error('Failed to fetch members')
       const data = await res.json()
       setMembers(data.members || [])
@@ -148,7 +149,7 @@ export default function TeamPage() {
   const handleInvite = async () => {
     setInviteLoading(true)
     try {
-      const res = await fetch('/api/firms/invite', {
+      const res = await authFetch('/api/firms/invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: inviteEmail, role: inviteRole }),
@@ -179,7 +180,7 @@ export default function TeamPage() {
     if (!editMember) return
     setEditLoading(true)
     try {
-      const res = await fetch(`/api/firms/members/${editMember.user_id}`, {
+      const res = await authFetch(`/api/firms/members/${editMember.user_id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role: editRole, permissions: editPermissions }),
@@ -201,7 +202,7 @@ export default function TeamPage() {
     if (!removeMember) return
     setRemoveLoading(true)
     try {
-      const res = await fetch(`/api/firms/members/${removeMember.user_id}`, {
+      const res = await authFetch(`/api/firms/members/${removeMember.user_id}`, {
         method: 'DELETE',
       })
       if (!res.ok) {

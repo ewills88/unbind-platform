@@ -13,6 +13,7 @@ import {
   Lock, Loader2
 } from 'lucide-react'
 import { formatCurrency } from '@/types/billing'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 // Initialize Stripe (client-side only)
 const stripePromise = typeof window !== 'undefined'
@@ -45,7 +46,7 @@ export default function PaymentModal({ invoice, onClose, onSuccess }: PaymentMod
       setLoading(true)
       setError(null)
 
-      const response = await fetch('/api/payments/create-intent', {
+      const response = await authFetch('/api/payments/create-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -79,7 +80,7 @@ export default function PaymentModal({ invoice, onClose, onSuccess }: PaymentMod
       setLoading(true)
       setError(null)
 
-      const response = await fetch('/api/payments/create-intent', {
+      const response = await authFetch('/api/payments/create-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

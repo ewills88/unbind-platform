@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   FileText, Plus, RefreshCw, Loader2, X,
@@ -38,7 +40,7 @@ export default function EFilingCredentialsSettings({ firmId }: Props) {
 
   async function loadCredentials() {
     try {
-      const res = await fetch(`/api/efiling/credentials?firm_id=${firmId}`)
+      const res = await authFetch(`/api/efiling/credentials?firm_id=${firmId}`)
       if (res.ok) {
         const json = await res.json()
         setCredentials(json.data || [])
@@ -57,7 +59,7 @@ export default function EFilingCredentialsSettings({ firmId }: Props) {
   async function handleVerify(credentialId: string) {
     setVerifying(credentialId)
     try {
-      const res = await fetch(`/api/efiling/credentials/${credentialId}/verify`, {
+      const res = await authFetch(`/api/efiling/credentials/${credentialId}/verify`, {
         method: 'POST',
       })
       const json = await res.json()
@@ -254,7 +256,7 @@ function AddCredentialModal({
     setWarning(null)
 
     try {
-      const res = await fetch('/api/efiling/credentials', {
+      const res = await authFetch('/api/efiling/credentials', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

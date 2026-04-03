@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { AppNotification } from '@/types/events'
 import { formatDistanceToNow } from 'date-fns'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface NotificationDropdownProps {
   className?: string
@@ -62,7 +63,7 @@ export default function NotificationDropdown({ className = '' }: NotificationDro
   const loadNotifications = async () => {
     setLoading(true)
     try {
-      const response = await fetch('/api/notifications?limit=10')
+      const response = await authFetch('/api/notifications?limit=10')
       if (response.ok) {
         const data = await response.json()
         setNotifications(data.notifications || [])
@@ -77,7 +78,7 @@ export default function NotificationDropdown({ className = '' }: NotificationDro
 
   const loadUnreadCount = async () => {
     try {
-      const response = await fetch('/api/notifications?limit=1&unread_only=true')
+      const response = await authFetch('/api/notifications?limit=1&unread_only=true')
       if (response.ok) {
         const data = await response.json()
         setUnreadCount(data.unread_count || 0)
@@ -89,7 +90,7 @@ export default function NotificationDropdown({ className = '' }: NotificationDro
 
   const markAsRead = async (notificationIds: string[]) => {
     try {
-      await fetch('/api/notifications', {
+      await authFetch('/api/notifications', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notification_ids: notificationIds })
@@ -108,7 +109,7 @@ export default function NotificationDropdown({ className = '' }: NotificationDro
 
   const markAllAsRead = async () => {
     try {
-      await fetch('/api/notifications', {
+      await authFetch('/api/notifications', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mark_all_read: true })

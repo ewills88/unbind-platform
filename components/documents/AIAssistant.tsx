@@ -15,6 +15,7 @@ import {
   History
 } from 'lucide-react'
 import { DocumentTemplateType, DOCUMENT_TYPE_INFO } from '@/types/document-templates'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface AIAssistantProps {
   caseId: string
@@ -95,7 +96,7 @@ export default function AIAssistant({
       setDraftResult(null)
       setWarnings([])
 
-      const response = await fetch('/api/documents/ai-draft', {
+      const response = await authFetch('/api/documents/ai-draft', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

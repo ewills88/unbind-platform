@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 import {
   ArrowLeft, ArrowRight, FileText, Home, DollarSign, Users,
   Calendar, List, CheckCircle, Loader2, Plus, X, Trash2,
@@ -123,7 +124,7 @@ export default function NewProposalPage() {
   useEffect(() => {
     async function loadCase() {
       try {
-        const res = await fetch(`/api/cases/${caseId}`)
+        const res = await authFetch(`/api/cases/${caseId}`)
         if (res.ok) {
           const d = await res.json()
           setCaseData(d.data || d)
@@ -138,8 +139,8 @@ export default function NewProposalPage() {
     async function loadFinancials() {
       try {
         const [assetsRes, debtsRes] = await Promise.all([
-          fetch(`/api/cases/${caseId}/assets`),
-          fetch(`/api/cases/${caseId}/debts`),
+          authFetch(`/api/cases/${caseId}/assets`),
+          authFetch(`/api/cases/${caseId}/debts`),
         ])
         const items: PropertyRow[] = []
         if (assetsRes.ok) {
@@ -274,7 +275,7 @@ export default function NewProposalPage() {
   async function handleCreateProposal() {
     setSaving(true)
     try {
-      const res = await fetch(`/api/cases/${caseId}/proposals`, {
+      const res = await authFetch(`/api/cases/${caseId}/proposals`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -296,7 +297,7 @@ export default function NewProposalPage() {
     if (!proposalId) return
     setSaving(true)
     try {
-      await fetch(`/api/proposals/${proposalId}/property`, {
+      await authFetch(`/api/proposals/${proposalId}/property`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items: propertyItems }),
@@ -310,7 +311,7 @@ export default function NewProposalPage() {
     if (!proposalId) return
     setSaving(true)
     try {
-      await fetch(`/api/proposals/${proposalId}/terms`, {
+      await authFetch(`/api/proposals/${proposalId}/terms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -340,7 +341,7 @@ export default function NewProposalPage() {
     if (!proposalId) return
     setSaving(true)
     try {
-      await fetch(`/api/proposals/${proposalId}/terms`, {
+      await authFetch(`/api/proposals/${proposalId}/terms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -369,7 +370,7 @@ export default function NewProposalPage() {
     if (!proposalId) return
     setSaving(true)
     try {
-      await fetch(`/api/proposals/${proposalId}/terms`, {
+      await authFetch(`/api/proposals/${proposalId}/terms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -399,7 +400,7 @@ export default function NewProposalPage() {
     if (!proposalId) return
     setSaving(true)
     try {
-      await fetch(`/api/proposals/${proposalId}/terms`, {
+      await authFetch(`/api/proposals/${proposalId}/terms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -414,7 +415,7 @@ export default function NewProposalPage() {
         }),
       })
       // Recalculate totals
-      await fetch(`/api/proposals/${proposalId}`, {
+      await authFetch(`/api/proposals/${proposalId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _action: 'recalculate' }),

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { createClient, RealtimeChannel } from '@supabase/supabase-js'
 import { MessageWithSender, TypingIndicator, Message } from '@/types/messages'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface UseMessagesOptions {
   caseId: string
@@ -50,7 +51,7 @@ export function useMessages({
       ? `/api/cases/${caseId}/messages?before=${before}`
       : `/api/cases/${caseId}/messages`
 
-    const response = await fetch(url)
+    const response = await authFetch(url)
     if (!response.ok) throw new Error('Failed to fetch messages')
     return response.json()
   }, [caseId])
@@ -114,7 +115,7 @@ export function useMessages({
     stopTyping()
 
     try {
-      const response = await fetch(`/api/cases/${caseId}/messages`, {
+      const response = await authFetch(`/api/cases/${caseId}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -145,7 +146,7 @@ export function useMessages({
     if (messageIds.length === 0) return
 
     try {
-      await fetch('/api/messages/mark-read', {
+      await authFetch('/api/messages/mark-read', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message_ids: messageIds })
@@ -172,7 +173,7 @@ export function useMessages({
     } else {
       // Start new typing session
       isTypingRef.current = true
-      fetch(`/api/cases/${caseId}/typing`, { method: 'POST' })
+      authFetch(`/api/cases/${caseId}/typing`, { method: 'POST' })
     }
 
     // Auto-stop after 3 seconds of no typing
@@ -191,7 +192,7 @@ export function useMessages({
 
     if (isTypingRef.current) {
       isTypingRef.current = false
-      fetch(`/api/cases/${caseId}/typing`, { method: 'DELETE' })
+      authFetch(`/api/cases/${caseId}/typing`, { method: 'DELETE' })
     }
   }, [caseId])
 
@@ -220,7 +221,7 @@ export function useMessages({
               const hasTemp = prev.some(m => m.id.startsWith('temp-'))
               if (hasTemp) {
                 // Fetch full message with sender info
-                fetch(`/api/cases/${caseId}/messages?limit=1`)
+                authFetch(`/api/cases/${caseId}/messages?limit=1`)
                   .then(res => res.json())
                   .then(data => {
                     const fullMsg = data.messages?.find((m: MessageWithSender) => m.id === newMessage.id)
@@ -238,7 +239,7 @@ export function useMessages({
 
           // Fetch full message with sender info for messages from others
           try {
-            const response = await fetch(`/api/cases/${caseId}/messages?limit=1`)
+            const response = await authFetch(`/api/cases/${caseId}/messages?limit=1`)
             const data = await response.json()
             const fullMessage = data.messages?.find((m: MessageWithSender) => m.id === newMessage.id)
 
@@ -254,7 +255,7 @@ export function useMessages({
 
               // Auto-mark as read if window is focused
               if (document.hasFocus()) {
-                fetch(`/api/messages/${newMessage.id}/read`, { method: 'PATCH' })
+                authFetch(`/api/messages/${newMessage.id}/read`, { method: 'PATCH' })
               }
             }
           } catch (err) {
@@ -273,7 +274,7 @@ export function useMessages({
         async () => {
           // Refresh typing indicators
           try {
-            const response = await fetch(`/api/cases/${caseId}/typing`)
+            const response = await authFetch(`/api/cases/${caseId}/typing`)
             const data = await response.json()
             setTypingUsers(data.typing?.filter((t: TypingIndicator) => t.user_id !== currentUserId) || [])
           } catch (err) {

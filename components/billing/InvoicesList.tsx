@@ -17,6 +17,7 @@ import {
 } from '@/types/billing'
 import InvoiceGenerator from './InvoiceGenerator'
 import PaymentPlanModal from './PaymentPlanModal'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface InvoicesListProps {
   caseId: string
@@ -55,7 +56,7 @@ export default function InvoicesList({
         url += `status=${filterStatus}&`
       }
 
-      const response = await fetch(url)
+      const response = await authFetch(url)
       if (response.ok) {
         const data = await response.json()
         setInvoices(data.invoices || [])
@@ -87,7 +88,7 @@ export default function InvoicesList({
 
   async function handleSendInvoice(invoiceId: string) {
     try {
-      const response = await fetch(`/api/cases/${caseId}/billing/invoices`, {
+      const response = await authFetch(`/api/cases/${caseId}/billing/invoices`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: invoiceId, action: 'send' })
@@ -105,7 +106,7 @@ export default function InvoicesList({
     if (!confirm('Are you sure you want to void this invoice? This cannot be undone.')) return
 
     try {
-      const response = await fetch(`/api/cases/${caseId}/billing/invoices`, {
+      const response = await authFetch(`/api/cases/${caseId}/billing/invoices`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: invoiceId, action: 'void' })

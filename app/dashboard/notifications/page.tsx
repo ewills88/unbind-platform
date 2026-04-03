@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { AppNotification } from '@/types/events'
 import { formatDistanceToNow, format } from 'date-fns'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 
 const NOTIFICATION_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -35,7 +36,7 @@ export default function NotificationsPage() {
     try {
       setLoading(true)
       const unreadOnly = filter === 'unread'
-      const response = await fetch(`/api/notifications?limit=50&unread_only=${unreadOnly}`)
+      const response = await authFetch(`/api/notifications?limit=50&unread_only=${unreadOnly}`)
 
       if (response.ok) {
         const data = await response.json()
@@ -61,7 +62,7 @@ export default function NotificationsPage() {
 
   const markAsRead = async (notificationIds: string[]) => {
     try {
-      await fetch('/api/notifications', {
+      await authFetch('/api/notifications', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notification_ids: notificationIds })
@@ -79,7 +80,7 @@ export default function NotificationsPage() {
 
   const markAllAsRead = async () => {
     try {
-      await fetch('/api/notifications', {
+      await authFetch('/api/notifications', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mark_all_read: true })

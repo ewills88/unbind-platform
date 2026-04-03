@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   FileText,
@@ -85,7 +87,7 @@ export default function TemplateSelector({
       const params = new URLSearchParams()
       if (stateCode) params.set('state_code', stateCode)
 
-      const response = await fetch(`/api/templates?${params}`)
+      const response = await authFetch(`/api/templates?${params}`)
       if (!response.ok) throw new Error('Failed to fetch templates')
 
       const data = await response.json()

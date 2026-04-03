@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import {
@@ -88,7 +90,7 @@ export default function PortalMessagesPage() {
 
   const fetchConversations = async () => {
     try {
-      const res = await fetch(`/api/portal/conversations?status=${statusFilter}`)
+      const res = await authFetch(`/api/portal/conversations?status=${statusFilter}`)
       if (res.status === 401) { router.push('/portal/login'); return }
       const data = await res.json()
       setConversations(data.data || [])
@@ -102,7 +104,7 @@ export default function PortalMessagesPage() {
   const fetchMessages = async (conversationId: string, silent = false) => {
     if (!silent) setMessagesLoading(true)
     try {
-      const res = await fetch(`/api/portal/conversations/${conversationId}/messages`)
+      const res = await authFetch(`/api/portal/conversations/${conversationId}/messages`)
       const data = await res.json()
       setMessages(data.data || [])
 
@@ -119,7 +121,7 @@ export default function PortalMessagesPage() {
 
   const fetchTemplates = async () => {
     try {
-      const res = await fetch('/api/portal/templates')
+      const res = await authFetch('/api/portal/templates')
       const data = await res.json()
       setTemplates(data.data || [])
     } catch {
@@ -137,7 +139,7 @@ export default function PortalMessagesPage() {
     setSending(true)
 
     try {
-      const res = await fetch(`/api/portal/conversations/${selectedConversation.id}/messages`, {
+      const res = await authFetch(`/api/portal/conversations/${selectedConversation.id}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: newMessage.trim() }),
@@ -160,7 +162,7 @@ export default function PortalMessagesPage() {
     setSending(true)
 
     try {
-      const res = await fetch('/api/portal/conversations', {
+      const res = await authFetch('/api/portal/conversations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -187,7 +189,7 @@ export default function PortalMessagesPage() {
 
   const closeConversation = async (id: string) => {
     try {
-      await fetch(`/api/portal/conversations/${id}`, {
+      await authFetch(`/api/portal/conversations/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'closed' }),

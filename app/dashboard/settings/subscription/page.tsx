@@ -7,6 +7,7 @@ import {
   Users,
 } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface FirmDetails {
   id: string
@@ -43,7 +44,7 @@ export default function SubscriptionManagement() {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const membersRes = await fetch('/api/firms/members')
+      const membersRes = await authFetch('/api/firms/members')
       const membersData = await membersRes.json()
 
       const members = (membersData.members || [])

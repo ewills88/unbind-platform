@@ -58,6 +58,13 @@ interface Case {
   total_assets_disclosed: number | null
   total_debts_disclosed: number | null
   estimated_fees: number | null
+  opposing_party_name: string | null
+  opposing_party_address: string | null
+  opposing_counsel_name: string | null
+  opposing_counsel_firm: string | null
+  court_name: string | null
+  court_county: string | null
+  judge_name: string | null
 }
 
 interface DocumentActivity {
@@ -452,11 +459,49 @@ export default function CaseDetailPage() {
                           <dd className="mt-1 text-sm text-gray-900">{caseData.client_name}</dd>
                         </div>
                         <div>
-                          <dt className="text-sm font-medium text-gray-600">Spouse</dt>
-                          <dd className="mt-1 text-sm text-gray-900">{caseData.spouse_name}</dd>
+                          <dt className="text-sm font-medium text-gray-600">Spouse / Opposing Party</dt>
+                          <dd className="mt-1 text-sm text-gray-900">{caseData.opposing_party_name || caseData.spouse_name}</dd>
+                          {caseData.opposing_party_address && (
+                            <dd className="text-xs text-gray-500 mt-0.5">{caseData.opposing_party_address}</dd>
+                          )}
                         </div>
+                        {caseData.opposing_counsel_name && (
+                          <div>
+                            <dt className="text-sm font-medium text-gray-600">Opposing Counsel</dt>
+                            <dd className="mt-1 text-sm text-gray-900">
+                              {caseData.opposing_counsel_name}
+                              {caseData.opposing_counsel_firm && (
+                                <span className="text-gray-500"> ({caseData.opposing_counsel_firm})</span>
+                              )}
+                            </dd>
+                          </div>
+                        )}
                       </dl>
                     </div>
+
+                    {/* Court Information */}
+                    {(caseData.court_name || caseData.judge_name) && (
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Court</h3>
+                        <dl className="space-y-3">
+                          {caseData.court_name && (
+                            <div>
+                              <dt className="text-sm font-medium text-gray-600">Court</dt>
+                              <dd className="mt-1 text-sm text-gray-900">
+                                {caseData.court_name}
+                                {caseData.court_county && <span className="text-gray-500"> - {caseData.court_county} County</span>}
+                              </dd>
+                            </div>
+                          )}
+                          {caseData.judge_name && (
+                            <div>
+                              <dt className="text-sm font-medium text-gray-600">Judge</dt>
+                              <dd className="mt-1 text-sm text-gray-900">{caseData.judge_name}</dd>
+                            </div>
+                          )}
+                        </dl>
+                      </div>
+                    )}
 
                     {/* Next Steps */}
                     <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">

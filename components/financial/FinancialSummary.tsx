@@ -58,6 +58,7 @@ import DebtForm from './DebtForm'
 import IncomeForm from './IncomeForm'
 import ExpenseForm from './ExpenseForm'
 import DivisionPlanner from './DivisionPlanner'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface FinancialSummaryProps {
   caseId: string
@@ -129,11 +130,11 @@ export default function FinancialSummary({ caseId }: FinancialSummaryProps) {
     try {
       setLoading(true)
       const [summaryRes, assetsRes, debtsRes, incomeRes, expenseRes] = await Promise.all([
-        fetch(`/api/cases/${caseId}/financial-summary`),
-        fetch(`/api/cases/${caseId}/assets`),
-        fetch(`/api/cases/${caseId}/debts`),
-        fetch(`/api/cases/${caseId}/income`),
-        fetch(`/api/cases/${caseId}/expenses`),
+        authFetch(`/api/cases/${caseId}/financial-summary`),
+        authFetch(`/api/cases/${caseId}/assets`),
+        authFetch(`/api/cases/${caseId}/debts`),
+        authFetch(`/api/cases/${caseId}/income`),
+        authFetch(`/api/cases/${caseId}/expenses`),
       ])
 
       if (summaryRes.ok) {
@@ -175,7 +176,7 @@ export default function FinancialSummary({ caseId }: FinancialSummaryProps) {
     if (!confirm('Are you sure you want to delete this asset?')) return
 
     try {
-      const response = await fetch(`/api/cases/${caseId}/assets?id=${assetId}`, {
+      const response = await authFetch(`/api/cases/${caseId}/assets?id=${assetId}`, {
         method: 'DELETE',
       })
 
@@ -192,7 +193,7 @@ export default function FinancialSummary({ caseId }: FinancialSummaryProps) {
     if (!confirm('Are you sure you want to delete this debt?')) return
 
     try {
-      const response = await fetch(`/api/cases/${caseId}/debts?id=${debtId}`, {
+      const response = await authFetch(`/api/cases/${caseId}/debts?id=${debtId}`, {
         method: 'DELETE',
       })
 
@@ -209,7 +210,7 @@ export default function FinancialSummary({ caseId }: FinancialSummaryProps) {
     if (!confirm('Are you sure you want to delete this income source?')) return
 
     try {
-      const response = await fetch(`/api/cases/${caseId}/income?id=${incomeId}`, {
+      const response = await authFetch(`/api/cases/${caseId}/income?id=${incomeId}`, {
         method: 'DELETE',
       })
 
@@ -226,7 +227,7 @@ export default function FinancialSummary({ caseId }: FinancialSummaryProps) {
     if (!confirm('Are you sure you want to delete this expense?')) return
 
     try {
-      const response = await fetch(`/api/cases/${caseId}/expenses?id=${expenseId}`, {
+      const response = await authFetch(`/api/cases/${caseId}/expenses?id=${expenseId}`, {
         method: 'DELETE',
       })
 

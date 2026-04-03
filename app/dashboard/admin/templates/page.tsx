@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
@@ -60,9 +62,9 @@ export default function AdminTemplatesPage() {
   const fetchTemplates = async () => {
     try {
       const [_taskRes, _emailRes, _docRes] = await Promise.all([
-        fetch('/api/admin/settings').then(r => r.ok ? r.json() : { data: null }),
-        fetch('/api/admin/settings').then(r => r.ok ? r.json() : { data: null }),
-        fetch('/api/admin/settings').then(r => r.ok ? r.json() : { data: null }),
+        authFetch('/api/admin/settings').then(r => r.ok ? r.json() : { data: null }),
+        authFetch('/api/admin/settings').then(r => r.ok ? r.json() : { data: null }),
+        authFetch('/api/admin/settings').then(r => r.ok ? r.json() : { data: null }),
       ])
 
       // Note: Templates are fetched via their own endpoints if available

@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect, useCallback } from 'react'
 import {
   DndContext,
@@ -248,9 +250,9 @@ export default function DivisionPlanner({ caseId, clientName = 'Client', spouseN
     try {
       setLoading(true)
       const [assetsRes, debtsRes, scenariosRes] = await Promise.all([
-        fetch(`/api/cases/${caseId}/assets`),
-        fetch(`/api/cases/${caseId}/debts`),
-        fetch(`/api/cases/${caseId}/division-scenarios`),
+        authFetch(`/api/cases/${caseId}/assets`),
+        authFetch(`/api/cases/${caseId}/debts`),
+        authFetch(`/api/cases/${caseId}/division-scenarios`),
       ])
 
       if (assetsRes.ok) {
@@ -341,7 +343,7 @@ export default function DivisionPlanner({ caseId, clientName = 'Client', spouseN
         ? `/api/cases/${caseId}/division-scenarios?id=${activeScenarioId}`
         : `/api/cases/${caseId}/division-scenarios`
 
-      const response = await fetch(url, {
+      const response = await authFetch(url, {
         method: activeScenarioId ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -369,7 +371,7 @@ export default function DivisionPlanner({ caseId, clientName = 'Client', spouseN
     if (!confirm('Delete this scenario?')) return
 
     try {
-      const response = await fetch(`/api/cases/${caseId}/division-scenarios?id=${scenarioId}`, {
+      const response = await authFetch(`/api/cases/${caseId}/division-scenarios?id=${scenarioId}`, {
         method: 'DELETE',
       })
 
@@ -392,7 +394,7 @@ export default function DivisionPlanner({ caseId, clientName = 'Client', spouseN
         ? `/api/cases/${caseId}/reports/financial-export?scenario=${activeScenarioId}`
         : `/api/cases/${caseId}/reports/financial-export`
 
-      const response = await fetch(url)
+      const response = await authFetch(url)
 
       if (response.ok) {
         const blob = await response.blob()

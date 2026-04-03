@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface TourStep {
   title: string
@@ -29,14 +30,14 @@ export default function FeatureTour({ featureKey, userId, onComplete }: FeatureT
   useEffect(() => {
     async function fetchTour() {
       try {
-        const res = await fetch(`/api/onboarding/tour?featureKey=${featureKey}`)
+        const res = await authFetch(`/api/onboarding/tour?featureKey=${featureKey}`)
         if (!res.ok) return
 
         const tour = await res.json()
         if (!tour || !tour.steps || tour.steps.length === 0) return
 
         // Check if user already completed this tour
-        const progressRes = await fetch(`/api/onboarding/tour-progress?userId=${userId}&tourId=${tour.id}`)
+        const progressRes = await authFetch(`/api/onboarding/tour-progress?userId=${userId}&tourId=${tour.id}`)
         if (progressRes.ok) {
           const progress = await progressRes.json()
           if (progress?.is_completed) return
@@ -111,7 +112,7 @@ export default function FeatureTour({ featureKey, userId, onComplete }: FeatureT
     setVisible(false)
     if (tourId) {
       try {
-        await fetch('/api/onboarding/complete-tour', {
+        await authFetch('/api/onboarding/complete-tour', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId, tourId }),

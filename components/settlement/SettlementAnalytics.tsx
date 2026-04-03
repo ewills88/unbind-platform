@@ -6,6 +6,7 @@ import {
   DollarSign, Scale, Loader2, CalendarDays,
 } from 'lucide-react'
 import { formatCurrency } from '@/types/settlement'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface AnalyticsData {
   totalProposals: number
@@ -54,7 +55,7 @@ export default function SettlementAnalytics({ caseId }: Props) {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/cases/${caseId}/settlement-analytics`)
+        const res = await authFetch(`/api/cases/${caseId}/settlement-analytics`)
         if (res.ok) {
           const json = await res.json()
           setData(json.data)

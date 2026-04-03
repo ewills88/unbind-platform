@@ -6,6 +6,7 @@ import {
   Trash2, Edit2, ChevronDown, ChevronUp
 } from 'lucide-react'
 import { DocumentComment, formatVersionDate } from '@/types/document-collaboration'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface CommentsSidebarProps {
   caseId: string
@@ -37,8 +38,7 @@ export default function CommentsSidebar({
   async function fetchComments() {
     try {
       setLoading(true)
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/comments?include_resolved=${showResolved}`
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/comments?include_resolved=${showResolved}`
       )
 
       if (!response.ok) {
@@ -60,8 +60,7 @@ export default function CommentsSidebar({
 
     try {
       setSubmitting(true)
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/comments`,
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/comments`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -92,8 +91,7 @@ export default function CommentsSidebar({
 
   async function resolveComment(commentId: string, resolve: boolean) {
     try {
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/comments`,
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/comments`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -118,8 +116,7 @@ export default function CommentsSidebar({
     if (!confirm('Are you sure you want to delete this comment?')) return
 
     try {
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/comments?comment_id=${commentId}`,
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/comments?comment_id=${commentId}`,
         { method: 'DELETE' }
       )
 
@@ -137,8 +134,7 @@ export default function CommentsSidebar({
     if (!editContent.trim()) return
 
     try {
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/comments`,
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/comments`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },

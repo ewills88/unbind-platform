@@ -20,6 +20,7 @@ import { Progress } from '@/components/ui/progress'
 import type { RevenueReport, ARAgingReport, CollectionsReport, ProfitabilityReport, TrustAccountReport } from '@/lib/analytics/financialAnalytics'
 import type { TeamPerformanceReport, ProductivityTrendReport } from '@/lib/analytics/attorneyAnalytics'
 import type { CaseLifecycleReport, CaseOutcomesReport, WorkloadReport } from '@/lib/analytics/caseAnalytics'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 type ReportCategory = 'financial' | 'attorney' | 'cases' | 'scheduled'
 type FinancialSubType = 'revenue' | 'ar_aging' | 'collections' | 'profitability' | 'trust'
@@ -82,7 +83,7 @@ export default function ReportsPage() {
         params.set('start', startDate)
         params.set('end', endDate)
       }
-      const res = await fetch(`/api/analytics/financial?${params}`)
+      const res = await authFetch(`/api/analytics/financial?${params}`)
       if (res.ok) {
         const json = await res.json()
         switch (type) {
@@ -100,7 +101,7 @@ export default function ReportsPage() {
     setLoading(true)
     try {
       const params = new URLSearchParams({ type, start: startDate, end: endDate })
-      const res = await fetch(`/api/analytics/attorneys?${params}`)
+      const res = await authFetch(`/api/analytics/attorneys?${params}`)
       if (res.ok) {
         const json = await res.json()
         if (type === 'team') setTeamData(json.data)
@@ -117,7 +118,7 @@ export default function ReportsPage() {
         params.set('start', startDate)
         params.set('end', endDate)
       }
-      const res = await fetch(`/api/analytics/cases?${params}`)
+      const res = await authFetch(`/api/analytics/cases?${params}`)
       if (res.ok) {
         const json = await res.json()
         switch (type) {
@@ -132,7 +133,7 @@ export default function ReportsPage() {
   async function fetchSchedules() {
     setSchedulesLoading(true)
     try {
-      const res = await fetch('/api/reports/schedules')
+      const res = await authFetch('/api/reports/schedules')
       if (res.ok) {
         const json = await res.json()
         setSchedules(json.data || [])
@@ -162,7 +163,7 @@ export default function ReportsPage() {
   async function handleExport() {
     setExporting(true)
     try {
-      const res = await fetch('/api/reports/export', {
+      const res = await authFetch('/api/reports/export', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -185,13 +186,13 @@ export default function ReportsPage() {
   async function handleRunNow(scheduleId: string) {
     setRunningScheduleId(scheduleId)
     try {
-      await fetch(`/api/reports/schedules/${scheduleId}/run`, { method: 'POST' })
+      await authFetch(`/api/reports/schedules/${scheduleId}/run`, { method: 'POST' })
       fetchSchedules()
     } catch { /* ignore */ } finally { setRunningScheduleId(null) }
   }
 
   async function handleToggleSchedule(scheduleId: string, isActive: boolean) {
-    await fetch(`/api/reports/schedules/${scheduleId}`, {
+    await authFetch(`/api/reports/schedules/${scheduleId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ is_active: !isActive }),
@@ -201,7 +202,7 @@ export default function ReportsPage() {
 
   async function handleDeleteSchedule(scheduleId: string) {
     if (!confirm('Delete this scheduled report?')) return
-    await fetch(`/api/reports/schedules/${scheduleId}`, { method: 'DELETE' })
+    await authFetch(`/api/reports/schedules/${scheduleId}`, { method: 'DELETE' })
     fetchSchedules()
   }
 
@@ -1671,7 +1672,7 @@ function CreateScheduleModal({ onClose, onCreated }: {
 
     setSubmitting(true)
     try {
-      const res = await fetch('/api/reports/schedules', {
+      const res = await authFetch('/api/reports/schedules', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, recipients: validRecipients }),

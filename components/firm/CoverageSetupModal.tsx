@@ -13,6 +13,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface CoverageSetupModalProps {
   isOpen: boolean
@@ -54,8 +55,8 @@ export default function CoverageSetupModal({
     setLoading(true)
     try {
       const [membersRes, casesRes] = await Promise.all([
-        fetch('/api/firms/members'),
-        fetch('/api/cases?limit=50'),
+        authFetch('/api/firms/members'),
+        authFetch('/api/cases?limit=50'),
       ])
       const membersData = await membersRes.json()
       const casesData = await casesRes.json()
@@ -98,7 +99,7 @@ export default function CoverageSetupModal({
         notes: notes || undefined,
       }
 
-      const res = await fetch('/api/coverage', {
+      const res = await authFetch('/api/coverage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

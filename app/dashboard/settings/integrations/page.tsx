@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import { ArrowLeft, RefreshCw, AlertTriangle, CheckCircle, Calendar, Loader2 } from 'lucide-react'
 import { CalendarInfo } from '@/types/calendar'
 import Image from 'next/image'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface ConnectionInfo {
   id: string
@@ -76,7 +77,7 @@ export default function IntegrationsPage() {
 
   const loadConnection = async () => {
     try {
-      const res = await fetch('/api/integrations/google/settings')
+      const res = await authFetch('/api/integrations/google/settings')
       if (res.ok) {
         const data = await res.json()
         setConnection(data.connection)
@@ -94,7 +95,7 @@ export default function IntegrationsPage() {
 
   const loadCalendars = async () => {
     try {
-      const res = await fetch('/api/integrations/google/calendars')
+      const res = await authFetch('/api/integrations/google/calendars')
       if (res.ok) {
         const data = await res.json()
         setCalendars(data.calendars || [])
@@ -107,7 +108,7 @@ export default function IntegrationsPage() {
   const handleConnectGoogle = async () => {
     setIsConnecting(true)
     try {
-      const res = await fetch('/api/integrations/google/connect')
+      const res = await authFetch('/api/integrations/google/connect')
       const data = await res.json()
       if (data.url) {
         window.location.href = data.url
@@ -125,7 +126,7 @@ export default function IntegrationsPage() {
     if (!confirm('Disconnect Google Calendar? Synced events will no longer be updated.')) return
 
     try {
-      const res = await fetch('/api/integrations/google/disconnect', { method: 'DELETE' })
+      const res = await authFetch('/api/integrations/google/disconnect', { method: 'DELETE' })
       if (res.ok) {
         setConnection(null)
         setCalendars([])
@@ -138,7 +139,7 @@ export default function IntegrationsPage() {
 
   const handleToggleSync = async (enabled: boolean) => {
     try {
-      const res = await fetch('/api/integrations/google/settings', {
+      const res = await authFetch('/api/integrations/google/settings', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sync_enabled: enabled }),
@@ -155,7 +156,7 @@ export default function IntegrationsPage() {
   const handleChangeCalendar = async (calendarId: string) => {
     const cal = calendars.find(c => c.id === calendarId)
     try {
-      const res = await fetch('/api/integrations/google/settings', {
+      const res = await authFetch('/api/integrations/google/settings', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -176,7 +177,7 @@ export default function IntegrationsPage() {
   const handleManualSync = async () => {
     setIsSyncing(true)
     try {
-      const res = await fetch('/api/integrations/google/sync', { method: 'POST' })
+      const res = await authFetch('/api/integrations/google/sync', { method: 'POST' })
       if (res.ok) {
         const data = await res.json()
         showToast(`Synced ${data.synced} events${data.errors > 0 ? ` (${data.errors} errors)` : ''}.`)

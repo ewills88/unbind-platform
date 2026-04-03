@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect, useMemo } from 'react'
 import {
   CheckCircle2, Circle, Clock, MinusCircle, XCircle,
@@ -28,7 +30,7 @@ export default function FilingChecklist({ caseId }: Props) {
 
   async function loadChecklists() {
     try {
-      const res = await fetch(`/api/cases/${caseId}/checklist`)
+      const res = await authFetch(`/api/cases/${caseId}/checklist`)
       if (res.ok) {
         const json = await res.json()
         const data = json.data || []
@@ -54,7 +56,7 @@ export default function FilingChecklist({ caseId }: Props) {
   async function handleUpdateStatus(checklistId: string, itemId: string, itemName: string, status: ChecklistItemStatus) {
     setUpdating(`${checklistId}-${itemId}`)
     try {
-      await fetch(`/api/cases/${caseId}/checklist`, {
+      await authFetch(`/api/cases/${caseId}/checklist`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

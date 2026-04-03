@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js'
 import { Upload, X, File, AlertCircle, CheckCircle2, Sparkles, HelpCircle } from 'lucide-react'
 import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE, DOCUMENT_CATEGORIES } from '@/types/documents'
 import { getConfidenceLabel, getConfidenceColor } from '@/lib/ai/document-classifier'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -147,7 +148,7 @@ export default function DocumentUpload({ caseId, onUploadComplete }: DocumentUpl
           aiHeaders['Authorization'] = `Bearer ${session.access_token}`
         }
 
-        const aiResponse = await fetch('/api/analyze-document', {
+        const aiResponse = await authFetch('/api/analyze-document', {
           method: 'POST',
           headers: aiHeaders,
           body: JSON.stringify({
@@ -160,19 +161,22 @@ export default function DocumentUpload({ caseId, onUploadComplete }: DocumentUpl
         })
 
         if (aiResponse.ok) {
-          const { analysis } = await aiResponse.json()
+          const data = await aiResponse.json()
+          const analysis = data?.analysis
           console.log('🎉 AI Analysis result:', analysis)
-          
+
           // Update UI with AI suggestion
-          setUploadingFiles(prev =>
-            prev.map(f => f.file === file ? { 
-              ...f, 
-              progress: 90,
-              suggestedCategory: analysis.category,
-              confidence: analysis.confidence,
-              reasoning: analysis.reasoning,
-            } : f)
-          )
+          if (analysis) {
+            setUploadingFiles(prev =>
+              prev.map(f => f.file === file ? {
+                ...f,
+                progress: 90,
+                suggestedCategory: analysis.category,
+                confidence: analysis.confidence,
+                reasoning: analysis.reasoning,
+              } : f)
+            )
+          }
         } else {
           const errorData = await aiResponse.json()
           console.error('❌ AI analysis failed:', errorData)

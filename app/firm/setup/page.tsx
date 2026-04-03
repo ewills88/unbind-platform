@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
@@ -91,7 +93,7 @@ export default function FirmSetupPage() {
         plan: selectedPlan,
       }
 
-      const firmRes = await fetch('/api/firms/create', {
+      const firmRes = await authFetch('/api/firms/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(firmPayload),
@@ -105,7 +107,7 @@ export default function FirmSetupPage() {
       // Send invites (skip empty emails)
       const validInvites = invites.filter(i => i.email.trim())
       for (const invite of validInvites) {
-        await fetch('/api/firms/invite', {
+        await authFetch('/api/firms/invite', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

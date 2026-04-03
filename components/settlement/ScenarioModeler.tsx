@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import type { SettlementScenario, SettlementProposal, ScenarioPropertyItem, PropertyAllocation } from '@/types/settlement'
 import { formatCurrency, calculateScenarioTotals, calculateAllocation } from '@/types/settlement'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface Props {
   caseId: string
@@ -25,8 +26,8 @@ export default function ScenarioModeler({ caseId }: Props) {
   const fetchData = useCallback(async () => {
     try {
       const [scenRes, propRes] = await Promise.all([
-        fetch(`/api/cases/${caseId}/scenarios`),
-        fetch(`/api/cases/${caseId}/proposals`),
+        authFetch(`/api/cases/${caseId}/scenarios`),
+        authFetch(`/api/cases/${caseId}/proposals`),
       ])
       if (scenRes.ok) {
         const d = await scenRes.json()
@@ -58,8 +59,8 @@ export default function ScenarioModeler({ caseId }: Props) {
     // Load existing assets and debts to pre-populate
     try {
       const [assetsRes, debtsRes] = await Promise.all([
-        fetch(`/api/cases/${caseId}/assets`),
-        fetch(`/api/cases/${caseId}/debts`),
+        authFetch(`/api/cases/${caseId}/assets`),
+        authFetch(`/api/cases/${caseId}/debts`),
       ])
       const assets = assetsRes.ok ? (await assetsRes.json()).data || [] : []
       const debts = debtsRes.ok ? (await debtsRes.json()).data || [] : []
@@ -122,7 +123,7 @@ export default function ScenarioModeler({ caseId }: Props) {
 
   async function copyFromProposal(proposalId: string) {
     try {
-      const res = await fetch(`/api/proposals/${proposalId}`)
+      const res = await authFetch(`/api/proposals/${proposalId}`)
       if (!res.ok) return
       const d = await res.json()
       const p = d.data
@@ -163,14 +164,14 @@ export default function ScenarioModeler({ caseId }: Props) {
     try {
       if (activeScenario.id) {
         // Update existing
-        await fetch(`/api/scenarios/${activeScenario.id}`, {
+        await authFetch(`/api/scenarios/${activeScenario.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(activeScenario),
         })
       } else {
         // Create new
-        await fetch(`/api/cases/${caseId}/scenarios`, {
+        await authFetch(`/api/cases/${caseId}/scenarios`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(activeScenario),
@@ -188,7 +189,7 @@ export default function ScenarioModeler({ caseId }: Props) {
   async function handleConvertToProposal(scenarioId: string) {
     if (!confirm('Convert this scenario to a formal proposal draft?')) return
     try {
-      const res = await fetch(`/api/scenarios/${scenarioId}`, {
+      const res = await authFetch(`/api/scenarios/${scenarioId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _action: 'convert' }),
@@ -206,7 +207,7 @@ export default function ScenarioModeler({ caseId }: Props) {
   async function handleDeleteScenario(scenarioId: string) {
     if (!confirm('Delete this scenario?')) return
     try {
-      await fetch(`/api/scenarios/${scenarioId}`, { method: 'DELETE' })
+      await authFetch(`/api/scenarios/${scenarioId}`, { method: 'DELETE' })
       fetchData()
     } catch {
       // silently handle
@@ -215,7 +216,7 @@ export default function ScenarioModeler({ caseId }: Props) {
 
   async function handleToggleFavorite(scenario: SettlementScenario) {
     try {
-      await fetch(`/api/scenarios/${scenario.id}`, {
+      await authFetch(`/api/scenarios/${scenario.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ is_favorite: !scenario.is_favorite }),

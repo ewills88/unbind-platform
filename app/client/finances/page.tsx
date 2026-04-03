@@ -20,6 +20,7 @@ import {
 import { formatCurrency } from '@/types/financial'
 import type { Asset, Debt, DivisionScenario } from '@/types/financial'
 import { cn } from '@/lib/utils'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface FinancialData {
   case_id: string
@@ -47,7 +48,7 @@ export default function ClientFinancesPage() {
 
   const fetchFinances = async () => {
     try {
-      const res = await fetch('/api/client/finances')
+      const res = await authFetch('/api/client/finances')
       if (!res.ok) throw new Error('Failed to load finances')
       const financialData = await res.json()
       setData(financialData)

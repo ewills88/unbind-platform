@@ -7,6 +7,7 @@ import {
   User, Clock, FileText, Settings, Shield, Eye,
 } from 'lucide-react'
 import type { AuditLog } from '@/types/admin'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const ACTION_ICONS: Record<string, typeof User> = {
   create: FileText,
@@ -52,7 +53,7 @@ export default function AdminAuditPage() {
       if (filterAction) params.set('action', filterAction)
       if (filterEntity) params.set('entityType', filterEntity)
 
-      const res = await fetch(`/api/admin/audit?${params}`)
+      const res = await authFetch(`/api/admin/audit?${params}`)
       if (res.status === 401) { router.push('/login'); return }
       if (res.status === 403) { setError('Access denied'); setLoading(false); return }
       if (!res.ok) throw new Error('Failed')

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Mail, Send, RefreshCw, XCircle, CheckCircle, Clock, AlertCircle, UserX } from 'lucide-react'
 import type { InviteStatus } from '@/types/portal'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface InviteClientFormProps {
   caseId: string
@@ -23,7 +24,7 @@ export default function InviteClientForm({ caseId }: InviteClientFormProps) {
   const loadStatus = async () => {
     try {
       setStatusLoading(true)
-      const res = await fetch(`/api/clients/invite?caseId=${caseId}`)
+      const res = await authFetch(`/api/clients/invite?caseId=${caseId}`)
       if (res.ok) {
         const data = await res.json()
         setInviteStatus(data)
@@ -43,7 +44,7 @@ export default function InviteClientForm({ caseId }: InviteClientFormProps) {
     setMessage(null)
 
     try {
-      const res = await fetch('/api/clients/invite', {
+      const res = await authFetch('/api/clients/invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ caseId, clientEmail: email.trim(), clientName: name.trim() || undefined }),
@@ -70,7 +71,7 @@ export default function InviteClientForm({ caseId }: InviteClientFormProps) {
     setMessage(null)
 
     try {
-      const res = await fetch('/api/clients/invite', {
+      const res = await authFetch('/api/clients/invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ caseId, resend: true }),
@@ -97,7 +98,7 @@ export default function InviteClientForm({ caseId }: InviteClientFormProps) {
     setMessage(null)
 
     try {
-      const res = await fetch('/api/clients/invite', {
+      const res = await authFetch('/api/clients/invite', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ caseId }),

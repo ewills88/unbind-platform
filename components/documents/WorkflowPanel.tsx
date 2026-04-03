@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   CheckCircle, Clock, AlertCircle, Send, UserPlus, X,
@@ -137,8 +139,7 @@ export default function WorkflowPanel({
 
   async function fetchAssignments() {
     try {
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/assignments`
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/assignments`
       )
       if (response.ok) {
         const data = await response.json()
@@ -154,8 +155,7 @@ export default function WorkflowPanel({
       setActionLoading(action.action)
 
       // For status transitions, update the document status
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}`,
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -375,8 +375,7 @@ function AssignModal({ caseId, documentId, onClose, onAssigned }: AssignModalPro
 
     try {
       setLoading(true)
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/assignments`,
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/assignments`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

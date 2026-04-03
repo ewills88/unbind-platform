@@ -7,6 +7,7 @@ import Sidebar from '@/components/layout/Sidebar'
 import { CalendarView, EventForm } from '@/components/events'
 import { CaseEventWithDetails, CreateEventRequest } from '@/types/events'
 import { format } from 'date-fns'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -130,7 +131,7 @@ export default function CalendarPage() {
 
     setIsSubmitting(true)
     try {
-      const response = await fetch(`/api/cases/${selectedCaseId}/events`, {
+      const response = await authFetch(`/api/cases/${selectedCaseId}/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -155,7 +156,7 @@ export default function CalendarPage() {
 
     setIsSubmitting(true)
     try {
-      const response = await fetch(`/api/events/${editingEvent.id}`, {
+      const response = await authFetch(`/api/events/${editingEvent.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -210,8 +211,8 @@ export default function CalendarPage() {
         </div>
       </main>
 
-      {/* Add Event Modal with Case Selection */}
-      {showEventForm && !editingEvent && (
+      {/* Add Event — Case Selection Modal */}
+      {showEventForm && !editingEvent && !selectedCaseId && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-lg">
             <div className="p-4 border-b border-gray-200">
@@ -219,53 +220,53 @@ export default function CalendarPage() {
                 Add Event - {selectedDate && format(selectedDate, 'MMMM d, yyyy')}
               </h2>
             </div>
-
-            {!selectedCaseId ? (
-              <div className="p-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Select a case for this event
-                </label>
-                <select
-                  value={selectedCaseId}
-                  onChange={(e) => handleCaseSelect(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            <div className="p-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Select a case for this event
+              </label>
+              <select
+                value={selectedCaseId}
+                onChange={(e) => handleCaseSelect(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Choose a case...</option>
+                {cases.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.client_name} {c.case_number && `(${c.case_number})`}
+                  </option>
+                ))}
+              </select>
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={() => {
+                    setShowEventForm(false)
+                    setSelectedDate(null)
+                  }}
+                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
                 >
-                  <option value="">Choose a case...</option>
-                  {cases.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.client_name} {c.case_number && `(${c.case_number})`}
-                    </option>
-                  ))}
-                </select>
-                <div className="flex justify-end mt-4">
-                  <button
-                    onClick={() => {
-                      setShowEventForm(false)
-                      setSelectedDate(null)
-                    }}
-                    className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
-                  >
-                    Cancel
-                  </button>
-                </div>
+                  Cancel
+                </button>
               </div>
-            ) : (
-              <EventForm
-                caseId={selectedCaseId}
-                event={null}
-                onSubmit={handleCreateEvent}
-                onClose={() => {
-                  setShowEventForm(false)
-                  setSelectedDate(null)
-                  setSelectedCaseId('')
-                }}
-                teamMembers={teamMembers}
-                isLoading={isSubmitting}
-                caseState={selectedCase?.state || 'CA'}
-              />
-            )}
+            </div>
           </div>
         </div>
+      )}
+
+      {/* Add Event — EventForm (has its own modal) */}
+      {showEventForm && !editingEvent && selectedCaseId && (
+        <EventForm
+          caseId={selectedCaseId}
+          event={null}
+          onSubmit={handleCreateEvent}
+          onClose={() => {
+            setShowEventForm(false)
+            setSelectedDate(null)
+            setSelectedCaseId('')
+          }}
+          teamMembers={teamMembers}
+          isLoading={isSubmitting}
+          caseState={selectedCase?.state || 'CA'}
+        />
       )}
 
       {/* Edit Event Modal */}

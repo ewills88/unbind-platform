@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { RelationshipType } from '@/types/tags'
 import { Document } from '@/types/documents'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface RelatedDocument {
   id: string
@@ -71,7 +72,7 @@ export default function DocumentRelationships({
   const fetchRelationships = async () => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/documents/${documentId}/relationships`)
+      const response = await authFetch(`/api/documents/${documentId}/relationships`)
       if (response.ok) {
         const data = await response.json()
         setRelationships(data.relationships || [])
@@ -94,7 +95,7 @@ export default function DocumentRelationships({
       setSearching(true)
       try {
         // Fetch documents from the same case
-        const response = await fetch(`/api/documents?caseId=${caseId}&search=${encodeURIComponent(searchQuery)}`)
+        const response = await authFetch(`/api/documents?caseId=${caseId}&search=${encodeURIComponent(searchQuery)}`)
         if (response.ok) {
           const data = await response.json()
           // Filter out current document and already linked documents
@@ -120,7 +121,7 @@ export default function DocumentRelationships({
     setError(null)
 
     try {
-      const response = await fetch(`/api/documents/${documentId}/relationships`, {
+      const response = await authFetch(`/api/documents/${documentId}/relationships`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -151,8 +152,7 @@ export default function DocumentRelationships({
 
   const handleRemoveRelationship = async (relationshipId: string) => {
     try {
-      const response = await fetch(
-        `/api/documents/${documentId}/relationships?relationshipId=${relationshipId}`,
+      const response = await authFetch(`/api/documents/${documentId}/relationships?relationshipId=${relationshipId}`,
         { method: 'DELETE' }
       )
 

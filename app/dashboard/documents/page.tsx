@@ -12,6 +12,7 @@ import { TagFilterBar, TagList } from '@/components/tags'
 import { Document, DOCUMENT_CATEGORIES } from '@/types/documents'
 import { Tag as TagType } from '@/types/tags'
 import {
+import { authFetch } from '@/lib/supabase/auth-fetch'
   FileText,
   Download,
   Eye,
@@ -474,7 +475,7 @@ export default function DocumentsPage() {
     if (selectedDocs.size === 0 || bulkTagIds.length === 0) return
 
     try {
-      const response = await fetch('/api/documents/bulk/tags', {
+      const response = await authFetch('/api/documents/bulk/tags', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

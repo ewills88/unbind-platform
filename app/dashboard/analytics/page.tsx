@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Sidebar from '@/components/layout/Sidebar'
@@ -69,7 +71,7 @@ export default function AnalyticsDashboardPage() {
   async function fetchDashboard() {
     setLoading(true)
     try {
-      const res = await fetch(`/api/analytics/dashboard?range=${timeRange}`)
+      const res = await authFetch(`/api/analytics/dashboard?range=${timeRange}`)
       if (res.ok) {
         const data = await res.json()
         setOverview(data.overview || null)
@@ -89,7 +91,7 @@ export default function AnalyticsDashboardPage() {
   async function handleGenerateReport() {
     setGeneratingReport(true)
     try {
-      const res = await fetch('/api/analytics/reports', {
+      const res = await authFetch('/api/analytics/reports', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -871,7 +873,7 @@ function KPITargetsSection({
         warning_threshold: target_value * 0.8,
       }))
 
-      await fetch('/api/analytics/kpi', {
+      await authFetch('/api/analytics/kpi', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ targets: targetList }),

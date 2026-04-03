@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
@@ -48,7 +50,7 @@ export default function ProposalComparePage() {
 
   const fetchProposals = useCallback(async () => {
     try {
-      const res = await fetch(`/api/cases/${caseId}/proposals`)
+      const res = await authFetch(`/api/cases/${caseId}/proposals`)
       if (res.ok) {
         const d = await res.json()
         setProposals(d.data || [])
@@ -70,8 +72,7 @@ export default function ProposalComparePage() {
     if (!selectedA || !selectedB || selectedA === selectedB) return
     setComparing(true)
     try {
-      const res = await fetch(
-        `/api/cases/${caseId}/proposals/compare?a=${selectedA}&b=${selectedB}`
+      const res = await authFetch(`/api/cases/${caseId}/proposals/compare?a=${selectedA}&b=${selectedB}`
       )
       if (res.ok) {
         const d = await res.json()

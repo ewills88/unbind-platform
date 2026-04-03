@@ -12,6 +12,7 @@ import {
   Download,
 } from 'lucide-react'
 import { Invoice, InvoiceStatus, INVOICE_STATUS_INFO, formatCurrency, formatDate, isInvoiceOverdue } from '@/types/billing'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface PaymentSummary {
   total_outstanding: number
@@ -32,7 +33,7 @@ export default function ClientPaymentsPage() {
 
   const fetchPayments = async () => {
     try {
-      const res = await fetch('/api/client/invoices')
+      const res = await authFetch('/api/client/invoices')
       if (res.ok) {
         const data = await res.json()
         setInvoices(data.invoices || [])

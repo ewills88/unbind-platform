@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState, useCallback } from 'react'
 import {
   Plus, X, Loader2, Users, Calendar, MapPin, Video, Clock,
@@ -34,7 +36,7 @@ export default function MediationManager({ caseId }: Props) {
 
   const fetchSessions = useCallback(async () => {
     try {
-      const res = await fetch(`/api/cases/${caseId}/mediation`)
+      const res = await authFetch(`/api/cases/${caseId}/mediation`)
       if (res.ok) {
         const d = await res.json()
         setSessions(d.data || [])
@@ -242,7 +244,7 @@ function ScheduleMediationModal({
     if (!form.session_date || !form.mediator_name) return
     setSaving(true)
     try {
-      await fetch(`/api/cases/${caseId}/mediation`, {
+      await authFetch(`/api/cases/${caseId}/mediation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -372,7 +374,7 @@ function SessionDetailDrawer({
 
   const fetchSession = useCallback(async () => {
     try {
-      const res = await fetch(`/api/mediation/${sessionId}`)
+      const res = await authFetch(`/api/mediation/${sessionId}`)
       if (res.ok) {
         const d = await res.json()
         setSession(d.data)
@@ -389,7 +391,7 @@ function SessionDetailDrawer({
   useEffect(() => { fetchSession() }, [fetchSession])
 
   async function handleStartSession() {
-    await fetch(`/api/mediation/${sessionId}`, {
+    await authFetch(`/api/mediation/${sessionId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'in_progress' }),
@@ -399,7 +401,7 @@ function SessionDetailDrawer({
   }
 
   async function handleCompleteSession(outcome: MediationOutcome) {
-    await fetch(`/api/mediation/${sessionId}`, {
+    await authFetch(`/api/mediation/${sessionId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -414,7 +416,7 @@ function SessionDetailDrawer({
   }
 
   async function handleUpdateNotes(field: string, value: string) {
-    await fetch(`/api/mediation/${sessionId}`, {
+    await authFetch(`/api/mediation/${sessionId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ [field]: value }),
@@ -422,7 +424,7 @@ function SessionDetailDrawer({
   }
 
   async function handleAddPosition(posData: Record<string, unknown>) {
-    await fetch(`/api/mediation/${sessionId}`, {
+    await authFetch(`/api/mediation/${sessionId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ _action: 'add_position', ...posData }),
@@ -432,7 +434,7 @@ function SessionDetailDrawer({
   }
 
   async function handleResolvePosition(positionId: string, resolution: string) {
-    await fetch(`/api/mediation/${sessionId}`, {
+    await authFetch(`/api/mediation/${sessionId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ _action: 'update_position', position_id: positionId, resolved: true, final_resolution: resolution }),
@@ -441,7 +443,7 @@ function SessionDetailDrawer({
   }
 
   async function handleAddOffer(offerData: Record<string, unknown>) {
-    await fetch(`/api/mediation/${sessionId}`, {
+    await authFetch(`/api/mediation/${sessionId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ _action: 'add_offer', ...offerData }),
@@ -451,7 +453,7 @@ function SessionDetailDrawer({
   }
 
   async function handleRespondOffer(offerId: string, response: OfferResponse) {
-    await fetch(`/api/mediation/${sessionId}`, {
+    await authFetch(`/api/mediation/${sessionId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ _action: 'respond_offer', offer_id: offerId, response }),

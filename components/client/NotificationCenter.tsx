@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Bell, CheckCheck, MessageSquare, FileText, DollarSign, Calendar, Trophy, ClipboardList } from 'lucide-react'
 import { ClientNotification, NotificationType } from '@/types/client'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface Props {
   userId: string | null
@@ -50,7 +51,7 @@ export default function NotificationCenter({ userId }: Props) {
   const fetchNotifications = async () => {
     setLoading(true)
     try {
-      const res = await fetch('/api/client/notifications')
+      const res = await authFetch('/api/client/notifications')
       if (res.ok) {
         const data = await res.json()
         setNotifications(data.notifications || [])
@@ -65,7 +66,7 @@ export default function NotificationCenter({ userId }: Props) {
 
   const markAsRead = async (notificationId: string) => {
     try {
-      await fetch('/api/client/notifications', {
+      await authFetch('/api/client/notifications', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notification_id: notificationId }),
@@ -81,7 +82,7 @@ export default function NotificationCenter({ userId }: Props) {
 
   const markAllAsRead = async () => {
     try {
-      await fetch('/api/client/notifications', {
+      await authFetch('/api/client/notifications', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mark_all: true }),

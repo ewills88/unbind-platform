@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { X, Receipt, DollarSign, AlertCircle, Upload } from 'lucide-react'
 import { ExpenseType, EXPENSE_TYPE_INFO, formatCurrency } from '@/types/billing'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface ExpenseFormProps {
   caseId: string
@@ -51,7 +52,7 @@ export default function ExpenseForm({ caseId, onClose, onSaved }: ExpenseFormPro
         receiptPath = `receipts/${caseId}/${Date.now()}-${receiptFile.name}`
       }
 
-      const response = await fetch(`/api/cases/${caseId}/billing/expenses`, {
+      const response = await authFetch(`/api/cases/${caseId}/billing/expenses`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

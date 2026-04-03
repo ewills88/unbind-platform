@@ -52,6 +52,8 @@ const attorneyNavItems = [
   { name: 'Documents', href: '/dashboard/documents', icon: FileText },
   { name: 'Messages', href: '/dashboard/messages', icon: MessageSquare },
   { name: 'Calendar', href: '/dashboard/calendar', icon: Calendar },
+  { name: 'Client Intake', href: '/dashboard/intake', icon: ClipboardList },
+  { name: 'Templates', href: '/dashboard/templates', icon: Library },
   { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
   { name: 'Resources', href: '/dashboard/resources', icon: BookOpen },
   { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },

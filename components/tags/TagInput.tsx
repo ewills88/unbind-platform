@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { Plus, Search, Loader2 } from 'lucide-react'
 import { Tag, TagColor, TAG_COLORS } from '@/types/tags'
 import { TagBadge } from './TagBadge'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface TagInputProps {
   selectedTags: Tag[]
@@ -35,21 +36,54 @@ export function TagInput({
   const dropdownRef = useRef<HTMLDivElement>(null)
   const debounceRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Standard document tags shown when input is empty
+  const STANDARD_TAGS: Tag[] = [
+    { id: '_std_fin', name: 'Financial Disclosure', color: 'green', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_tax', name: 'Tax Return', color: 'green', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_pay', name: 'Pay Stub', color: 'green', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_bank', name: 'Bank Statement', color: 'blue', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_deed', name: 'Property Deed', color: 'purple', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_mort', name: 'Mortgage Statement', color: 'purple', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_retire', name: 'Retirement Account', color: 'blue', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_custody', name: 'Custody Document', color: 'orange', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_parent', name: 'Parenting Plan', color: 'orange', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_court', name: 'Court Filing', color: 'red', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_corr', name: 'Correspondence', color: 'gray', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_ins', name: 'Insurance Policy', color: 'blue', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_vehicle', name: 'Vehicle Title', color: 'purple', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_biz', name: 'Business Document', color: 'green', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_medical', name: 'Medical Record', color: 'red', usage_count: 0, created_at: '', created_by: '' },
+    { id: '_std_school', name: 'School Record', color: 'orange', usage_count: 0, created_at: '', created_by: '' },
+  ]
+
   // Fetch tag suggestions
   const fetchSuggestions = useCallback(async (search: string) => {
-    if (!search.trim()) {
-      setSuggestions([])
-      return
-    }
-
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/tags?search=${encodeURIComponent(search)}&limit=10`)
+      const url = search.trim()
+        ? `/api/tags?search=${encodeURIComponent(search)}&limit=10`
+        : '/api/tags?limit=20'
+      const response = await authFetch(url)
       if (response.ok) {
         const data = await response.json()
+        let results: Tag[] = data.tags || []
+
+        // If empty search and no DB tags, show standard suggestions
+        if (!search.trim() && results.length === 0) {
+          results = STANDARD_TAGS
+        } else if (search.trim()) {
+          // Also include matching standard tags not yet in DB
+          const searchLower = search.toLowerCase()
+          const dbNames = new Set(results.map((t: Tag) => t.name.toLowerCase()))
+          const matchingStandard = STANDARD_TAGS.filter(
+            t => t.name.toLowerCase().includes(searchLower) && !dbNames.has(t.name.toLowerCase())
+          )
+          results = [...results, ...matchingStandard]
+        }
+
         // Filter out already selected tags
-        const filtered = (data.tags || []).filter(
-          (tag: Tag) => !selectedTags.some(t => t.id === tag.id)
+        const filtered = results.filter(
+          (tag: Tag) => !selectedTags.some(t => t.id === tag.id || t.name.toLowerCase() === tag.name.toLowerCase())
         )
         setSuggestions(filtered)
       }
@@ -66,13 +100,9 @@ export function TagInput({
       clearTimeout(debounceRef.current)
     }
 
-    if (inputValue.trim()) {
-      debounceRef.current = setTimeout(() => {
-        fetchSuggestions(inputValue)
-      }, 200)
-    } else {
-      setSuggestions([])
-    }
+    debounceRef.current = setTimeout(() => {
+      fetchSuggestions(inputValue)
+    }, inputValue.trim() ? 200 : 0)
 
     return () => {
       if (debounceRef.current) {
@@ -98,8 +128,28 @@ export function TagInput({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleSelectTag = (tag: Tag) => {
+  const handleSelectTag = async (tag: Tag) => {
     if (selectedTags.length >= maxTags) return
+
+    // If it's a standard suggestion (not yet in DB), create it first
+    if (tag.id.startsWith('_std_')) {
+      try {
+        const response = await authFetch('/api/tags', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: tag.name, color: tag.color })
+        })
+        if (response.ok) {
+          const data = await response.json()
+          if (data.tag) {
+            tag = data.tag
+          }
+        }
+      } catch (error) {
+        console.error('Error creating standard tag:', error)
+      }
+    }
+
     onTagsChange([...selectedTags, tag])
     setInputValue('')
     setSuggestions([])
@@ -117,7 +167,7 @@ export function TagInput({
 
     setIsLoading(true)
     try {
-      const response = await fetch('/api/tags', {
+      const response = await authFetch('/api/tags', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: inputValue.trim(), color: createColor })
@@ -199,7 +249,7 @@ export function TagInput({
               setIsOpen(true)
               setHighlightedIndex(-1)
             }}
-            onFocus={() => setIsOpen(true)}
+            onFocus={() => { setIsOpen(true); if (!inputValue.trim()) fetchSuggestions('') }}
             onKeyDown={handleKeyDown}
             placeholder={selectedTags.length >= maxTags ? 'Max tags reached' : placeholder}
             disabled={disabled || selectedTags.length >= maxTags}

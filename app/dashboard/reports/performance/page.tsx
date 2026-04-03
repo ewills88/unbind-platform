@@ -10,6 +10,7 @@ import {
 import { formatCurrency } from '@/types/billing'
 import { AttorneyPerformance } from '@/types/analytics'
 import { Progress } from '@/components/ui/progress'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 export default function AttorneyPerformanceReport() {
   const [performance, setPerformance] = useState<AttorneyPerformance[]>([])
@@ -38,7 +39,7 @@ export default function AttorneyPerformanceReport() {
       if (startDate) params.set('start', startDate)
       if (endDate) params.set('end', endDate)
 
-      const res = await fetch(`/api/firms/analytics/performance?${params}`)
+      const res = await authFetch(`/api/firms/analytics/performance?${params}`)
       const data = await res.json()
       setPerformance(data.performance || [])
 

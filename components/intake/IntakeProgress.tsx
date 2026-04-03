@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { IntakeProgressSummary } from '@/types/intake-documents'
 import { ClientIntake } from '@/types/intake'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface IntakeProgressProps {
   intakeId: string
@@ -39,7 +40,7 @@ export default function IntakeProgress({ intakeId, intake }: IntakeProgressProps
     const fetchProgress = async () => {
       try {
         // Fetch documents for progress
-        const docsResponse = await fetch(`/api/intakes/${intakeId}/documents`)
+        const docsResponse = await authFetch(`/api/intakes/${intakeId}/documents`)
         const docsData = await docsResponse.json()
 
         // Check if AI analysis exists

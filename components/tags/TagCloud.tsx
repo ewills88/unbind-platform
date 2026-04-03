@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Tag, TAG_COLORS } from '@/types/tags'
 import { Loader2 } from 'lucide-react'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface TagCloudProps {
   selectedTagIds: string[]
@@ -23,7 +24,7 @@ export function TagCloud({
   useEffect(() => {
     async function fetchTags() {
       try {
-        const response = await fetch('/api/tags?limit=30')
+        const response = await authFetch('/api/tags?limit=30')
         if (response.ok) {
           const data = await response.json()
           setTags(data.tags || [])
@@ -110,7 +111,7 @@ export function TagFilterBar({
   useEffect(() => {
     async function fetchTags() {
       try {
-        const response = await fetch('/api/tags?limit=20')
+        const response = await authFetch('/api/tags?limit=20')
         if (response.ok) {
           const data = await response.json()
           setTags(data.tags || [])

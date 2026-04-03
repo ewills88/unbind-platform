@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   FileText, Check, AlertCircle,
@@ -55,7 +57,7 @@ export default function InvoiceGenerator({
       setLoading(true)
 
       // Fetch unbilled time entries
-      const timeResponse = await fetch(`/api/cases/${caseId}/time-entries?billed=false&billable=true`)
+      const timeResponse = await authFetch(`/api/cases/${caseId}/time-entries?billed=false&billable=true`)
       if (timeResponse.ok) {
         const data = await timeResponse.json()
         setTimeEntries(data.entries || [])
@@ -64,7 +66,7 @@ export default function InvoiceGenerator({
       }
 
       // Fetch unbilled expenses
-      const expenseResponse = await fetch(`/api/cases/${caseId}/billing/expenses?billed=false&billable=true`)
+      const expenseResponse = await authFetch(`/api/cases/${caseId}/billing/expenses?billed=false&billable=true`)
       if (expenseResponse.ok) {
         const data = await expenseResponse.json()
         setExpenses(data.expenses || [])
@@ -121,7 +123,7 @@ export default function InvoiceGenerator({
       setStep('generating')
       setError(null)
 
-      const response = await fetch(`/api/cases/${caseId}/billing/invoices`, {
+      const response = await authFetch(`/api/cases/${caseId}/billing/invoices`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

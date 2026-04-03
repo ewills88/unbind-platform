@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { createClient, RealtimeChannel } from '@supabase/supabase-js'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface UnreadCounts {
   [caseId: string]: number
@@ -28,7 +29,7 @@ export function useUnreadCounts(userId: string | null): UseUnreadCountsReturn {
     if (!userId) return
 
     try {
-      const response = await fetch('/api/messages/inbox')
+      const response = await authFetch('/api/messages/inbox')
       if (!response.ok) throw new Error('Failed to fetch inbox')
 
       const data = await response.json()

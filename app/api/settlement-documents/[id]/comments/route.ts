@@ -1,22 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
-
-async function getAuthenticatedClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (!url || !key) return { client: null, user: null }
-
-  const cookieStore = await cookies()
-  const supabase = createClient(url, key, {
-    global: { headers: { cookie: cookieStore.toString() } }
-  })
-
-  const { data: { user }, error } = await supabase.auth.getUser()
-  if (error || !user) return { client: null, user: null }
-  return { client: supabase, user }
-}
-
+import { getAuthenticatedClient } from '@/lib/supabase/server'
 interface RouteParams {
   params: Promise<{ id: string }>
 }
@@ -24,7 +7,7 @@ interface RouteParams {
 // GET /api/settlement-documents/[id]/comments
 export async function GET(_request: NextRequest, { params }: RouteParams) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -48,7 +31,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
 // POST /api/settlement-documents/[id]/comments - Add a comment
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -93,7 +76,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 // PATCH /api/settlement-documents/[id]/comments - Resolve or update a comment
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

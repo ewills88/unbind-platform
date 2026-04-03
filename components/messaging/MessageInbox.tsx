@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { MessageSquare, Search, Loader2, AlertCircle, Inbox } from 'lucide-react'
 import { CaseWithMessages } from '@/types/messages'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface MessageInboxProps {
   onSelectCase?: (caseId: string) => void
@@ -27,7 +28,7 @@ export default function MessageInbox({
 
   const fetchInbox = async () => {
     try {
-      const response = await fetch('/api/messages/inbox')
+      const response = await authFetch('/api/messages/inbox')
       if (!response.ok) throw new Error('Failed to fetch inbox')
 
       const data = await response.json()

@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   Calendar, Plus, Loader2, X,
@@ -32,7 +34,7 @@ export default function HearingManager({ caseId }: Props) {
 
   async function loadHearings() {
     try {
-      const res = await fetch(`/api/cases/${caseId}/hearings`)
+      const res = await authFetch(`/api/cases/${caseId}/hearings`)
       if (res.ok) {
         const json = await res.json()
         setHearings(json.data || [])
@@ -305,7 +307,7 @@ function ScheduleHearingModal({
     setError(null)
 
     try {
-      const res = await fetch(`/api/cases/${caseId}/hearings`, {
+      const res = await authFetch(`/api/cases/${caseId}/hearings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -504,7 +506,7 @@ function HearingDetail({
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/cases/${caseId}/hearings/${hearingId}`)
+        const res = await authFetch(`/api/cases/${caseId}/hearings/${hearingId}`)
         if (res.ok) {
           const json = await res.json()
           setHearing(json.data)
@@ -521,7 +523,7 @@ function HearingDetail({
   async function handleAction(action: string, extra?: Record<string, unknown>) {
     setUpdating(true)
     try {
-      await fetch(`/api/cases/${caseId}/hearings/${hearingId}`, {
+      await authFetch(`/api/cases/${caseId}/hearings/${hearingId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, ...extra }),
@@ -530,7 +532,7 @@ function HearingDetail({
       if (action === 'vacate') onClose()
       else {
         // Reload
-        const res = await fetch(`/api/cases/${caseId}/hearings/${hearingId}`)
+        const res = await authFetch(`/api/cases/${caseId}/hearings/${hearingId}`)
         if (res.ok) {
           const json = await res.json()
           setHearing(json.data)
@@ -546,13 +548,13 @@ function HearingDetail({
   async function handlePrepTaskToggle(taskId: string, currentStatus: string) {
     const newStatus = currentStatus === 'complete' ? 'pending' : 'complete'
     try {
-      await fetch(`/api/cases/${caseId}/hearings/${hearingId}`, {
+      await authFetch(`/api/cases/${caseId}/hearings/${hearingId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'update_prep_task', task_id: taskId, status: newStatus }),
       })
       // Reload
-      const res = await fetch(`/api/cases/${caseId}/hearings/${hearingId}`)
+      const res = await authFetch(`/api/cases/${caseId}/hearings/${hearingId}`)
       if (res.ok) {
         const json = await res.json()
         setHearing(json.data)

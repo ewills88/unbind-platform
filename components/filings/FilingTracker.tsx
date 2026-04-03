@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   FileText, Clock, AlertTriangle, CheckCircle2,
@@ -49,7 +51,7 @@ export default function FilingTracker({ caseId, onSelectFiling, onNewFiling }: P
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/cases/${caseId}/filings`)
+        const res = await authFetch(`/api/cases/${caseId}/filings`)
         if (res.ok) {
           const json = await res.json()
           setFilings(json.data || [])

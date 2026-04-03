@@ -6,6 +6,7 @@ import {
   Download, RefreshCw, User
 } from 'lucide-react'
 import { DocumentSignature } from '@/types/document-collaboration'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface SignaturePanelProps {
   caseId: string
@@ -36,8 +37,7 @@ export default function SignaturePanel({
   async function fetchSignatures() {
     try {
       setLoading(true)
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/signatures`
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/signatures`
       )
 
       if (response.ok) {
@@ -260,8 +260,7 @@ function RequestSignatureModal({ caseId, documentId, onClose, onRequested }: Req
       setLoading(true)
       setError(null)
 
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/signatures`,
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/signatures`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -465,8 +464,7 @@ function SignModal({ caseId, documentId, signature, onClose, onSigned }: SignMod
       const canvas = canvasRef.current
       const signatureData = canvas?.toDataURL('image/png')
 
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/signatures`,
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/signatures`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -495,8 +493,7 @@ function SignModal({ caseId, documentId, signature, onClose, onSigned }: SignMod
       setLoading(true)
       setError(null)
 
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/signatures`,
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/signatures`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },

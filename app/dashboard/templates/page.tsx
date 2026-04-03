@@ -19,6 +19,7 @@ import {
   FilePlus,
 } from 'lucide-react'
 import type { DocumentTemplate } from '@/types/document-templates'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -287,7 +288,7 @@ export default function TemplatesPage() {
         return
       }
 
-      const response = await fetch('/api/templates')
+      const response = await authFetch('/api/templates')
       if (response.ok) {
         const data = await response.json()
         if (data.templates && data.templates.length > 0) {

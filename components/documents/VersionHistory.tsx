@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Clock, ChevronDown, ChevronUp, Eye, RotateCcw, Tag } from 'lucide-react'
 import { DocumentVersion, formatVersionDate } from '@/types/document-collaboration'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface VersionHistoryProps {
   caseId: string
@@ -32,8 +33,7 @@ export default function VersionHistory({
   async function fetchVersions() {
     try {
       setLoading(true)
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/versions`
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/versions`
       )
 
       if (!response.ok) {
@@ -52,8 +52,7 @@ export default function VersionHistory({
   async function createVersion(isMajor: boolean = false) {
     try {
       setSavingVersion(true)
-      const response = await fetch(
-        `/api/cases/${caseId}/documents/generated/${documentId}/versions`,
+      const response = await authFetch(`/api/cases/${caseId}/documents/generated/${documentId}/versions`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

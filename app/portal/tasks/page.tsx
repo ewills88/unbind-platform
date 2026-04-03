@@ -8,6 +8,7 @@ import {
   XCircle, Play, Send, ClipboardList,
 } from 'lucide-react'
 import { EnhancedClientTask, TaskStats } from '@/types/portal'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString('en-US', {
@@ -73,7 +74,7 @@ export default function PortalTasksPage() {
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch('/api/portal/tasks?include_stats=true')
+      const res = await authFetch('/api/portal/tasks?include_stats=true')
       if (res.status === 401) {
         router.push('/portal/login')
         return
@@ -94,7 +95,7 @@ export default function PortalTasksPage() {
     setActionLoading(taskId)
     setError(null)
     try {
-      const res = await fetch(`/api/portal/tasks/${taskId}`, {
+      const res = await authFetch(`/api/portal/tasks/${taskId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'start' }),
@@ -116,7 +117,7 @@ export default function PortalTasksPage() {
     setActionLoading(taskId)
     setError(null)
     try {
-      const res = await fetch(`/api/portal/tasks/${taskId}/submit`, {
+      const res = await authFetch(`/api/portal/tasks/${taskId}/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notes: submitNotes || undefined }),

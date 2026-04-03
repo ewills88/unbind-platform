@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   X, FileText, ChevronRight, Loader2,
@@ -47,8 +49,8 @@ export default function NewFilingModal({ caseId, stateCode, onClose, onCreated }
     async function load() {
       try {
         const [typesRes, courtsRes] = await Promise.all([
-          fetch(`/api/filing-types?state_code=${stateCode}`),
-          fetch(`/api/courts?state_code=${stateCode}`),
+          authFetch(`/api/filing-types?state_code=${stateCode}`),
+          authFetch(`/api/courts?state_code=${stateCode}`),
         ])
         if (typesRes.ok) {
           const json = await typesRes.json()
@@ -95,7 +97,7 @@ export default function NewFilingModal({ caseId, stateCode, onClose, onCreated }
     setError(null)
 
     try {
-      const res = await fetch(`/api/cases/${caseId}/filings`, {
+      const res = await authFetch(`/api/cases/${caseId}/filings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

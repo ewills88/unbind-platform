@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
@@ -57,8 +59,8 @@ export default function PortalDocumentsPage() {
   const fetchData = async () => {
     try {
       const [docsRes, reqsRes] = await Promise.all([
-        fetch('/api/portal/documents'),
-        fetch('/api/portal/documents/requests'),
+        authFetch('/api/portal/documents'),
+        authFetch('/api/portal/documents/requests'),
       ])
       if (docsRes.status === 401 || reqsRes.status === 401) {
         router.push('/portal/login')
@@ -79,9 +81,9 @@ export default function PortalDocumentsPage() {
   const handleView = async (docId: string) => {
     setViewingDoc(docId)
     try {
-      await fetch(`/api/portal/documents/${docId}/view`, { method: 'POST' })
+      await authFetch(`/api/portal/documents/${docId}/view`, { method: 'POST' })
       // Re-fetch to update view count
-      const docsRes = await fetch('/api/portal/documents')
+      const docsRes = await authFetch('/api/portal/documents')
       if (docsRes.ok) {
         const docsData = await docsRes.json()
         setDocuments(docsData.data || [])
@@ -96,7 +98,7 @@ export default function PortalDocumentsPage() {
   const handleDownload = async (docId: string, fileName: string) => {
     setDownloading(docId)
     try {
-      const res = await fetch(`/api/portal/documents/${docId}/download`)
+      const res = await authFetch(`/api/portal/documents/${docId}/download`)
       if (!res.ok) throw new Error('Download failed')
       const blob = await res.blob()
       const url = window.URL.createObjectURL(blob)
@@ -121,7 +123,7 @@ export default function PortalDocumentsPage() {
     try {
       const formData = new FormData()
       formData.append('file', file)
-      const res = await fetch(`/api/portal/documents/requests/${requestId}/submit`, {
+      const res = await authFetch(`/api/portal/documents/requests/${requestId}/submit`, {
         method: 'POST',
         body: formData,
       })
@@ -130,7 +132,7 @@ export default function PortalDocumentsPage() {
         throw new Error(data.error || 'Upload failed')
       }
       // Re-fetch requests
-      const reqsRes = await fetch('/api/portal/documents/requests')
+      const reqsRes = await authFetch('/api/portal/documents/requests')
       if (reqsRes.ok) {
         const reqsData = await reqsRes.json()
         setRequests(reqsData.data || [])

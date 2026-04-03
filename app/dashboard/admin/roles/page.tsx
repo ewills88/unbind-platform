@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import type { Role, Permission } from '@/types/admin'
 import { PERMISSION_CATEGORIES } from '@/types/admin'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 export default function AdminRolesPage() {
   const router = useRouter()
@@ -25,7 +26,7 @@ export default function AdminRolesPage() {
 
   const fetchRoles = async () => {
     try {
-      const res = await fetch('/api/admin/roles')
+      const res = await authFetch('/api/admin/roles')
       if (res.status === 401) { router.push('/login'); return }
       if (res.status === 403) { setError('Access denied'); setLoading(false); return }
       if (!res.ok) throw new Error('Failed')
@@ -40,7 +41,7 @@ export default function AdminRolesPage() {
     setLoadingPerms(true)
     setSelectedRole(roleId)
     try {
-      const res = await fetch(`/api/admin/roles?roleId=${roleId}`)
+      const res = await authFetch(`/api/admin/roles?roleId=${roleId}`)
       if (!res.ok) throw new Error('Failed')
       const data = await res.json()
       setRolePermissions(data.data || [])
@@ -58,7 +59,7 @@ export default function AdminRolesPage() {
     if (!selectedRole) return
     setSaving(true)
     try {
-      const res = await fetch('/api/admin/roles', {
+      const res = await authFetch('/api/admin/roles', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ roleId: selectedRole, permissions: rolePermissions }),
@@ -73,7 +74,7 @@ export default function AdminRolesPage() {
     if (!newRole.role_name || !newRole.role_key) return
     setSaving(true)
     try {
-      const res = await fetch('/api/admin/roles', {
+      const res = await authFetch('/api/admin/roles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...newRole, permissions: [] }),

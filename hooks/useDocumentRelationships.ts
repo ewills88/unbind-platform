@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { RelationshipType } from '@/types/tags'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface RelatedDocument {
   id: string
@@ -32,7 +33,7 @@ export function useDocumentRelationships({ documentId }: UseDocumentRelationship
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/documents/${documentId}/relationships`)
+      const response = await authFetch(`/api/documents/${documentId}/relationships`)
       if (!response.ok) throw new Error('Failed to fetch relationships')
 
       const data = await response.json()
@@ -56,7 +57,7 @@ export function useDocumentRelationships({ documentId }: UseDocumentRelationship
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/documents/${documentId}/relationships`, {
+      const response = await authFetch(`/api/documents/${documentId}/relationships`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -88,8 +89,7 @@ export function useDocumentRelationships({ documentId }: UseDocumentRelationship
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch(
-        `/api/documents/${documentId}/relationships?relationshipId=${relationshipId}`,
+      const response = await authFetch(`/api/documents/${documentId}/relationships?relationshipId=${relationshipId}`,
         { method: 'DELETE' }
       )
 

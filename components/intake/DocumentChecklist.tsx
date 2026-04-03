@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { DocumentChecklist as ChecklistType, DocumentChecklistItem, DOCUMENT_TYPES, DocumentType } from '@/types/intake-documents'
 import DocumentUploadModal from './DocumentUploadModal'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface DocumentChecklistProps {
   intakeId: string
@@ -46,7 +47,7 @@ export default function DocumentChecklist({ intakeId, onProgressChange }: Docume
 
   const fetchChecklist = useCallback(async () => {
     try {
-      const response = await fetch(`/api/intakes/${intakeId}/documents`)
+      const response = await authFetch(`/api/intakes/${intakeId}/documents`)
       if (!response.ok) throw new Error('Failed to fetch documents')
 
       const data = await response.json()
@@ -72,7 +73,7 @@ export default function DocumentChecklist({ intakeId, onProgressChange }: Docume
     setError(null)
 
     try {
-      const response = await fetch(`/api/intakes/${intakeId}/generate-checklist`, {
+      const response = await authFetch(`/api/intakes/${intakeId}/generate-checklist`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       })

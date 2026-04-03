@@ -21,6 +21,7 @@ import {
   STAGE_ORDER,
 } from '@/types/client'
 import { getDaysUntil, formatShortDate } from '@/lib/dates'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const _supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -51,7 +52,7 @@ export default function ProgressTracker({ caseId }: ProgressTrackerProps) {
 
   const fetchProgress = async () => {
     try {
-      const res = await fetch('/api/client/progress')
+      const res = await authFetch('/api/client/progress')
       if (res.ok) {
         const data = await res.json()
         setProgress(data)

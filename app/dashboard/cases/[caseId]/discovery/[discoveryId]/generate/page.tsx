@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import type { DiscoveryRequest, DiscoveryItem, DiscoveryType } from '@/types/discovery'
 import { DISCOVERY_TYPE_INFO } from '@/types/discovery'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -34,8 +35,8 @@ export default function GenerateDiscoveryDocumentPage() {
   const fetchData = useCallback(async () => {
     try {
       const [discRes, itemsRes] = await Promise.all([
-        fetch(`/api/discovery/${discoveryId}`),
-        fetch(`/api/discovery/${discoveryId}/items`),
+        authFetch(`/api/discovery/${discoveryId}`),
+        authFetch(`/api/discovery/${discoveryId}/items`),
       ])
 
       if (discRes.ok) {
@@ -63,7 +64,7 @@ export default function GenerateDiscoveryDocumentPage() {
     setSuccess(false)
 
     try {
-      const res = await fetch('/api/discovery/generate', {
+      const res = await authFetch('/api/discovery/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   Lock,
@@ -59,8 +61,8 @@ export default function InternalNotesPanel({ caseId }: InternalNotesPanelProps) 
     setLoading(true)
     try {
       const [notesRes, membersRes] = await Promise.all([
-        fetch(`/api/cases/${caseId}/internal-notes`),
-        fetch('/api/firms/members'),
+        authFetch(`/api/cases/${caseId}/internal-notes`),
+        authFetch('/api/firms/members'),
       ])
       const notesData = await notesRes.json()
       const membersData = await membersRes.json()
@@ -77,7 +79,7 @@ export default function InternalNotesPanel({ caseId }: InternalNotesPanelProps) 
     if (!newNote.trim()) return
     setPosting(true)
     try {
-      const res = await fetch(`/api/cases/${caseId}/internal-notes`, {
+      const res = await authFetch(`/api/cases/${caseId}/internal-notes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -102,7 +104,7 @@ export default function InternalNotesPanel({ caseId }: InternalNotesPanelProps) 
     if (action === 'pin') body.pinned = true
     if (action === 'unpin') body.pinned = false
 
-    await fetch(`/api/internal-notes/${noteId}`, {
+    await authFetch(`/api/internal-notes/${noteId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -268,7 +270,7 @@ function InternalNoteCard({
     if (!reply.trim()) return
     setReplyPosting(true)
     try {
-      const res = await fetch(`/api/cases/${caseId}/internal-notes`, {
+      const res = await authFetch(`/api/cases/${caseId}/internal-notes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

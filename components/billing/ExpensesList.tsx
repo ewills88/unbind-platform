@@ -14,6 +14,7 @@ import {
   formatDate
 } from '@/types/billing'
 import ExpenseForm from './ExpenseForm'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface ExpensesListProps {
   caseId: string
@@ -58,7 +59,7 @@ export default function ExpensesList({
         url += `expense_type=${filterType}&`
       }
 
-      const response = await fetch(url)
+      const response = await authFetch(url)
       if (response.ok) {
         const data = await response.json()
         setExpenses(data.expenses || [])
@@ -80,7 +81,7 @@ export default function ExpensesList({
     if (!confirm('Are you sure you want to delete this expense?')) return
 
     try {
-      const response = await fetch(`/api/cases/${caseId}/billing/expenses?id=${expenseId}`, {
+      const response = await authFetch(`/api/cases/${caseId}/billing/expenses?id=${expenseId}`, {
         method: 'DELETE'
       })
 

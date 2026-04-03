@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import { Mail, ArrowRight, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -27,7 +28,7 @@ export default function PortalLoginPage() {
     setError(null)
 
     try {
-      const res = await fetch('/api/portal/auth/magic-link', {
+      const res = await authFetch('/api/portal/auth/magic-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.trim() }),

@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
@@ -55,7 +57,7 @@ export default function NotificationSettingsPage() {
 
   const loadPreferences = async () => {
     try {
-      const res = await fetch('/api/settings/notifications')
+      const res = await authFetch('/api/settings/notifications')
       if (res.status === 401) {
         router.push('/login')
         return
@@ -84,7 +86,7 @@ export default function NotificationSettingsPage() {
   const handleSave = async () => {
     setSaving(true)
     try {
-      const res = await fetch('/api/settings/notifications', {
+      const res = await authFetch('/api/settings/notifications', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

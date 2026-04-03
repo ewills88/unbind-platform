@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Tag as TagIcon, Plus, Loader2 } from 'lucide-react'
 import { Tag } from '@/types/tags'
 import { TagBadge, TagInput } from '@/components/tags'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface DocumentTagEditorProps {
   documentId: string
@@ -25,7 +26,7 @@ export default function DocumentTagEditor({
   const fetchTags = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/documents/${documentId}/tags`)
+      const response = await authFetch(`/api/documents/${documentId}/tags`)
       if (response.ok) {
         const data = await response.json()
         setTags(data.tags || [])
@@ -48,7 +49,7 @@ export default function DocumentTagEditor({
     // Add new tags
     if (tagsToAdd.length > 0) {
       try {
-        await fetch(`/api/documents/${documentId}/tags`, {
+        await authFetch(`/api/documents/${documentId}/tags`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ tagIds: tagsToAdd.map(t => t.id) })
@@ -61,7 +62,7 @@ export default function DocumentTagEditor({
     // Remove tags
     for (const tag of tagsToRemove) {
       try {
-        await fetch(`/api/documents/${documentId}/tags?tagId=${tag.id}`, {
+        await authFetch(`/api/documents/${documentId}/tags?tagId=${tag.id}`, {
           method: 'DELETE'
         })
       } catch (error) {
@@ -75,7 +76,7 @@ export default function DocumentTagEditor({
 
   const handleRemoveTag = async (tagId: string) => {
     try {
-      await fetch(`/api/documents/${documentId}/tags?tagId=${tagId}`, {
+      await authFetch(`/api/documents/${documentId}/tags?tagId=${tagId}`, {
         method: 'DELETE'
       })
       setTags(prev => prev.filter(t => t.id !== tagId))

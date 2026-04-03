@@ -5,6 +5,7 @@ import { CheckCircle2, ListTodo, Loader2 } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import TaskCard from '@/components/client/TaskCard'
 import { ClientTask } from '@/types/client'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 export default function ClientTasksPage() {
   const [tasks, setTasks] = useState<ClientTask[]>([])
@@ -16,7 +17,7 @@ export default function ClientTasksPage() {
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch('/api/client/tasks')
+      const res = await authFetch('/api/client/tasks')
       if (res.ok) {
         const data = await res.json()
         setTasks(data.tasks || [])
@@ -30,7 +31,7 @@ export default function ClientTasksPage() {
 
   const handleComplete = async (taskId: string) => {
     try {
-      const res = await fetch(`/api/client/tasks/${taskId}/complete`, { method: 'PATCH' })
+      const res = await authFetch(`/api/client/tasks/${taskId}/complete`, { method: 'PATCH' })
       if (!res.ok) throw new Error('Failed to complete task')
 
       setTasks(prev =>

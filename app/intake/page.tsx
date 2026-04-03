@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { FileText, ArrowRight, Clock, Shield, CheckCircle, Loader2 } from 'lucide-react'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 export default function IntakeStartPage() {
   const router = useRouter()
@@ -14,7 +15,7 @@ export default function IntakeStartPage() {
     setError(null)
 
     try {
-      const response = await fetch('/api/intakes', {
+      const response = await authFetch('/api/intakes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),

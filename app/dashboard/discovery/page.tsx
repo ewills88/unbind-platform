@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { DISCOVERY_TYPE_INFO, DEPOSITION_STATUS_INFO } from '@/types/discovery'
 import type { DiscoveryType, DepositionStatus } from '@/types/discovery'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -75,7 +76,7 @@ export default function DiscoveryDashboardPage() {
 
   const fetchData = useCallback(async () => {
     try {
-      const res = await fetch('/api/discovery/dashboard')
+      const res = await authFetch('/api/discovery/dashboard')
       if (res.ok) {
         const d = await res.json()
         setStats(d.data.stats)

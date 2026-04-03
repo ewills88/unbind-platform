@@ -12,6 +12,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import { DocumentChecklistItem, DOCUMENT_TYPES, DocumentType } from '@/types/intake-documents'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface DocumentUploadModalProps {
   intakeId: string
@@ -114,7 +115,7 @@ export default function DocumentUploadModal({
 
       if (!documentId) {
         // Create document record first
-        const createResponse = await fetch(`/api/intakes/${intakeId}/documents`, {
+        const createResponse = await authFetch(`/api/intakes/${intakeId}/documents`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -145,8 +146,7 @@ export default function DocumentUploadModal({
       const formData = new FormData()
       formData.append('file', selectedFile)
 
-      const uploadResponse = await fetch(
-        `/api/intakes/${intakeId}/documents/${documentId}/upload`,
+      const uploadResponse = await authFetch(`/api/intakes/${intakeId}/documents/${documentId}/upload`,
         {
           method: 'POST',
           body: formData,

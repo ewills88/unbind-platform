@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
@@ -94,7 +96,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/portal/auth/session', { method: 'DELETE' })
+      await authFetch('/api/portal/auth/session', { method: 'DELETE' })
     } catch {
       // Continue with client-side logout
     }

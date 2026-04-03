@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { HelpCircle, X, ChevronRight, ExternalLink } from 'lucide-react'
 import { marked } from 'marked'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface Article {
   id: string
@@ -32,7 +33,7 @@ export default function ContextualHelpPanel({
   const fetchArticles = useCallback(async () => {
     setLoading(true)
     try {
-      const res = await fetch(`/api/help/articles?q=${encodeURIComponent(contextKey)}`)
+      const res = await authFetch(`/api/help/articles?q=${encodeURIComponent(contextKey)}`)
       if (res.ok) {
         const data = await res.json()
         setArticles(data.slice(0, 5))
@@ -56,7 +57,7 @@ export default function ContextualHelpPanel({
     }
 
     try {
-      const res = await fetch(`/api/help/articles/${article.slug}`)
+      const res = await authFetch(`/api/help/articles/${article.slug}`)
       if (res.ok) {
         const full = await res.json()
         setSelectedArticle(full)

@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import type { EnhancedFirmMember } from '@/types/admin'
 import { FIRM_MEMBER_ROLE_INFO } from '@/types/firm'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 export default function AdminUsersPage() {
   const router = useRouter()
@@ -26,7 +27,7 @@ export default function AdminUsersPage() {
   const fetchMembers = async () => {
     try {
       const params = showInactive ? '?include_inactive=true' : ''
-      const res = await fetch(`/api/admin/users${params}`)
+      const res = await authFetch(`/api/admin/users${params}`)
       if (res.status === 401) { router.push('/login'); return }
       if (res.status === 403) { setError('Access denied'); setLoading(false); return }
       if (!res.ok) throw new Error('Failed to load')
@@ -40,7 +41,7 @@ export default function AdminUsersPage() {
     if (!inviteForm.email) return
     setInviting(true)
     try {
-      const res = await fetch('/api/admin/users/invite', {
+      const res = await authFetch('/api/admin/users/invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(inviteForm),
@@ -57,7 +58,7 @@ export default function AdminUsersPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleUpdateMember = async (memberId: string, updates: Record<string, any>) => {
     try {
-      const res = await fetch('/api/admin/users', {
+      const res = await authFetch('/api/admin/users', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ memberId, updates }),
@@ -71,7 +72,7 @@ export default function AdminUsersPage() {
   const handleDeactivate = async (memberId: string) => {
     if (!confirm('Are you sure you want to deactivate this member?')) return
     try {
-      const res = await fetch('/api/admin/users', {
+      const res = await authFetch('/api/admin/users', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ memberId }),

@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState } from 'react'
 import {
   Users, Loader2, AlertCircle, CheckCircle2,
@@ -47,7 +49,7 @@ export default function ServiceRecordForm({ caseId, filingId, spouseName, existi
     setError(null)
 
     try {
-      const res = await fetch(`/api/cases/${caseId}/filings/${filingId}/service`, {
+      const res = await authFetch(`/api/cases/${caseId}/filings/${filingId}/service`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -90,7 +92,7 @@ export default function ServiceRecordForm({ caseId, filingId, spouseName, existi
 
   async function handleUpdateStatus(recordId: string, status: string) {
     try {
-      await fetch(`/api/cases/${caseId}/filings/${filingId}/service`, {
+      await authFetch(`/api/cases/${caseId}/filings/${filingId}/service`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -107,7 +109,7 @@ export default function ServiceRecordForm({ caseId, filingId, spouseName, existi
 
   async function handleMarkProofFiled(recordId: string) {
     try {
-      await fetch(`/api/cases/${caseId}/filings/${filingId}/service`, {
+      await authFetch(`/api/cases/${caseId}/filings/${filingId}/service`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

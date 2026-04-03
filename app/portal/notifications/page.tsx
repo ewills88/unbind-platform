@@ -8,6 +8,7 @@ import {
   AlertCircle, ChevronRight,
 } from 'lucide-react'
 import { ClientNotification } from '@/types/portal'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 function formatRelativeTime(dateStr: string): string {
   const now = new Date()
@@ -70,7 +71,7 @@ export default function PortalNotificationsPage() {
 
   const fetchNotifications = async () => {
     try {
-      const res = await fetch('/api/portal/notifications')
+      const res = await authFetch('/api/portal/notifications')
       if (res.status === 401) {
         router.push('/portal/login')
         return
@@ -89,7 +90,7 @@ export default function PortalNotificationsPage() {
 
   const handleMarkAllRead = async () => {
     try {
-      await fetch('/api/portal/notifications/read', {
+      await authFetch('/api/portal/notifications/read', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ all: true }),
@@ -102,7 +103,7 @@ export default function PortalNotificationsPage() {
 
   const handleMarkRead = async (id: string) => {
     try {
-      await fetch('/api/portal/notifications/read', {
+      await authFetch('/api/portal/notifications/read', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notificationIds: [id] }),

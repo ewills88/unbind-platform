@@ -13,6 +13,7 @@ import {
   PartyPopper,
 } from 'lucide-react'
 import { ONBOARDING_STEPS } from '@/types/intake-workflow'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface OnboardingWizardProps {
   userId: string
@@ -108,7 +109,7 @@ export default function OnboardingWizard({
     // Check if onboarding was already completed
     const checkOnboarding = async () => {
       try {
-        const response = await fetch(`/api/onboarding/${userId}`)
+        const response = await authFetch(`/api/onboarding/${userId}`)
         if (response.ok) {
           const data = await response.json()
           if (data.onboarding?.tour_completed || data.onboarding?.tour_skipped) {
@@ -143,7 +144,7 @@ export default function OnboardingWizard({
 
   const handleSkip = async () => {
     try {
-      await fetch(`/api/onboarding/${userId}`, {
+      await authFetch(`/api/onboarding/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tour_skipped: true }),
@@ -158,7 +159,7 @@ export default function OnboardingWizard({
 
   const handleComplete = async () => {
     try {
-      await fetch(`/api/onboarding/${userId}`, {
+      await authFetch(`/api/onboarding/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

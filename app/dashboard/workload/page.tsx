@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   AlertTriangle,
@@ -25,7 +27,7 @@ export default function WorkloadDistribution() {
   const fetchWorkload = async () => {
     setLoading(true)
     try {
-      const res = await fetch('/api/firms/analytics/workload')
+      const res = await authFetch('/api/firms/analytics/workload')
       const data = await res.json()
       setWorkloadData(data.workload || null)
       setWarnings(data.warnings || [])

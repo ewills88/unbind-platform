@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 import { X, DollarSign, Calendar, FileText } from 'lucide-react'
 import {
   Asset,
@@ -42,7 +43,7 @@ export default function AssetForm({ caseId, asset, onSuccess, onCancel }: AssetF
       const method = asset ? 'PATCH' : 'POST'
       const body = asset ? { id: asset.id, ...formData } : formData
 
-      const response = await fetch(url, {
+      const response = await authFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

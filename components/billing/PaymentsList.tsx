@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useState, useEffect } from 'react'
 import {
   CreditCard, RefreshCw, Calendar, CheckCircle, XCircle,
@@ -36,7 +38,7 @@ export default function PaymentsList({ caseId }: PaymentsListProps) {
   async function fetchPayments() {
     try {
       setLoading(true)
-      const response = await fetch(`/api/cases/${caseId}/payments`)
+      const response = await authFetch(`/api/cases/${caseId}/payments`)
       if (response.ok) {
         const data = await response.json()
         setPayments(data.payments || [])

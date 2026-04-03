@@ -15,6 +15,7 @@ import {
   SET_NUMBER_OPTIONS,
 } from '@/types/discovery'
 import type { ServiceMethod } from '@/types/discovery'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -53,7 +54,7 @@ export default function CaseDiscoveryTab({ caseId, stateCode }: Props) {
 
   const fetchDiscoveries = useCallback(async () => {
     try {
-      const res = await fetch(`/api/cases/${caseId}/discovery`)
+      const res = await authFetch(`/api/cases/${caseId}/discovery`)
       if (res.ok) {
         const json = await res.json()
         setDiscoveries(json.data || [])
@@ -78,14 +79,14 @@ export default function CaseDiscoveryTab({ caseId, stateCode }: Props) {
 
   async function handleDelete(id: string) {
     if (!confirm('Delete this discovery request?')) return
-    const res = await fetch(`/api/discovery/${id}`, { method: 'DELETE' })
+    const res = await authFetch(`/api/discovery/${id}`, { method: 'DELETE' })
     if (res.ok) {
       setDiscoveries(prev => prev.filter(d => d.id !== id))
     }
   }
 
   async function handleStatusChange(id: string, status: DiscoveryStatus) {
-    const res = await fetch(`/api/discovery/${id}`, {
+    const res = await authFetch(`/api/discovery/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status }),
@@ -495,7 +496,7 @@ function AddDiscoveryModal({
       const timer = setTimeout(async () => {
         setCalculating(true)
         try {
-          const res = await fetch('/api/discovery/calculate-deadline', {
+          const res = await authFetch('/api/discovery/calculate-deadline', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -526,7 +527,7 @@ function AddDiscoveryModal({
     setError('')
 
     try {
-      const res = await fetch(`/api/cases/${caseId}/discovery`, {
+      const res = await authFetch(`/api/cases/${caseId}/discovery`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -844,7 +845,7 @@ function ExtensionModal({
     setError('')
 
     try {
-      const res = await fetch(`/api/discovery/${discoveryId}/extension`, {
+      const res = await authFetch(`/api/discovery/${discoveryId}/extension`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

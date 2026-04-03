@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 import { X, DollarSign, Loader2 } from 'lucide-react'
 import {
   IncomeSource,
@@ -47,7 +48,7 @@ export default function IncomeForm({ caseId, income, onSuccess, onCancel }: Inco
         ? `/api/cases/${caseId}/income?id=${income.id}`
         : `/api/cases/${caseId}/income`
 
-      const response = await fetch(url, {
+      const response = await authFetch(url, {
         method: income ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

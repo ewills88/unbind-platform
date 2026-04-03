@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { formatCurrency } from '@/types/billing'
 import { PaymentMethod, PAYMENT_METHOD_INFO } from '@/types/payments'
+import { authFetch } from '@/lib/supabase/auth-fetch'
 
 interface RecordPaymentModalProps {
   caseId: string
@@ -61,7 +62,7 @@ export default function RecordPaymentModal({
     try {
       setLoading(true)
 
-      const response = await fetch(`/api/cases/${caseId}/payments`, {
+      const response = await authFetch(`/api/cases/${caseId}/payments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

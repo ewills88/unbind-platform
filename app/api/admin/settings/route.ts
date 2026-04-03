@@ -1,6 +1,4 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
 import {
   getFirmSettings,
   updateFirmProfile,
@@ -9,26 +7,12 @@ import {
   updateNotificationSettings,
 } from '@/lib/admin/firmSettingsService'
 import { logAudit } from '@/lib/admin/auditService'
-
-async function getAuthenticatedClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (!url || !key) return { client: null, user: null }
-
-  const cookieStore = await cookies()
-  const supabase = createClient(url, key, {
-    global: { headers: { cookie: cookieStore.toString() } },
-  })
-
-  const { data: { user }, error } = await supabase.auth.getUser()
-  if (error || !user) return { client: null, user: null }
-  return { client: supabase, user }
-}
+import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 // GET /api/admin/settings
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -74,7 +58,7 @@ export async function GET() {
 // PATCH /api/admin/settings
 export async function PATCH(req: Request) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient()
+    const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

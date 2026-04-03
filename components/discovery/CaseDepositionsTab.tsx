@@ -1,5 +1,7 @@
 'use client'
 
+import { authFetch } from '@/lib/supabase/auth-fetch'
+
 import { useEffect, useState, useCallback } from 'react'
 import {
   Users, Plus, Calendar, MapPin, Video, Clock, Loader2,
@@ -37,7 +39,7 @@ export default function CaseDepositionsTab({ caseId }: Props) {
 
   const fetchDepositions = useCallback(async () => {
     try {
-      const res = await fetch(`/api/cases/${caseId}/depositions`)
+      const res = await authFetch(`/api/cases/${caseId}/depositions`)
       if (res.ok) {
         const d = await res.json()
         setDepositions(d.data || [])
@@ -54,7 +56,7 @@ export default function CaseDepositionsTab({ caseId }: Props) {
   async function fetchDetail(id: string) {
     setLoadingDetail(true)
     try {
-      const res = await fetch(`/api/depositions/${id}`)
+      const res = await authFetch(`/api/depositions/${id}`)
       if (res.ok) {
         const d = await res.json()
         setDetailData(d.data)
@@ -78,7 +80,7 @@ export default function CaseDepositionsTab({ caseId }: Props) {
 
   async function handleStatusChange(id: string, status: DepositionStatus) {
     try {
-      await fetch(`/api/depositions/${id}`, {
+      await authFetch(`/api/depositions/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -93,7 +95,7 @@ export default function CaseDepositionsTab({ caseId }: Props) {
   async function handleDelete(id: string) {
     if (!confirm('Delete this deposition?')) return
     try {
-      await fetch(`/api/depositions/${id}`, { method: 'DELETE' })
+      await authFetch(`/api/depositions/${id}`, { method: 'DELETE' })
       if (expandedId === id) {
         setExpandedId(null)
         setDetailData(null)
@@ -386,7 +388,7 @@ function TopicsSection({
     if (!newTopic.trim()) return
     setSaving(true)
     try {
-      await fetch(`/api/depositions/${depositionId}`, {
+      await authFetch(`/api/depositions/${depositionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _action: 'add_topic', topic: newTopic.trim(), priority: newPriority }),
@@ -403,7 +405,7 @@ function TopicsSection({
 
   async function toggleCovered(topicId: string, covered: boolean) {
     try {
-      await fetch(`/api/depositions/${depositionId}`, {
+      await authFetch(`/api/depositions/${depositionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _action: 'update_topic', topic_id: topicId, covered }),
@@ -416,7 +418,7 @@ function TopicsSection({
 
   async function deleteTopic(topicId: string) {
     try {
-      await fetch(`/api/depositions/${depositionId}`, {
+      await authFetch(`/api/depositions/${depositionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _action: 'delete_topic', topic_id: topicId }),
@@ -492,7 +494,7 @@ function ExhibitsSection({
     if (!newNumber.trim() || !newDesc.trim()) return
     setSaving(true)
     try {
-      await fetch(`/api/depositions/${depositionId}`, {
+      await authFetch(`/api/depositions/${depositionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _action: 'add_exhibit', exhibit_number: newNumber.trim(), description: newDesc.trim() }),
@@ -510,7 +512,7 @@ function ExhibitsSection({
 
   async function deleteExhibit(exhibitId: string) {
     try {
-      await fetch(`/api/depositions/${depositionId}`, {
+      await authFetch(`/api/depositions/${depositionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _action: 'delete_exhibit', exhibit_id: exhibitId }),
@@ -586,7 +588,7 @@ function NotesSection({
     if (!noteText.trim()) return
     setSaving(true)
     try {
-      await fetch(`/api/depositions/${depositionId}`, {
+      await authFetch(`/api/depositions/${depositionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -609,7 +611,7 @@ function NotesSection({
 
   async function deleteNote(noteId: string) {
     try {
-      await fetch(`/api/depositions/${depositionId}`, {
+      await authFetch(`/api/depositions/${depositionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _action: 'delete_note', note_id: noteId }),
@@ -731,7 +733,7 @@ function ScheduleDepositionModal({
         ? `${scheduledDate}T${scheduledTime}:00`
         : null
 
-      const res = await fetch(`/api/cases/${caseId}/depositions`, {
+      const res = await authFetch(`/api/cases/${caseId}/depositions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
