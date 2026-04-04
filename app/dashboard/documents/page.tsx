@@ -11,8 +11,8 @@ import DocumentAnalyticsDashboard from '@/components/dashboard/DocumentAnalytics
 import { TagFilterBar, TagList } from '@/components/tags'
 import { Document, DOCUMENT_CATEGORIES } from '@/types/documents'
 import { Tag as TagType } from '@/types/tags'
-import {
 import { authFetch } from '@/lib/supabase/auth-fetch'
+import {
   FileText,
   Download,
   Eye,
