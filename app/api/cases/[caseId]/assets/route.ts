@@ -5,7 +5,7 @@ import { getAuthenticatedClient } from '@/lib/supabase/server'
 // GET /api/cases/[caseId]/assets - List all assets for a case
 export async function GET(
   request: NextRequest,
-  { params }: { params: { caseId: string } }
+  { params }: { params: Promise<{ caseId: string }> }
 ) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
@@ -14,7 +14,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { caseId } = params
+    const { caseId } = await params
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     const ownership = searchParams.get('ownership')
@@ -70,7 +70,7 @@ export async function GET(
 // POST /api/cases/[caseId]/assets - Create a new asset
 export async function POST(
   request: NextRequest,
-  { params }: { params: { caseId: string } }
+  { params }: { params: Promise<{ caseId: string }> }
 ) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
@@ -79,7 +79,7 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { caseId } = params
+    const { caseId } = await params
     const body: AssetFormData = await request.json()
 
     // Verify user has access to this case
@@ -127,7 +127,7 @@ export async function POST(
 // PATCH /api/cases/[caseId]/assets - Update an asset
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { caseId: string } }
+  { params }: { params: Promise<{ caseId: string }> }
 ) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
@@ -136,7 +136,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { caseId } = params
+    const { caseId } = await params
     const body = await request.json()
     const { id, ...updates } = body
 
@@ -180,7 +180,7 @@ export async function PATCH(
 // DELETE /api/cases/[caseId]/assets - Delete an asset
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { caseId: string } }
+  { params }: { params: Promise<{ caseId: string }> }
 ) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
@@ -189,7 +189,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { caseId } = params
+    const { caseId } = await params
     const { searchParams } = new URL(request.url)
     const assetId = searchParams.get('id')
 

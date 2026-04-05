@@ -40,43 +40,25 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       })
     }
 
-    // If not in cache, calculate from messages
-    const { count, error: countError } = await supabase
+    // Calculate unread count using two queries (avoids SQL injection from string interpolation)
+    const { data: allMessages } = await supabase
       .from('messages')
-      .select('id', { count: 'exact', head: true })
+      .select('id')
       .eq('case_id', caseId)
       .eq('is_archived', false)
       .neq('sender_id', user.id)
-      .not('id', 'in', `(
-        SELECT message_id FROM message_reads WHERE user_id = '${user.id}'
-      )`)
 
-    if (countError) {
-      // Fallback to simpler query
-      const { data: messages } = await supabase
-        .from('messages')
-        .select('id, sender_id')
-        .eq('case_id', caseId)
-        .eq('is_archived', false)
-        .neq('sender_id', user.id)
+    const { data: reads } = await supabase
+      .from('message_reads')
+      .select('message_id')
+      .eq('user_id', user.id)
 
-      const { data: reads } = await supabase
-        .from('message_reads')
-        .select('message_id')
-        .eq('user_id', user.id)
-
-      const readIds = new Set(reads?.map(r => r.message_id) || [])
-      const unreadCount = messages?.filter(m => !readIds.has(m.id)).length || 0
-
-      return NextResponse.json({
-        case_id: caseId,
-        count: unreadCount
-      })
-    }
+    const readIds = new Set(reads?.map(r => r.message_id) || [])
+    const unreadCount = allMessages?.filter(m => !readIds.has(m.id)).length || 0
 
     return NextResponse.json({
       case_id: caseId,
-      count: count || 0
+      count: unreadCount
     })
 
   } catch (error) {

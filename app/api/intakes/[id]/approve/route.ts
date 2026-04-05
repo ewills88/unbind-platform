@@ -182,14 +182,15 @@ async function createFinancialRecords(
   const financial = intakeData.financial
   if (!financial) return
 
-  // Create asset placeholders
+  // Create asset placeholders (using correct field names matching assets table schema)
   const assets = []
 
   if ((financial.realEstateProperties ?? 0) > 0) {
     assets.push({
       case_id: caseId,
-      asset_type: 'real_estate',
-      description: 'Real Estate (from intake)',
+      category: 'real_estate',
+      name: 'Real Estate (from intake)',
+      description: 'Real estate property transferred from client intake questionnaire',
       estimated_value: financial.estimatedRealEstateValue || 0,
       ownership: 'joint',
     })
@@ -198,8 +199,9 @@ async function createFinancialRecords(
   if ((financial.bankAccountsValue ?? 0) > 0) {
     assets.push({
       case_id: caseId,
-      asset_type: 'bank_account',
-      description: 'Bank Accounts (from intake)',
+      category: 'bank_account',
+      name: 'Bank Accounts (from intake)',
+      description: 'Bank accounts transferred from client intake questionnaire',
       estimated_value: financial.bankAccountsValue,
       ownership: 'joint',
     })
@@ -208,8 +210,9 @@ async function createFinancialRecords(
   if ((financial.retirementAccountsValue ?? 0) > 0) {
     assets.push({
       case_id: caseId,
-      asset_type: 'retirement',
-      description: 'Retirement Accounts (from intake)',
+      category: 'retirement',
+      name: 'Retirement Accounts (from intake)',
+      description: 'Retirement accounts transferred from client intake questionnaire',
       estimated_value: financial.retirementAccountsValue,
       ownership: 'joint',
     })
@@ -218,8 +221,9 @@ async function createFinancialRecords(
   if ((financial.investmentAccountsValue ?? 0) > 0) {
     assets.push({
       case_id: caseId,
-      asset_type: 'investment',
-      description: 'Investment Accounts (from intake)',
+      category: 'investment',
+      name: 'Investment Accounts (from intake)',
+      description: 'Investment accounts transferred from client intake questionnaire',
       estimated_value: financial.investmentAccountsValue,
       ownership: 'joint',
     })
@@ -228,8 +232,9 @@ async function createFinancialRecords(
   if ((financial.vehiclesValue ?? 0) > 0) {
     assets.push({
       case_id: caseId,
-      asset_type: 'vehicle',
-      description: 'Vehicles (from intake)',
+      category: 'vehicle',
+      name: 'Vehicles (from intake)',
+      description: 'Vehicles transferred from client intake questionnaire',
       estimated_value: financial.vehiclesValue,
       ownership: 'joint',
     })
@@ -239,14 +244,15 @@ async function createFinancialRecords(
     await supabase.from('assets').insert(assets)
   }
 
-  // Create debt placeholders
+  // Create debt placeholders (using correct field names matching debts table schema)
   const debts = []
 
   if ((financial.mortgageBalance ?? 0) > 0) {
     debts.push({
       case_id: caseId,
-      debt_type: 'mortgage',
-      description: 'Mortgage (from intake)',
+      category: 'mortgage',
+      name: 'Mortgage (from intake)',
+      description: 'Mortgage transferred from client intake questionnaire',
       current_balance: financial.mortgageBalance,
       responsibility: 'joint',
     })
@@ -255,8 +261,9 @@ async function createFinancialRecords(
   if ((financial.vehicleLoansBalance ?? 0) > 0) {
     debts.push({
       case_id: caseId,
-      debt_type: 'auto_loan',
-      description: 'Vehicle Loans (from intake)',
+      category: 'auto_loan',
+      name: 'Vehicle Loans (from intake)',
+      description: 'Vehicle loans transferred from client intake questionnaire',
       current_balance: financial.vehicleLoansBalance,
       responsibility: 'joint',
     })
@@ -265,8 +272,9 @@ async function createFinancialRecords(
   if ((financial.creditCardBalance ?? 0) > 0) {
     debts.push({
       case_id: caseId,
-      debt_type: 'credit_card',
-      description: 'Credit Cards (from intake)',
+      category: 'credit_card',
+      name: 'Credit Cards (from intake)',
+      description: 'Credit card debt transferred from client intake questionnaire',
       current_balance: financial.creditCardBalance,
       responsibility: 'joint',
     })
@@ -275,8 +283,9 @@ async function createFinancialRecords(
   if ((financial.studentLoansBalance ?? 0) > 0) {
     debts.push({
       case_id: caseId,
-      debt_type: 'student_loan',
-      description: 'Student Loans (from intake)',
+      category: 'student_loan',
+      name: 'Student Loans (from intake)',
+      description: 'Student loans transferred from client intake questionnaire',
       current_balance: financial.studentLoansBalance,
       responsibility: 'joint',
     })

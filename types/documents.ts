@@ -70,5 +70,8 @@ export type { DocumentAIInsights } from './ai'
     { value: 'legal', label: 'Legal Documents', color: 'purple' },
     { value: 'property', label: 'Property', color: 'green' },
     { value: 'custody', label: 'Custody & Children', color: 'orange' },
+    { value: 'tax', label: 'Tax', color: 'indigo' },
+    { value: 'employment', label: 'Employment', color: 'teal' },
+    { value: 'court', label: 'Court', color: 'red' },
     { value: 'other', label: 'Other', color: 'gray' },
   ] as const

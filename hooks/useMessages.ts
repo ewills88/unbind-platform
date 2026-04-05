@@ -173,7 +173,9 @@ export function useMessages({
     } else {
       // Start new typing session
       isTypingRef.current = true
-      authFetch(`/api/cases/${caseId}/typing`, { method: 'POST' })
+      authFetch(`/api/cases/${caseId}/typing`, { method: 'POST' }).catch(() => {
+        // Typing indicator is non-critical, silently ignore errors
+      })
     }
 
     // Auto-stop after 3 seconds of no typing
@@ -192,7 +194,9 @@ export function useMessages({
 
     if (isTypingRef.current) {
       isTypingRef.current = false
-      authFetch(`/api/cases/${caseId}/typing`, { method: 'DELETE' })
+      authFetch(`/api/cases/${caseId}/typing`, { method: 'DELETE' }).catch(() => {
+        // Typing indicator is non-critical, silently ignore errors
+      })
     }
   }, [caseId])
 
@@ -218,22 +222,23 @@ export function useMessages({
           if (newMessage.sender_id === currentUserId) {
             // But update with real data if we have a temp message
             setMessages(prev => {
-              const hasTemp = prev.some(m => m.id.startsWith('temp-'))
-              if (hasTemp) {
-                // Fetch full message with sender info
-                authFetch(`/api/cases/${caseId}/messages?limit=1`)
-                  .then(res => res.json())
-                  .then(data => {
-                    const fullMsg = data.messages?.find((m: MessageWithSender) => m.id === newMessage.id)
-                    if (fullMsg) {
-                      setMessages(p => p.map(m =>
-                        m.id.startsWith('temp-') ? fullMsg : m
-                      ))
-                    }
-                  })
-              }
-              return prev
+              if (!prev.some(m => m.id.startsWith('temp-'))) return prev
+              return prev // Return unchanged; we'll fetch outside setState
             })
+
+            // Fetch full message with sender info to replace temp message
+            try {
+              const res = await authFetch(`/api/cases/${caseId}/messages?limit=1`)
+              const data = await res.json()
+              const fullMsg = data.messages?.find((m: MessageWithSender) => m.id === newMessage.id)
+              if (fullMsg) {
+                setMessages(p => p.map(m =>
+                  m.id.startsWith('temp-') ? fullMsg : m
+                ))
+              }
+            } catch (err) {
+              console.error('Error replacing temp message:', err)
+            }
             return
           }
 

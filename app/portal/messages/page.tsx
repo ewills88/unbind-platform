@@ -80,12 +80,19 @@ export default function PortalMessagesPage() {
   }, [messages])
 
   // Poll for new messages when conversation is open
+  const selectedConversationIdRef = useRef<string | null>(null)
+  useEffect(() => {
+    selectedConversationIdRef.current = selectedConversation?.id || null
+  }, [selectedConversation?.id])
+
   useEffect(() => {
     if (!selectedConversation) return
+    const conversationId = selectedConversation.id
     const interval = setInterval(() => {
-      fetchMessages(selectedConversation.id, true)
+      fetchMessages(conversationId, true)
     }, 5000)
     return () => clearInterval(interval)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedConversation?.id])
 
   const fetchConversations = async () => {

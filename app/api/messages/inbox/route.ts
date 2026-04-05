@@ -37,8 +37,7 @@ function extractSenderName(sender: MessageRecordRaw['sender']): string {
  * GET /api/messages/inbox
  * Get all cases for the current user with message summaries
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
 

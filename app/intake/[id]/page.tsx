@@ -59,10 +59,30 @@ export default function IntakePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600">Loading your questionnaire...</p>
+      <div className="min-h-screen bg-gray-50 py-8 px-4">
+        <div className="max-w-3xl mx-auto">
+          {/* Skeleton matching IntakeWizard layout */}
+          <div className="bg-white rounded-xl shadow-sm border p-6 mb-6">
+            <div className="flex items-center gap-4 mb-6">
+              {[1,2,3,4,5].map(i => (
+                <div key={i} className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+                  <div className="hidden sm:block w-16 h-3 bg-gray-200 rounded animate-pulse" />
+                </div>
+              ))}
+            </div>
+            <div className="h-6 w-48 bg-gray-200 rounded animate-pulse mb-4" />
+            <div className="h-4 w-72 bg-gray-100 rounded animate-pulse mb-8" />
+            <div className="space-y-6">
+              {[1,2,3,4].map(i => (
+                <div key={i}>
+                  <div className="h-4 w-32 bg-gray-200 rounded animate-pulse mb-2" />
+                  <div className="h-10 w-full bg-gray-100 rounded-lg animate-pulse" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <p className="text-center text-sm text-gray-400">Loading your questionnaire...</p>
         </div>
       </div>
     )

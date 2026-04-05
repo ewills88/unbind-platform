@@ -619,7 +619,7 @@ export default function DocumentPreviewModal({
                 Download
               </button>
 
-              {userRole === 'admin' && (
+              {(userRole === 'admin' || userRole === 'attorney') && (
                 <>
                   <button
                     onClick={() => setIsEditing(!isEditing)}
@@ -678,7 +678,7 @@ export default function DocumentPreviewModal({
             </div>
 
             {/* Edit Panel */}
-            {isEditing && userRole === 'admin' && (
+            {isEditing && (userRole === 'admin' || userRole === 'attorney') && (
               <div className="p-4 border-b border-gray-200 bg-blue-50 space-y-4">
                 <h3 className="text-sm font-semibold text-gray-900">Edit Document</h3>
 
@@ -686,18 +686,55 @@ export default function DocumentPreviewModal({
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Category
                   </label>
-                  <select
-                    value={editCategory}
-                    onChange={(e) => setEditCategory(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                  >
-                    <option value="">No category</option>
-                    {DOCUMENT_CATEGORIES.map((cat) => (
-                      <option key={cat.value} value={cat.value}>
-                        {cat.label}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="flex gap-2">
+                    <select
+                      value={editCategory}
+                      onChange={(e) => setEditCategory(e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    >
+                      <option value="">No category</option>
+                      {DOCUMENT_CATEGORIES.map((cat) => (
+                        <option key={cat.value} value={cat.value}>
+                          {cat.label}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          const res = await fetch(`/api/analyze-document`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              document_id: document.id,
+                              analysis_type: 'categorize'
+                            })
+                          })
+                          if (res.ok) {
+                            const data = await res.json()
+                            if (data.category) {
+                              setEditCategory(data.category)
+                              setToast(`AI suggests: ${DOCUMENT_CATEGORIES.find(c => c.value === data.category)?.label || data.category} (${Math.round((data.confidence || 0) * 100)}% confident)`)
+                            }
+                          }
+                        } catch {
+                          setToast('AI classification failed')
+                        }
+                      }}
+                      className="px-3 py-2 text-xs font-medium bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors whitespace-nowrap flex items-center gap-1"
+                      title="Ask AI to suggest a category"
+                    >
+                      <Sparkles className="w-3 h-3" />
+                      AI Suggest
+                    </button>
+                  </div>
+                  {document.ai_category && document.ai_confidence && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      AI previously suggested: {DOCUMENT_CATEGORIES.find(c => c.value === document.ai_category)?.label || document.ai_category}
+                      {' '}({Math.round(document.ai_confidence * 100)}% confident)
+                    </p>
+                  )}
                 </div>
 
                 {cases.length > 0 && (
