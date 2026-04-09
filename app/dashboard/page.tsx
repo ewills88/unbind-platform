@@ -12,6 +12,7 @@ import CaseProgressTracker from '@/components/dashboard/CaseProgressTracker'
 import DocumentAnalytics from '@/components/dashboard/DocumentAnalytics'
 import { UpcomingDeadlines } from '@/components/events'
 import ClientBillingSection from '@/components/billing/ClientBillingSection'
+import FirstRunChecklist from '@/components/onboarding/FirstRunChecklist'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -98,6 +99,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isFirstRun, setIsFirstRun] = useState(false)
 
   useEffect(() => {
     checkUserAndLoadProfile()
@@ -106,7 +108,7 @@ export default function DashboardPage() {
   const checkUserAndLoadProfile = async () => {
     try {
       const { data: { user }, error: userError } = await supabase.auth.getUser()
-      
+
       if (userError || !user) {
         router.push('/login')
         return
@@ -117,6 +119,17 @@ export default function DashboardPage() {
         .select('*')
         .eq('id', user.id)
         .single()
+
+      // Check for first-run (attorney with zero cases and zero intakes)
+      if (profileData?.role === 'admin') {
+        const [casesRes, intakesRes] = await Promise.all([
+          supabase.from('cases').select('id', { count: 'exact', head: true }).eq('attorney_id', user.id),
+          supabase.from('client_intakes').select('id', { count: 'exact', head: true }).eq('attorney_id', user.id),
+        ])
+        if ((casesRes.count || 0) === 0 && (intakesRes.count || 0) === 0) {
+          setIsFirstRun(true)
+        }
+      }
 
       if (profileError) {
         console.error('Error loading profile:', profileError)
@@ -170,6 +183,22 @@ export default function DashboardPage() {
       
       {/* Attorney Dashboard with 3-column layout */}
       {profile.role === 'admin' ? (
+        isFirstRun ? (
+          /* First-run onboarding */
+          <main className="flex-1 overflow-auto">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Welcome, {profile.full_name || 'Attorney'}
+                </h1>
+                <p className="mt-2 text-gray-600">
+                  Let&apos;s get your practice set up. This should only take a few minutes.
+                </p>
+              </div>
+              <FirstRunChecklist />
+            </div>
+          </main>
+        ) : (
         <div className="flex-1 flex overflow-hidden">
           {/* Main Content Area */}
           <main className="flex-1 overflow-auto">
@@ -204,6 +233,7 @@ export default function DashboardPage() {
           {/* Right Sidebar - Deadlines & Collapsible Activity */}
           <RightSidebar />
         </div>
+        )
       ) : (
         /* Client Dashboard */
         <main className="flex-1 overflow-auto">
