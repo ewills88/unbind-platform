@@ -1,72 +1,108 @@
-const CACHE_NAME = 'unbind-portal-v2';
-const STATIC_ASSETS = [
+const CACHE_NAME = 'unbind-v3';
+const STATIC_CACHE = 'unbind-static-v3';
+
+const PRECACHE_URLS = [
   '/offline.html',
 ];
 
-// Install service worker and cache static assets
+// Install — precache essential assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(STATIC_ASSETS))
+      .then((cache) => cache.addAll(PRECACHE_URLS))
   );
   self.skipWaiting();
 });
 
-// Activate and clean up old caches
+// Activate — clean up old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    caches.keys().then((names) =>
+      Promise.all(
+        names
+          .filter((name) => name !== CACHE_NAME && name !== STATIC_CACHE)
+          .map((name) => caches.delete(name))
+      )
+    )
   );
   self.clients.claim();
 });
 
-// Network-first strategy for pages, cache-first for static assets
+// Fetch — strategy depends on request type
 self.addEventListener('fetch', (event) => {
   const { request } = event;
 
-  // Skip non-GET requests
+  // Skip non-GET
   if (request.method !== 'GET') return;
 
-  // Skip API calls
-  if (request.url.includes('/api/')) return;
+  const url = new URL(request.url);
 
-  // For navigation requests, try network first, fallback to offline page
-  if (request.mode === 'navigate') {
+  // ── Network-first for API routes (always want fresh data) ──
+  if (url.pathname.startsWith('/api/')) {
+    return;
+  }
+
+  // ── Cache-first for static assets (JS, CSS, fonts, images under /_next/static) ──
+  if (
+    url.pathname.startsWith('/_next/static/') ||
+    url.pathname.startsWith('/icons/') ||
+    url.pathname.endsWith('.woff') ||
+    url.pathname.endsWith('.woff2')
+  ) {
     event.respondWith(
-      fetch(request)
-        .catch(() => caches.match('/offline.html'))
+      caches.match(request).then((cached) => {
+        if (cached) return cached;
+
+        return fetch(request).then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(STATIC_CACHE).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        }).catch(() => caches.match('/offline.html'));
+      })
     );
     return;
   }
 
-  // For other requests (JS, CSS, images), try network first with cache fallback
+  // ── Network-first for navigation (HTML pages) ──
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // Cache successful page loads for offline fallback
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() =>
+          caches.match(request).then((cached) => cached || caches.match('/offline.html'))
+        )
+    );
+    return;
+  }
+
+  // ── Stale-while-revalidate for everything else (images, etc.) ──
   event.respondWith(
-    fetch(request)
-      .then((response) => {
-        // Cache successful responses for static assets
-        if (response.ok && (request.url.includes('/_next/static/') || request.url.includes('/icons/'))) {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, responseClone);
-          });
+    caches.match(request).then((cached) => {
+      const networkFetch = fetch(request).then((response) => {
+        if (response.ok) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
         }
         return response;
-      })
-      .catch(() => caches.match(request))
+      });
+
+      return cached || networkFetch;
+    })
   );
 });
 
-// Push notification handling
+// ── Push notifications ──
 self.addEventListener('push', (event) => {
-  let data = { title: 'Unbind', body: 'You have a new notification', url: '/portal/dashboard' };
+  let data = { title: 'Unbind', body: 'You have a new notification', url: '/dashboard' };
 
   try {
     data = event.data.json();
@@ -80,7 +116,7 @@ self.addEventListener('push', (event) => {
     badge: data.badge || '/icons/icon-192x192.png',
     vibrate: [200, 100, 200],
     data: {
-      url: (data.data && data.data.url) || data.url || '/portal/dashboard',
+      url: (data.data && data.data.url) || data.url || '/dashboard',
       notificationId: data.data && data.data.notificationId,
     },
     actions: [
@@ -94,24 +130,22 @@ self.addEventListener('push', (event) => {
   );
 });
 
-// Notification click handling
+// ── Notification click ──
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  const url = event.notification.data?.url || '/portal/dashboard';
+  const url = event.notification.data?.url || '/dashboard';
 
   if (event.action === 'dismiss') return;
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
-      // Focus existing window if available
       for (const client of windowClients) {
-        if ((client.url.includes('/portal') || client.url.includes('/client')) && 'focus' in client) {
+        if ('focus' in client) {
           client.navigate(url);
           return client.focus();
         }
       }
-      // Open new window
       return clients.openWindow(url);
     })
   );

@@ -1,12 +1,13 @@
 {
-  "name": "Unbind - Your Divorce Portal",
+  "name": "Unbind — Family Law Practice Management",
   "short_name": "Unbind",
-  "description": "Track your divorce case, communicate with your attorney, and manage documents",
-  "start_url": "/portal/dashboard",
+  "description": "AI-powered practice management built for family law attorneys. Manage cases, documents, billing, and client communications.",
+  "start_url": "/dashboard",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#3b82f6",
-  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -29,29 +30,31 @@
   ],
   "shortcuts": [
     {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Open your dashboard",
+      "url": "/dashboard",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Cases",
+      "short_name": "Cases",
+      "description": "View your cases",
+      "url": "/dashboard/cases"
+    },
+    {
       "name": "Messages",
       "short_name": "Messages",
-      "description": "Message your attorney",
-      "url": "/portal/messages"
+      "description": "View messages",
+      "url": "/dashboard/messages"
     },
     {
       "name": "Documents",
       "short_name": "Documents",
-      "description": "View shared documents",
-      "url": "/portal/documents"
-    },
-    {
-      "name": "Tasks",
-      "short_name": "Tasks",
-      "description": "View your tasks",
-      "url": "/portal/tasks"
-    },
-    {
-      "name": "Billing",
-      "short_name": "Billing",
-      "description": "View invoices and payments",
-      "url": "/portal/billing"
+      "description": "Manage documents",
+      "url": "/dashboard/documents"
     }
   ],
-  "categories": ["legal", "productivity", "lifestyle"]
+  "categories": ["legal", "productivity", "business"],
+  "prefer_related_applications": false
 }
