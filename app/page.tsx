@@ -55,7 +55,7 @@ export default function LandingPage() {
             <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
             <a href="#testimonials" className="hover:text-white transition-colors">Testimonials</a>
             <Link href="/help" className="hover:text-white transition-colors">Help</Link>
-            <Link href="/login" className="hover:text-white transition-colors">Log In</Link>
+            <a href="https://app.unbind.law/login" className="hover:text-white transition-colors">Log In</a>
             <a
               href="#cta"
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors font-medium"
