@@ -1,6 +1,5 @@
 // Session 13 Checkpoint 1: Client Portal Types
 
-import { LucideIcon } from 'lucide-react'
 
 // ============================================================
 // Enums / Union Types
