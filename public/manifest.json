@@ -1,58 +1,42 @@
 {
-  "name": "Unbind — Family Law Practice Management",
+  "name": "Unbind",
   "short_name": "Unbind",
-  "description": "AI-powered practice management built for family law attorneys. Manage cases, documents, billing, and client communications.",
+  "description": "Divorce practice management",
   "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
-  "orientation": "portrait-primary",
+  "background_color": "#0a0f1e",
+  "theme_color": "#0a0f1e",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/maskable-icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "shortcuts": [
     {
       "name": "Dashboard",
       "short_name": "Dashboard",
-      "description": "Open your dashboard",
-      "url": "/dashboard",
-      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+      "url": "/dashboard"
     },
     {
       "name": "Cases",
       "short_name": "Cases",
-      "description": "View your cases",
       "url": "/dashboard/cases"
     },
     {
       "name": "Messages",
       "short_name": "Messages",
-      "description": "View messages",
       "url": "/dashboard/messages"
-    },
-    {
-      "name": "Documents",
-      "short_name": "Documents",
-      "description": "Manage documents",
-      "url": "/dashboard/documents"
     }
   ],
   "categories": ["legal", "productivity", "business"],

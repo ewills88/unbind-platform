@@ -52,8 +52,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* PWA: Apple touch icons */}
-        <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png" />
-        <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png" />
+        <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512.png" />
 
         {/* PWA: Apple splash screens (common sizes) */}
         <link

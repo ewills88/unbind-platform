@@ -34,7 +34,11 @@ function SetupBanner() {
   return (
     <div
       className="fixed top-0 right-0 left-0 lg:left-64 z-40 border-b-2"
-      style={{ backgroundColor: '#f5a623', borderColor: '#0a0f1e' }}
+      style={{
+        backgroundColor: '#f5a623',
+        borderColor: '#0a0f1e',
+        paddingTop: 'env(safe-area-inset-top)',
+      }}
     >
       <div className="flex items-center justify-between py-3 px-6">
         <div className="flex items-center gap-2 min-w-0">
@@ -77,10 +81,10 @@ function SetupBanner() {
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div style={{ paddingTop: 'env(safe-area-inset-top)' }}>
       <SetupBanner />
       {children}
       <AssistantBubble />
-    </>
+    </div>
   )
 }
