@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Infinity symbol only — cyan -->
+  <path d="M12 32c0-7.7 6.3-14 14-14 4.7 0 8.8 2.3 11.3 5.8L40 27.5l2.7-3.7C45.2 20.3 49.3 18 54 18c7.7 0 14 6.3 14 14s-6.3 14-14 14c-4.7 0-8.8-2.3-11.3-5.8L40 36.5l-2.7 3.7C34.8 43.7 30.7 46 26 46c-7.7 0-14-6.3-14-14z" stroke="#06b6d4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

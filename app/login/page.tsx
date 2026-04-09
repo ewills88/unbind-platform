@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Scale } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -43,11 +42,7 @@ export default function LoginPage() {
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <Scale className="w-8 h-8 text-amber-400" />
-            <span className="text-2xl font-bold text-white">Unbind</span>
-          </div>
-          <p className="text-sm text-slate-500">Divorce. Together.</p>
+          <img src="/logo-dark.svg" alt="Unbind" className="h-16 mx-auto" />
         </div>
 
         <div className="bg-slate-900 border border-white/10 rounded-xl px-8 py-10">

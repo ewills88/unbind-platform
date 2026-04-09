@@ -45,9 +45,8 @@ export default function LandingPage() {
       {/* ───────── NAV ───────── */}
       <nav className="fixed top-0 inset-x-0 z-50 bg-slate-950/80 backdrop-blur-lg border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Scale className="w-7 h-7 text-blue-400" />
-            <span className="text-xl font-bold tracking-tight">Unbind</span>
+          <Link href="/" className="flex items-center">
+            <img src="/logo-dark.svg" alt="Unbind" className="h-10 w-auto" />
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm text-slate-400">
@@ -484,9 +483,8 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid sm:grid-cols-3 gap-8">
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Scale className="w-6 h-6 text-blue-400" />
-                <span className="text-lg font-bold">Unbind</span>
+              <div className="mb-4">
+                <img src="/logo-dark.svg" alt="Unbind" className="h-9 w-auto" />
               </div>
               <p className="text-sm text-slate-500 leading-relaxed">
                 AI-powered practice management built exclusively for family law attorneys.
