@@ -1,33 +1,33 @@
 # TODO/FIXME Audit
 
-> Generated: 2026-04-08
+> Generated: 2026-04-09
 
 ## app/api/intakes/[id]/submit/route.ts
 
 - **Line 143**: `// TODO: Send notification to attorney if invited_by is set`
-  - Priority: **MEDIUM** — Impacts case workflow notifications when attorney is invited
+  - Priority: **MEDIUM** — Attorneys don't get notified when a client submits an intake
 
 - **Line 144**: `// TODO: Create notification for case dashboard`
-  - Priority: **MEDIUM** — Impacts case management dashboard visibility
+  - Priority: **MEDIUM** — Submitted intakes don't appear as dashboard notifications
 
 ## app/api/intakes/[id]/request-info/route.ts
 
 - **Line 54**: `// TODO: Send email notification to client`
-  - Priority: **MEDIUM** — Clients need notification when additional info is requested during intake
+  - Priority: **MEDIUM** — Clients aren't emailed when attorney requests additional info during intake
 
 ## app/api/intakes/[id]/approve/route.ts
 
 - **Line 162**: `// TODO: Send notifications`
-  - Priority: **MEDIUM** — Blocks client and attorney notification upon case approval
+  - Priority: **MEDIUM** — Neither client nor attorney get notified when a case is approved/created from intake
 
 ## components/billing/ExpenseForm.tsx
 
 - **Line 48**: `// TODO: Upload receipt file to Supabase Storage if present`
-  - Priority: **MEDIUM** — Blocks expense receipt storage functionality
+  - Priority: **MEDIUM** — Expense receipt file upload is non-functional
 
 ## lib/ai/document-classifier.ts
 
-- **Line 7**: `// TODO for Session 4:` (GPT-4 Vision integration)
+- **Line 7**: `// TODO for Session 4:` (GPT-4 Vision API integration)
   - Priority: **LOW** — Deferred AI enhancement; filename-based classification works as fallback
 
 - **Line 131**: `// TODO: Future AI Enhancement (Session 4)`
