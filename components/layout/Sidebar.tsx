@@ -151,14 +151,30 @@ export default function Sidebar() {
   const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => (
     <div className="flex flex-col h-full">
       {/* Logo/Brand */}
-<div className={`border-b border-gray-200 ${isCollapsed ? 'flex items-center justify-center px-2 py-4' : 'px-5 py-4'}`}>
+<div className={`border-b border-gray-200 ${isCollapsed ? 'flex items-center justify-center px-2 py-5' : 'px-5 py-5'}`}>
   {isCollapsed ? (
-    <img src="/logo-icon.svg" alt="Unbind" className="w-9 h-9" />
+    <div className="relative">
+      <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#0a0f1e" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+      <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#f5a623' }} />
+    </div>
   ) : (
     <div>
-      <img src="/logo-light.svg" alt="Unbind" className="h-8 w-auto" style={{ minWidth: '150px' }} />
+      <div className="flex items-center gap-3">
+        <div className="relative shrink-0">
+          <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#0a0f1e" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full" style={{ backgroundColor: '#f5a623' }} />
+        </div>
+        <div>
+          <div className="text-lg font-bold text-gray-900 leading-tight">Unbind</div>
+          <div className="text-xs leading-tight" style={{ color: '#f5a623' }}>Divorce. Together.</div>
+        </div>
+      </div>
       {firmInfo && (
-        <p className="text-xs text-gray-400 mt-1.5 truncate">{firmInfo.name}</p>
+        <p className="text-[11px] text-gray-400 mt-2 truncate">{firmInfo.name}</p>
       )}
     </div>
   )}
@@ -248,8 +264,11 @@ export default function Sidebar() {
     <>
       {/* Mobile Menu Button */}
 <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3 safe-top flex items-center justify-between">
-  <div className="flex items-center">
-    <img src="/logo-light.svg" alt="Unbind" className="h-7 w-auto" style={{ minWidth: '130px' }} />
+  <div className="flex items-center gap-2">
+    <svg width="28" height="28" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#0a0f1e" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+    <span className="text-base font-bold text-gray-900">Unbind</span>
   </div>
   <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
     <SheetTrigger asChild>
