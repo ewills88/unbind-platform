@@ -1,11 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import {
-  Scale, Briefcase, FileText, MessageSquare, CreditCard, Calendar,
-  Clock, CheckCircle2, AlertCircle, ChevronRight, Users, Search,
-  BarChart3, ArrowRight,
+  Scale, Briefcase, FileText, MessageSquare, CreditCard,
+  Clock, CheckCircle2, AlertCircle, Search,
 } from 'lucide-react'
 
 const DEMO_CASE = {
