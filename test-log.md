@@ -59,3 +59,4 @@ path resolution for Vitest. No source code changes needed — only config files.
 **Fix applied:** tsconfig.test.json created, vitest.config.ts updated. All 130 tests passing again.
 
 - 2026-04-08T22:34 — ✅ all tests passing (12 files, 130 tests, vitest v4.0.18)
+- 2026-04-08T23:11 — ✅ all tests passing (12 files, 130 tests, vitest v4.0.18)
