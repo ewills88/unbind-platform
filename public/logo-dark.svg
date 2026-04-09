@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" fill="none">
-  <!-- Infinity symbol — white/cyan on dark backgrounds -->
-  <path d="M28 40c0-8.8 7.2-16 16-16 5.3 0 10 2.6 12.9 6.6L60 34.8l3.1-4.2C66 26.6 70.7 24 76 24c8.8 0 16 7.2 16 16s-7.2 16-16 16c-5.3 0-10-2.6-12.9-6.6L60 45.2l-3.1 4.2C54 53.4 49.3 56 44 56c-8.8 0-16-7.2-16-16z" stroke="#06b6d4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 56" fill="none">
+  <!-- Infinity symbol — cyan on dark backgrounds -->
+  <path d="M16 28c0-6.6 5.4-12 12-12 4 0 7.5 2 9.7 5l2.3 3.1 2.3-3.1C44.5 18 48 16 52 16c6.6 0 12 5.4 12 12s-5.4 12-12 12c-4 0-7.5-2-9.7-5L40 31.9l-2.3 3.1C35.5 38 32 40 28 40c-6.6 0-12-5.4-12-12z" stroke="#06b6d4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
   <!-- Wordmark -->
-  <text x="108" y="47" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="32" font-weight="700" fill="#ffffff">Unbind</text>
+  <text x="74" y="33" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#ffffff">Unbind</text>
   <!-- Tagline -->
-  <text x="108" y="65" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13" font-weight="400" fill="#f5a623">Divorce. Together.</text>
+  <text x="74" y="47" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10" font-weight="400" fill="#f5a623">Divorce. Together.</text>
 </svg>

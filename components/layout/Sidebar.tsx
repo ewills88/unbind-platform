@@ -151,18 +151,16 @@ export default function Sidebar() {
   const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => (
     <div className="flex flex-col h-full">
       {/* Logo/Brand */}
-<div className={`flex items-center px-6 py-5 border-b border-gray-200 ${isCollapsed ? 'justify-center px-4' : ''}`}>
+<div className={`border-b border-gray-200 ${isCollapsed ? 'flex items-center justify-center px-2 py-4' : 'px-5 py-4'}`}>
   {isCollapsed ? (
-    <div className="w-10 h-10 flex items-center justify-center">
-      <img src="/logo-icon.svg" alt="Unbind" className="w-8 h-8" />
-    </div>
+    <img src="/logo-icon.svg" alt="Unbind" className="w-9 h-9" />
   ) : (
-    <div className="flex items-center">
-      <img src="/logo-light.svg" alt="Unbind" className="h-10 w-auto" />
+    <div>
+      <img src="/logo-light.svg" alt="Unbind" className="h-8 w-auto" style={{ minWidth: '150px' }} />
+      {firmInfo && (
+        <p className="text-xs text-gray-400 mt-1.5 truncate">{firmInfo.name}</p>
+      )}
     </div>
-  )}
-  {firmInfo && !isCollapsed && (
-    <p className="text-xs text-gray-500 mt-1 truncate">{firmInfo.name}</p>
   )}
 </div>
 
@@ -251,7 +249,7 @@ export default function Sidebar() {
       {/* Mobile Menu Button */}
 <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3 safe-top flex items-center justify-between">
   <div className="flex items-center">
-    <img src="/logo-light.svg" alt="Unbind" className="h-8 w-auto" />
+    <img src="/logo-light.svg" alt="Unbind" className="h-7 w-auto" style={{ minWidth: '130px' }} />
   </div>
   <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
     <SheetTrigger asChild>
