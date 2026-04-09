@@ -153,11 +153,9 @@ export default function Sidebar() {
       {/* Logo/Brand */}
 <div className={`border-b border-gray-200 ${isCollapsed ? 'flex items-center justify-center py-5' : 'px-5 py-5'}`}>
   {isCollapsed ? (
-    <div className="relative pr-1" style={{ overflow: 'visible' }}>
-      <svg width="40" height="36" viewBox="3 10 50 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ overflow: 'visible' }}>
-        <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#0a0f1e" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-      <div className="absolute top-0 -right-0.5 w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#f5a623' }} />
+    <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0a0f1e' }}>
+      <span className="text-white font-bold text-lg">U</span>
+      <span className="absolute -mt-3 ml-3 w-2 h-2 rounded-full" style={{ backgroundColor: '#f5a623' }} />
     </div>
   ) : (
     <div>
