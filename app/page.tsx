@@ -319,15 +319,38 @@ export default function LandingPage() {
               ))}
             </div>
 
-            <a
-              href="#cta"
-              className="mt-8 w-full block px-8 py-3.5 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-all font-semibold text-lg shadow-lg shadow-blue-600/25 text-center"
-            >
-              Join the Beta
-            </a>
+            <div className="mt-8 space-y-3">
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await fetch('/api/checkout', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({}),
+                    })
+                    const data = await res.json()
+                    if (data.url) {
+                      window.location.href = data.url
+                    }
+                  } catch {
+                    // Fallback to beta signup if Stripe isn't configured
+                    document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' })
+                  }
+                }}
+                className="w-full px-8 py-3.5 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-all font-semibold text-lg shadow-lg shadow-blue-600/25"
+              >
+                Start Free Trial
+              </button>
+              <a
+                href="#cta"
+                className="w-full block px-8 py-3 border border-white/10 text-slate-300 rounded-lg hover:bg-white/5 transition-all font-medium text-center"
+              >
+                Join the Beta Waitlist
+              </a>
+            </div>
 
             <p className="mt-4 text-xs text-slate-500">
-              14-day free trial. Cancel anytime. No contracts.
+              14-day free trial. No credit card required to join waitlist.
             </p>
           </div>
         </div>
