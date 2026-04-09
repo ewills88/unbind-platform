@@ -259,7 +259,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile Menu Button */}
-<div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+<div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3 safe-top flex items-center justify-between">
   <div className="flex items-center">
     <img
       src="/unbind-logo.png"

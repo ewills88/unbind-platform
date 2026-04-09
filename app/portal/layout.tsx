@@ -223,7 +223,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       </aside>
 
       {/* Mobile: Top Bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3 safe-top flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-xs">U</span>

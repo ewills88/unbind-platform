@@ -75,4 +75,15 @@
   body {
     @apply bg-background text-foreground;
   }
+  :root {
+    --sat: env(safe-area-inset-top);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
+    --sar: env(safe-area-inset-right);
+  }
+}
+
+@layer utilities {
+  .safe-top { padding-top: env(safe-area-inset-top); }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 }
