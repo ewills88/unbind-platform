@@ -1,27 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import Stripe from 'stripe'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
-
-const _stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16' as Stripe.LatestApiVersion,
-})
+import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 // GET - List payment plans (optionally filter by case_id or invoice_id)
 export async function GET(request: NextRequest) {
+  const { client: supabase, user } = await getAuthenticatedClient(request)
+  if (!user || !supabase) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   const { searchParams } = new URL(request.url)
   const caseId = searchParams.get('case_id')
   const invoiceId = searchParams.get('invoice_id')
-
-  const authHeader = request.headers.get('authorization')
-  if (authHeader) {
-    const token = authHeader.replace('Bearer ', '')
-    await supabase.auth.setSession({ access_token: token, refresh_token: '' })
-  }
 
   let query = supabase
     .from('payment_plans')
@@ -42,14 +31,8 @@ export async function GET(request: NextRequest) {
 
 // POST - Create a new payment plan
 export async function POST(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
-  if (authHeader) {
-    const token = authHeader.replace('Bearer ', '')
-    await supabase.auth.setSession({ access_token: token, refresh_token: '' })
-  }
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
+  const { client: supabase, user } = await getAuthenticatedClient(request)
+  if (!user || !supabase) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

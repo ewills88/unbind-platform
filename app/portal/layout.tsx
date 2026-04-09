@@ -1,6 +1,7 @@
 'use client'
 
 import { authFetch } from '@/lib/supabase/auth-fetch'
+import dynamic from 'next/dynamic'
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
@@ -11,6 +12,11 @@ import {
   DollarSign, Calendar, HelpCircle, LogOut,
   MoreHorizontal, Bell,
 } from 'lucide-react'
+
+const AssistantBubble = dynamic(
+  () => import('@/components/assistant/AssistantBubble'),
+  { ssr: false }
+)
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -302,6 +308,9 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       <main className="flex-1 min-h-screen pt-14 pb-20 lg:pt-0 lg:pb-0">
         {children}
       </main>
+
+      {/* AI Assistant */}
+      <AssistantBubble />
     </div>
   )
 }
