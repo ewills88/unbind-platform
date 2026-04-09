@@ -3,56 +3,120 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { X, ArrowRight } from 'lucide-react'
 
 const AssistantBubble = dynamic(
   () => import('@/components/assistant/AssistantBubble'),
   { ssr: false }
 )
 
-const ONBOARDING_STEPS = ['firm_profile', 'first_intake', 'invite_team', 'connect_calendar', 'setup_payments']
+interface StepStatus {
+  key: string
+  label: string
+  done: boolean
+}
+
+const TRACKED_STEPS: { key: string; label: string }[] = [
+  { key: 'firm_profile', label: 'Firm Profile' },
+  { key: 'first_intake', label: 'First Intake' },
+  { key: 'setup_payments', label: 'Payments' },
+]
+
+const ALL_STEPS = ['firm_profile', 'first_intake', 'invite_team', 'connect_calendar', 'setup_payments']
 
 function SetupBanner() {
-  const [dismissed, setDismissed] = useState(true) // Default hidden until check
-  const [incomplete, setIncomplete] = useState(false)
+  const [dismissed, setDismissed] = useState(true)
+  const [steps, setSteps] = useState<StepStatus[]>([])
+  const [remaining, setRemaining] = useState(0)
 
   useEffect(() => {
     const wasDismissed = localStorage.getItem('unbind_setup_banner_dismissed') === 'true'
     if (wasDismissed) return
 
-    const allDone = ONBOARDING_STEPS.every(
-      step => localStorage.getItem(`unbind_onboarding_${step}_done`) === 'true'
+    const allDone = ALL_STEPS.every(
+      s => localStorage.getItem(`unbind_onboarding_${s}_done`) === 'true'
     )
+    if (allDone) return
 
-    if (!allDone) {
-      setIncomplete(true)
-      setDismissed(false)
-    }
+    const tracked = TRACKED_STEPS.map(s => ({
+      ...s,
+      done: localStorage.getItem(`unbind_onboarding_${s.key}_done`) === 'true',
+    }))
+
+    const pendingCount = ALL_STEPS.filter(
+      s => localStorage.getItem(`unbind_onboarding_${s}_done`) !== 'true'
+    ).length
+
+    setSteps(tracked)
+    setRemaining(pendingCount)
+    setDismissed(false)
   }, [])
 
-  if (dismissed || !incomplete) return null
+  if (dismissed) return null
 
   return (
-    <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex items-center justify-between">
-      <div className="flex items-center gap-2 text-sm text-amber-800">
-        <span>Finish setting up your practice</span>
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center gap-1 font-medium text-amber-700 hover:text-amber-900"
-        >
-          View checklist
-          <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
+    <div className="relative z-50 w-full border-b-2 border-[#0a0f1e]" style={{ backgroundColor: '#f5a623' }}>
+      <div className="px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 max-w-[1600px] mx-auto">
+        {/* Left: message */}
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-xl animate-bounce inline-block" role="img" aria-label="rocket">
+            🚀
+          </span>
+          <p className="text-sm sm:text-[15px]" style={{ color: '#0a0f1e' }}>
+            <span className="font-bold">Complete your practice setup</span>
+            <span className="hidden sm:inline font-normal">
+              {' '}— you&apos;re {remaining} step{remaining !== 1 ? 's' : ''} away from being fully operational
+            </span>
+          </p>
+        </div>
+
+        {/* Center: progress dots (hidden on mobile) */}
+        <div className="hidden md:flex items-center gap-5 shrink-0">
+          {steps.map((step) => (
+            <div key={step.key} className="flex items-center gap-1.5">
+              <div
+                className={`w-3 h-3 rounded-full border-2 transition-colors ${
+                  step.done
+                    ? 'bg-[#0a0f1e] border-[#0a0f1e]'
+                    : 'bg-transparent border-[#0a0f1e]/40'
+                }`}
+              />
+              <span
+                className="text-xs font-medium whitespace-nowrap"
+                style={{ color: step.done ? '#0a0f1e' : 'rgba(10,15,30,0.55)' }}
+              >
+                {step.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Right: CTA + dismiss */}
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            href="/dashboard?checklist=open"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg transition-colors"
+            style={{ backgroundColor: '#0a0f1e', color: '#f5a623' }}
+          >
+            View Checklist
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
+          </Link>
+          <button
+            onClick={() => {
+              setDismissed(true)
+              localStorage.setItem('unbind_setup_banner_dismissed', 'true')
+            }}
+            className="p-1.5 rounded-md transition-colors hover:bg-[#0a0f1e]/10"
+            style={{ color: '#0a0f1e' }}
+            aria-label="Dismiss setup banner"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </div>
-      <button
-        onClick={() => {
-          setDismissed(true)
-          localStorage.setItem('unbind_setup_banner_dismissed', 'true')
-        }}
-        className="p-1 text-amber-400 hover:text-amber-600 transition-colors"
-      >
-        <X className="w-4 h-4" />
-      </button>
     </div>
   )
 }
