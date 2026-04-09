@@ -5,7 +5,7 @@ import { getAuthenticatedClient } from '@/lib/supabase/server'
 // GET /api/admin/audit
 export async function GET(req: Request) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -40,6 +40,21 @@ export async function GET(req: Request) {
 
     if (type === 'login') {
       const targetUserId = url.searchParams.get('userId') || user.id
+
+      // Verify target user belongs to the same firm
+      if (targetUserId !== user.id) {
+        const { data: targetMembership } = await supabase
+          .from('firm_members')
+          .select('id')
+          .eq('firm_id', profile.current_firm_id)
+          .eq('user_id', targetUserId)
+          .single()
+
+        if (!targetMembership) {
+          return NextResponse.json({ error: 'User not in your firm' }, { status: 403 })
+        }
+      }
+
       const logs = await getLoginHistory(supabase, targetUserId)
       return NextResponse.json({ data: logs })
     }

@@ -26,6 +26,7 @@ import {
   Activity,
   DollarSign,
   CreditCard,
+  HelpCircle,
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useUnreadCounts } from '@/hooks/useUnreadCounts'
@@ -57,6 +58,7 @@ const attorneyNavItems = [
   { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
   { name: 'Resources', href: '/dashboard/resources', icon: BookOpen },
   { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
+  { name: 'Help', href: '/help', icon: HelpCircle },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
 
@@ -66,6 +68,7 @@ const clientNavItems = [
   { name: 'Documents', href: '/client/documents', icon: FileText },
   { name: 'Messages', href: '/client/messages', icon: MessageSquare },
   { name: 'Resources', href: '/dashboard/resources', icon: BookOpen },
+  { name: 'Help', href: '/help', icon: HelpCircle },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
 

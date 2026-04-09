@@ -1,21 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 // GET - Financial summary reports for the attorney dashboard
 export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
-  if (authHeader) {
-    const token = authHeader.replace('Bearer ', '')
-    await supabase.auth.setSession({ access_token: token, refresh_token: '' })
-  }
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
+  const { client: supabase, user } = await getAuthenticatedClient(request)
+  if (!user || !supabase) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -23,25 +12,49 @@ export async function GET(request: NextRequest) {
     const now = new Date()
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
 
-    // Parallel queries
+    // Get cases this attorney is assigned to, for scoping all queries
+    const { data: userCases } = await supabase
+      .from('cases')
+      .select('id')
+      .or(`attorney_id.eq.${user.id},client_id.eq.${user.id}`)
+
+    const caseIds = (userCases || []).map(c => c.id)
+
+    if (caseIds.length === 0) {
+      return NextResponse.json({
+        revenue_this_month: 0,
+        accounts_receivable: 0,
+        overdue_count: 0,
+        unbilled_time_value: 0,
+        unbilled_hours: 0,
+        total_trust_balance: 0,
+        trust_account_count: 0,
+      })
+    }
+
+    // Parallel queries — all scoped to user's cases
     const [paymentsRes, invoicesRes, timeRes, trustRes] = await Promise.all([
       supabase
         .from('payments')
         .select('amount, payment_date, status')
         .eq('status', 'succeeded')
+        .in('case_id', caseIds)
         .gte('payment_date', startOfMonth),
       supabase
         .from('invoices')
         .select('balance_due, due_date, status')
+        .in('case_id', caseIds)
         .in('status', ['sent', 'viewed', 'partially_paid', 'overdue']),
       supabase
         .from('time_entries')
         .select('duration_minutes, amount')
+        .in('case_id', caseIds)
         .eq('billable', true)
         .is('billed_at', null),
       supabase
         .from('trust_accounts')
-        .select('current_balance'),
+        .select('current_balance')
+        .in('case_id', caseIds),
     ])
 
     const revenue = (paymentsRes.data || []).reduce((s, p) => s + parseFloat(String(p.amount)), 0)

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { SupabaseClient } from '@supabase/supabase-js'
 import { getAuthenticatedClient } from '@/lib/supabase/server'
 // GET /api/timer - Get current active timer
 export async function GET(request: NextRequest) {

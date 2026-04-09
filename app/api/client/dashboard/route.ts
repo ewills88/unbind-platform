@@ -3,7 +3,7 @@ import { ClientDashboardData } from '@/types/client'
 import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 // GET /api/client/dashboard - Aggregated dashboard data for client
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { Loader2, AlertCircle } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import IntakeWizard from '@/components/intake/IntakeWizard'
 import { ClientIntake } from '@/types/intake'
 import { authFetch } from '@/lib/supabase/auth-fetch'

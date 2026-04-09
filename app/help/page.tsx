@@ -183,6 +183,20 @@ export default async function HelpCenterPage({
           </>
         )}
 
+        {/* AI Help Assistant CTA */}
+        <div className="mb-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200 p-8 text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Try our AI Help Assistant</h2>
+          <p className="text-gray-600 mb-4">
+            Get instant answers to your questions — whether you&apos;re an attorney or a client.
+          </p>
+          <Link
+            href="/help/ai"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            <span>Ask AI Assistant</span>
+          </Link>
+        </div>
+
         {/* Contact Support */}
         <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-2">Still need help?</h2>
