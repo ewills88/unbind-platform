@@ -160,11 +160,11 @@ export default function Sidebar() {
   ) : (
     <div>
       <div className="flex items-center gap-3">
-        <div className="relative shrink-0">
-          <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#0a0f1e" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <div className="relative shrink-0 pr-2" style={{ overflow: 'visible' }}>
+          <svg width="36" height="32" viewBox="3 11 52 26" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ overflow: 'visible' }}>
+            <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#0a0f1e" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+            <circle cx="49" cy="14" r="2.5" fill="#f5a623"/>
           </svg>
-          <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full" style={{ backgroundColor: '#f5a623' }} />
         </div>
         <div>
           <div className="text-lg font-bold text-gray-900 leading-tight">Unbind</div>
@@ -262,10 +262,13 @@ export default function Sidebar() {
     <>
       {/* Mobile Menu Button */}
 <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3 safe-top flex items-center justify-between">
-  <div className="flex items-center gap-2">
-    <svg width="28" height="28" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#0a0f1e" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
+  <div className="flex items-center gap-2" style={{ overflow: 'visible' }}>
+    <div className="shrink-0 pr-1" style={{ overflow: 'visible' }}>
+      <svg width="32" height="26" viewBox="3 11 52 26" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ overflow: 'visible' }}>
+        <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#0a0f1e" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+        <circle cx="49" cy="14" r="2" fill="#f5a623"/>
+      </svg>
+    </div>
     <span className="text-base font-bold text-gray-900">Unbind</span>
   </div>
   <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
