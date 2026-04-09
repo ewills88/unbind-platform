@@ -153,19 +153,21 @@ export default function Sidebar() {
       {/* Logo/Brand */}
 <div className={`flex items-center px-6 py-5 border-b border-gray-200 ${isCollapsed ? 'justify-center px-4' : ''}`}>
   {isCollapsed ? (
-    <div className="w-10 h-10">
-      <img 
-        src="/unbind-icon.png" 
-        alt="Unbind" 
+    <div className="w-10 h-10 flex items-center justify-center">
+      <img
+        src="/unbind-icon.png"
+        alt="Unbind"
         className="w-full h-full object-contain"
+        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.innerHTML = '<span style="font-size:1.5rem">&#8734;</span>' }}
       />
     </div>
   ) : (
     <div className="flex items-center">
-      <img 
-        src="/unbind-logo.png" 
-        alt="Unbind - Divorce. Together." 
+      <img
+        src="/unbind-logo.png"
+        alt="Unbind"
         className="h-12 w-auto"
+        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.innerHTML = '<div><span style="font-weight:700;font-size:1.25rem;color:#1e293b">&#8734; Unbind</span><br/><span style="font-size:0.65rem;color:#f5a623">Divorce. Together.</span></div>' }}
       />
     </div>
   )}
@@ -259,10 +261,11 @@ export default function Sidebar() {
       {/* Mobile Menu Button */}
 <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
   <div className="flex items-center">
-    <img 
-      src="/unbind-logo.png" 
-      alt="Unbind - Divorce. Together." 
+    <img
+      src="/unbind-logo.png"
+      alt="Unbind"
       className="h-8 w-auto"
+      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.innerHTML = '<div><span style="font-weight:700;font-size:1.1rem;color:#1e293b">&#8734; Unbind</span></div>' }}
     />
   </div>
   <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
