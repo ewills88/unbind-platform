@@ -94,7 +94,6 @@ export async function POST(request: NextRequest) {
       message: message.trim(),
     })
     .then(() => {})
-    .catch(() => {})
 
   // Build input with conversation history
   const input: Array<{ role: string; content: string }> = []

@@ -4,7 +4,7 @@ import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 // POST /api/reports/schedules/[id]/run — manually trigger a scheduled report
 export async function POST(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAuthenticatedClient } from '@/lib/supabase/server'
 // GET /api/client/finances - Get financial overview for client's case
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
 

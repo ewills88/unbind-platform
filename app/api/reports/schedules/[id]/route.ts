@@ -50,7 +50,7 @@ export async function PATCH(
 
 // DELETE /api/reports/schedules/[id] — delete a schedule
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {

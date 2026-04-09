@@ -5,7 +5,7 @@ import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 // POST - Send a test webhook
 export async function POST(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {

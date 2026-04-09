@@ -5,7 +5,7 @@ interface RouteParams {
 }
 
 // GET /api/cases/[caseId]/filings/[filingId]/deadlines - List deadlines for a filing
-export async function GET(_request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {

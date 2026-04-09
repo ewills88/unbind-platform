@@ -10,7 +10,7 @@ function getServiceClient() {
 
 // GET /api/portal/documents/[id]/download — download a shared document
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {

@@ -7,7 +7,7 @@ interface RouteParams {
 }
 
 // POST /api/efiling/credentials/[id]/verify - Verify credentials
-export async function POST(_request: NextRequest, { params }: RouteParams) {
+export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {

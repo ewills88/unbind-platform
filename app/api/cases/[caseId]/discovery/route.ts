@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { calculateDiscoveryDeadline, getDaysUntilDeadline } from '@/lib/discovery/deadlineCalculator'
 import { generateDiscoveryTitle } from '@/types/discovery'
 import type { DiscoveryType, DiscoveryDirection } from '@/types/discovery'
@@ -164,7 +163,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 }
 
 async function createDiscoveryCalendarEvents(
-  supabase: ReturnType<typeof createClient>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
   caseId: string,
   discovery: { id: string; title: string },
   deadline: { dueDate: string; statutoryReference: string; warnings: string[] }

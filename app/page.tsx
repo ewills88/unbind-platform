@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import {
   Scale, FileText, MessageSquare, CreditCard, Search, Users,
-  Sparkles, Clock, ArrowRight, Check, Shield, Star, Menu, X,
+  Sparkles, ArrowRight, Check, Shield, Star, Menu, X,
   ChevronRight,
 } from 'lucide-react'
 

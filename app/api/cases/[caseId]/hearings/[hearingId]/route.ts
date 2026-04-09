@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getAuthenticatedClient } from '@/lib/supabase/server'
 // GET /api/cases/[caseId]/hearings/[hearingId] - Get hearing detail
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ caseId: string; hearingId: string }> }
 ) {
   try {
@@ -170,7 +170,7 @@ export async function PATCH(
 
 // DELETE /api/cases/[caseId]/hearings/[hearingId] - Delete hearing
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ caseId: string; hearingId: string }> }
 ) {
   try {

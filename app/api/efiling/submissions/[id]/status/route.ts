@@ -7,7 +7,7 @@ interface RouteParams {
 }
 
 // GET /api/efiling/submissions/[id]/status - Check submission status
-export async function GET(_request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {

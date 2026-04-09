@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getRoles, createRole, updateRole, getPermissions, getRolePermissions } from '@/lib/admin/userManagementService'
 import { logAudit } from '@/lib/admin/auditService'
 import { getAuthenticatedClient } from '@/lib/supabase/server'
@@ -30,9 +30,9 @@ async function checkAdminAccess(
 }
 
 // GET /api/admin/roles
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -63,9 +63,9 @@ export async function GET(req: Request) {
 }
 
 // POST /api/admin/roles
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -104,9 +104,9 @@ export async function POST(req: Request) {
 }
 
 // PATCH /api/admin/roles
-export async function PATCH(req: Request) {
+export async function PATCH(req: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

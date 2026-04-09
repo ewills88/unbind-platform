@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import {
   getSubscription,
   getPlans,
@@ -35,9 +35,9 @@ async function checkAdminAccess(
 }
 
 // GET /api/admin/subscription
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -70,9 +70,9 @@ export async function GET(req: Request) {
 }
 
 // POST /api/admin/subscription
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

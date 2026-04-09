@@ -115,7 +115,6 @@ export default function FirstRunChecklist() {
         <div className="space-y-3">
           {STEPS.map((step) => {
             const isDone = completed.has(step.key)
-            const Icon = step.icon
 
             return (
               <div

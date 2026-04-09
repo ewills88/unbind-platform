@@ -90,7 +90,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 }
 
 // DELETE /api/discovery/items/[itemId] - Delete an item
-export async function DELETE(_request: NextRequest, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {

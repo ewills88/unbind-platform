@@ -5,7 +5,7 @@ interface RouteParams {
 }
 
 // GET /api/cases/[caseId]/filings/[filingId] - Get filing detail with related data
-export async function GET(_request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {
@@ -162,7 +162,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 }
 
 // DELETE /api/cases/[caseId]/filings/[filingId] - Delete a filing (draft only)
-export async function DELETE(_request: NextRequest, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {

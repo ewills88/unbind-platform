@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { inviteMember, getInvitations, revokeInvitation } from '@/lib/admin/userManagementService'
 import { logAudit } from '@/lib/admin/auditService'
 import { getAuthenticatedClient } from '@/lib/supabase/server'
@@ -56,9 +56,9 @@ export async function GET(request: NextRequest) {
 }
 
 // POST /api/admin/users/invite - Send invitation
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -104,9 +104,9 @@ export async function POST(req: Request) {
 }
 
 // DELETE /api/admin/users/invite - Revoke invitation
-export async function DELETE(req: Request) {
+export async function DELETE(req: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

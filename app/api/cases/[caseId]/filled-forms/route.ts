@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getAuthenticatedClient } from '@/lib/supabase/server'
 // GET /api/cases/[caseId]/filled-forms - List filled forms for a case
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ caseId: string }> }
 ) {
   try {

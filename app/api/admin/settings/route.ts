@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import {
   getFirmSettings,
   updateFirmProfile,
@@ -56,9 +56,9 @@ export async function GET(request: NextRequest) {
 }
 
 // PATCH /api/admin/settings
-export async function PATCH(req: Request) {
+export async function PATCH(req: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

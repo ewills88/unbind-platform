@@ -4,7 +4,7 @@ import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 // GET /api/portal/tasks/[id] — get single task detail
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {

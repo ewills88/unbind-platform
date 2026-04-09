@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateSettlementAgreement } from '@/lib/settlement/documentGenerator'
+import { SettlementTemplateSection } from '@/types/settlement'
 import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 interface RouteParams {
@@ -7,7 +8,7 @@ interface RouteParams {
 }
 
 // GET /api/cases/[caseId]/settlement-documents - List all settlement documents for a case
-export async function GET(_request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {
@@ -171,7 +172,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const { buffer, renderedSections, variables } = await generateSettlementAgreement(
       fullProposal,
       caseInfo,
-      sections as unknown[],
+      sections as SettlementTemplateSection[],
       selected_sections,
       section_overrides
     )

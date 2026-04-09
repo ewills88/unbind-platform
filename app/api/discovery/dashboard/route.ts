@@ -3,7 +3,7 @@ import { getDaysUntilDeadline } from '@/lib/discovery/deadlineCalculator'
 import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 // GET /api/discovery/dashboard - Firm-wide discovery dashboard data
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(request)
     if (!user || !supabase) {

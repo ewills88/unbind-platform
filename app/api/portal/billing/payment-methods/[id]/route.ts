@@ -4,7 +4,7 @@ import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 // DELETE /api/portal/billing/payment-methods/[id] — remove payment method
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {

@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getAuditLogs, getLoginHistory } from '@/lib/admin/auditService'
 import { getAuthenticatedClient } from '@/lib/supabase/server'
 
 // GET /api/admin/audit
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {

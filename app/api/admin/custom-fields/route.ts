@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import {
   getFieldDefinitions,
   createFieldDefinition,
@@ -37,9 +37,9 @@ async function checkAdminAccess(
 }
 
 // GET /api/admin/custom-fields
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -67,9 +67,9 @@ export async function GET(req: Request) {
 }
 
 // POST /api/admin/custom-fields
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -114,9 +114,9 @@ export async function POST(req: Request) {
 }
 
 // PATCH /api/admin/custom-fields
-export async function PATCH(req: Request) {
+export async function PATCH(req: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -140,9 +140,9 @@ export async function PATCH(req: Request) {
 }
 
 // DELETE /api/admin/custom-fields
-export async function DELETE(req: Request) {
+export async function DELETE(req: NextRequest) {
   try {
-    const { client: supabase, user } = await getAuthenticatedClient(request)
+    const { client: supabase, user } = await getAuthenticatedClient(req)
     if (!user || !supabase) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
