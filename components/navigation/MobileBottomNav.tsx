@@ -25,8 +25,8 @@ function HomeIcon({ active }: { active: boolean }) {
       <path d="M3 10.5L12 3l9 7.5" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
       {/* House walls */}
       <path d="M5 9.5V20a1 1 0 001 1h12a1 1 0 001-1V9.5" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      {/* Infinity symbol as "door" */}
-      <path d="M9 16.5c0-1.4 1.1-2.5 2.5-2.5.8 0 1.6.4 2 1.1l.5.7.5-.7c.4-.7 1.2-1.1 2-1.1 1.4 0 2.5 1.1 2.5 2.5s-1.1 2.5-2.5 2.5c-.8 0-1.6-.4-2-1.1l-.5-.7-.5.7c-.4.7-1.2 1.1-2 1.1C10.1 19 9 17.9 9 16.5z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Infinity symbol centered in lower house */}
+      <path d="M8.5 16c0-1.2 1-2.2 2.2-2.2.7 0 1.3.4 1.7.9l.6.8.6-.8c.4-.5 1-.9 1.7-.9 1.2 0 2.2 1 2.2 2.2s-1 2.2-2.2 2.2c-.7 0-1.3-.4-1.7-.9l-.6-.8-.6.8c-.4.5-1 .9-1.7.9-1.2 0-2.2-1-2.2-2.2z" stroke={color} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   )
 }

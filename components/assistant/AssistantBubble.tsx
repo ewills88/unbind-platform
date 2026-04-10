@@ -186,9 +186,10 @@ export default function AssistantBubble() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-50 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all flex items-center justify-center group ${
+        className={`fixed right-6 z-50 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all flex items-center justify-center group ${
           !hasPulsed ? 'animate-pulse' : ''
         }`}
+        style={{ bottom: 'calc(80px + env(safe-area-inset-bottom))' }}
         title="Need help?"
       >
         <Sparkles className="w-6 h-6" />
@@ -205,7 +206,7 @@ export default function AssistantBubble() {
       {/* Mobile: full-width bottom sheet overlay */}
       <div className="fixed inset-0 bg-black/30 z-40 sm:hidden" onClick={() => setIsOpen(false)} />
 
-      <div className="fixed z-50 bottom-0 right-0 w-full sm:bottom-6 sm:right-6 sm:w-[380px] h-[520px] sm:h-[520px] max-h-[calc(100vh-2rem)] bg-white sm:rounded-2xl rounded-t-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
+      <div className="fixed z-50 right-0 w-full sm:right-6 sm:w-[380px] h-[520px] sm:h-[520px] max-h-[calc(100vh-2rem)] bg-white sm:rounded-2xl rounded-t-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden" style={{ bottom: 'calc(80px + env(safe-area-inset-bottom))' }}>
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 bg-blue-600 text-white shrink-0 sm:rounded-t-2xl rounded-t-2xl">
           <div className="flex items-center gap-2">
