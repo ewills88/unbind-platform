@@ -9,6 +9,11 @@ const AssistantBubble = dynamic(
   { ssr: false }
 )
 
+const MobileBottomNav = dynamic(
+  () => import('@/components/navigation/MobileBottomNav'),
+  { ssr: false }
+)
+
 const ALL_STEPS = ['firm_profile', 'first_intake', 'invite_team', 'connect_calendar', 'setup_payments']
 
 function SetupBanner() {
@@ -83,7 +88,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div style={{ paddingTop: 'env(safe-area-inset-top)' }}>
       <SetupBanner />
-      {children}
+      <div className="pb-20 md:pb-0">
+        {children}
+      </div>
+      <MobileBottomNav />
       <AssistantBubble />
     </div>
   )
