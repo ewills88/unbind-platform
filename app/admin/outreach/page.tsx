@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { authFetch } from '@/lib/supabase/auth-fetch'
+import SocialPostsTab from '@/components/admin/SocialPostsTab'
 import {
   Users, Mail, Calendar, Target, CheckCircle2, TrendingUp,
-  Download, Play, Loader2, Filter, MoreHorizontal,
+  Download, Play, Loader2, Filter, MoreHorizontal, Share2,
 } from 'lucide-react'
 
 interface Lead {
@@ -46,6 +47,7 @@ const STATUS_COLORS: Record<string, string> = {
 }
 
 export default function OutreachDashboard() {
+  const [activeTab, setActiveTab] = useState<'leads' | 'social'>('leads')
   const [leads, setLeads] = useState<Lead[]>([])
   const [stats, setStats] = useState<Stats>({ total: 0, emailsSentToday: 0, emailsSentWeek: 0, activeInSequence: 0, demosBooked: 0, converted: 0 })
   const [loading, setLoading] = useState(true)
@@ -170,6 +172,33 @@ export default function OutreachDashboard() {
             </button>
           </div>
         </div>
+
+        {/* Tabs */}
+        <div className="flex gap-1 mb-6 border-b border-gray-200">
+          <button
+            onClick={() => setActiveTab('leads')}
+            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'leads' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <Mail className="w-4 h-4" />
+            Email Outreach
+          </button>
+          <button
+            onClick={() => setActiveTab('social')}
+            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'social' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <Share2 className="w-4 h-4" />
+            Social Media
+          </button>
+        </div>
+
+        {activeTab === 'social' ? (
+          <SocialPostsTab />
+        ) : (
+        <>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
@@ -304,6 +333,8 @@ export default function OutreachDashboard() {
             </div>
           )}
         </div>
+        </>
+        )}
       </div>
     </div>
   )
