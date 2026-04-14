@@ -47,22 +47,27 @@ ALTER TABLE client_intakes ADD COLUMN IF NOT EXISTS retainer_amount NUMERIC;
 ALTER TABLE client_intakes ADD COLUMN IF NOT EXISTS attorney_id UUID REFERENCES auth.users(id);
 ALTER TABLE client_intakes ADD COLUMN IF NOT EXISTS firm_id UUID;
 
--- RLS policy for attorney access
-CREATE POLICY IF NOT EXISTS "Attorneys can view their firm intakes"
+-- RLS policies for attorney access (drop first to avoid conflicts)
+DROP POLICY IF EXISTS "Attorneys can view their firm intakes" ON client_intakes;
+DROP POLICY IF EXISTS "Attorneys can create intakes" ON client_intakes;
+DROP POLICY IF EXISTS "Attorneys can update their intakes" ON client_intakes;
+DROP POLICY IF EXISTS "Attorneys can delete their intakes" ON client_intakes;
+
+CREATE POLICY "Attorneys can view their firm intakes"
   ON client_intakes FOR SELECT
   USING (
     auth.uid() = attorney_id OR
     firm_id IN (SELECT current_firm_id FROM profiles WHERE id = auth.uid())
   );
 
-CREATE POLICY IF NOT EXISTS "Attorneys can create intakes"
+CREATE POLICY "Attorneys can create intakes"
   ON client_intakes FOR INSERT
   WITH CHECK (auth.uid() = attorney_id);
 
-CREATE POLICY IF NOT EXISTS "Attorneys can update their intakes"
+CREATE POLICY "Attorneys can update their intakes"
   ON client_intakes FOR UPDATE
   USING (auth.uid() = attorney_id);
 
-CREATE POLICY IF NOT EXISTS "Attorneys can delete their intakes"
+CREATE POLICY "Attorneys can delete their intakes"
   ON client_intakes FOR DELETE
   USING (auth.uid() = attorney_id);
