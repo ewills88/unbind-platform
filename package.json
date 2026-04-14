@@ -25,6 +25,7 @@
     "db:migrate:down": "npx tsx scripts/migrate.ts down",
     "db:migrate:status": "npx tsx scripts/migrate.ts status",
     "db:migrate:create": "npx tsx scripts/migrate.ts create",
+    "scrape": "npx tsx scripts/scrape-leads.ts",
     "deploy:staging": "npx tsx scripts/deploy.ts staging",
     "deploy:production": "npx tsx scripts/deploy.ts production",
     "rollback:staging": "npx tsx scripts/rollback.ts staging",
