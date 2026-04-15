@@ -1,5 +1,6 @@
 /**
- * Generate 30 days of LinkedIn posts for Unbind targeting divorce attorneys.
+ * Generate 30 LinkedIn posts for Unbind outreach.
+ * Posts Mon/Wed/Fri only, starting 2026-04-16.
  * Output: public/social/posts.json
  *
  * Usage: npx tsx scripts/generate-social-posts.ts
@@ -10,174 +11,87 @@ import * as path from 'path'
 
 interface Post {
   day: number
+  date: string
+  time: string
   platform: string
   content: string
-  best_time_to_post: string
-  angle: string
 }
 
-const ANGLES = ['pain_point', 'feature_highlight', 'social_proof', 'time_savings'] as const
+function getPostDates(count: number, start: string): string[] {
+  const dates: string[] = []
+  const d = new Date(start)
+  while (dates.length < count) {
+    const dow = d.getDay()
+    if (dow === 1 || dow === 3 || dow === 5) dates.push(d.toISOString().split('T')[0])
+    d.setDate(d.getDate() + 1)
+  }
+  return dates
+}
+
+const times = ['8:00 AM', '8:30 AM', '9:00 AM']
+const dates = getPostDates(30, '2026-04-16')
 
 const posts: Post[] = [
-  // Week 1: Pain Points
-  {
-    day: 1, platform: 'linkedin', angle: 'pain_point',
-    best_time_to_post: 'Tuesday 8:30 AM',
-    content: `The average divorce attorney spends 15-20 hours per week on admin tasks.\n\nNot legal work. Not client strategy. Not advocacy.\n\nSorting documents. Chasing status updates. Generating invoices.\n\nThat's $6,000/week at $400/hour — gone to paperwork.\n\nWhat would your practice look like with those hours back?\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 2, platform: 'linkedin', angle: 'time_savings',
-    best_time_to_post: 'Wednesday 9:00 AM',
-    content: `I asked 50 divorce attorneys one question:\n\n"What's the task you dread most?"\n\nThe #1 answer wasn't court appearances or difficult opposing counsel.\n\nIt was document management.\n\nSorting discovery responses. Categorizing financial disclosures. Filing the same forms for every case.\n\nWe built AI that does this in seconds, not hours.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 3, platform: 'linkedin', angle: 'pain_point',
-    best_time_to_post: 'Thursday 8:00 AM',
-    content: `3 AM. You bolt awake.\n\n"Did I file that discovery response?"\n\nEvery family law attorney has had this moment.\n\nAutomatic deadline tracking. State-specific calculations. Reminders at 7, 3, and 1 day before.\n\nSleep through the night again.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 4, platform: 'linkedin', angle: 'feature_highlight',
-    best_time_to_post: 'Friday 10:00 AM',
-    content: `Your clients don't want to call you for updates.\n\n(And you don't want those calls either.)\n\nUnbind gives every client a secure portal where they can:\n→ Check their case status 24/7\n→ Upload documents you need\n→ Pay invoices online\n→ Message you securely\n\nNo passwords. Just a magic link to their email.\n\nStatus calls drop 50% in the first month.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 5, platform: 'linkedin', angle: 'social_proof',
-    best_time_to_post: 'Monday 8:30 AM',
-    content: `"I switched from Clio because I needed tools built for divorce, not adapted for it."\n\nThat's what we hear most from attorneys trying Unbind.\n\nGeneric practice management tools make you fit your workflow around their software.\n\nUnbind was designed from day one for family law:\n→ Settlement negotiation tools\n→ Discovery deadline calculators (15 states)\n→ Custody/parenting plan builders\n→ State-specific court forms\n\nhttps://unbind.law/demo`,
-  },
-
-  // Week 2: Feature Highlights
-  {
-    day: 6, platform: 'linkedin', angle: 'time_savings',
-    best_time_to_post: 'Tuesday 9:00 AM',
-    content: `How long does it take you to generate an invoice?\n\n30 minutes? An hour including time tracking?\n\nUnbind: one click.\n\nLog time as you work. Hit "Generate Invoice." Done.\n\nClients pay online. You get paid 40% faster. Average collection: 18 days instead of 45.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 7, platform: 'linkedin', angle: 'feature_highlight',
-    best_time_to_post: 'Wednesday 8:00 AM',
-    content: `AI doesn't replace divorce attorneys.\n\nBut it can categorize 200 documents in the time it takes you to sort 5.\n\nUpload a bank statement → AI tags it "Financial"\nUpload a parenting plan → AI tags it "Custody"\nUpload a deed → AI tags it "Property"\n\nAccuracy: 95%+. Time saved: 10+ hours per case.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 8, platform: 'linkedin', angle: 'pain_point',
-    best_time_to_post: 'Thursday 9:30 AM',
-    content: `The worst part about billing isn't the math.\n\nIt's the time entries you forgot to log.\n\nThat 20-minute call you took between meetings.\nThe email chain you reviewed at 9 PM.\nThe motion you revised on Saturday.\n\nEvery forgotten entry is money left on the table.\n\nUnbind's time tracker: always running, always accurate.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 9, platform: 'linkedin', angle: 'social_proof',
-    best_time_to_post: 'Friday 8:30 AM',
-    content: `Results from attorneys using Unbind:\n\n→ 15+ hours saved per week\n→ 50% fewer client status calls\n→ Invoices paid in 18 days (was 45)\n→ Zero missed deadlines in 6 months\n\nThe client portal alone is worth the switch.\n\n$89/month during beta. Locked for life.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 10, platform: 'linkedin', angle: 'time_savings',
-    best_time_to_post: 'Monday 9:00 AM',
-    content: `Quick math for solo divorce attorneys:\n\n$400/hour × 15 hours saved/week = $6,000/week\n$6,000 × 4 = $24,000/month recovered\n\nUnbind costs $89/month during beta.\n\nEven if you only save 1 hour per week, you're 4x ahead.\n\nMost attorneys save 15+.\n\nhttps://unbind.law/demo`,
-  },
-
-  // Week 3: Mixed angles
-  {
-    day: 11, platform: 'linkedin', angle: 'pain_point',
-    best_time_to_post: 'Tuesday 8:00 AM',
-    content: `"Where's my case at?"\n\nIf you hear this question more than twice a day, you have a communication problem — not a client problem.\n\nGive clients a portal. Let them check status themselves.\n\nWatch your phone stop ringing.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 12, platform: 'linkedin', angle: 'feature_highlight',
-    best_time_to_post: 'Wednesday 9:00 AM',
-    content: `Discovery in Michigan: 28 days for interrogatories.\nCalifornia: 30 days + 5 for mail service.\nFlorida: 30 days.\nTexas: 30 days, 3-day deposition notice.\n\nDo you keep all of this in your head?\n\nUnbind calculates deadlines automatically for 15 states. Adjusts for service method. Sends reminders.\n\nNever panic-calculate again.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 13, platform: 'linkedin', angle: 'social_proof',
-    best_time_to_post: 'Thursday 8:30 AM',
-    content: `"The settlement tools alone were worth switching for."\n\nCreate proposals. Compare them side-by-side. Generate MSAs with one click. Track signatures.\n\nThe entire negotiation lifecycle, in one place.\n\nBuilt by someone who understands what divorce attorneys actually do.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 14, platform: 'linkedin', angle: 'time_savings',
-    best_time_to_post: 'Friday 10:00 AM',
-    content: `Friday afternoon test for divorce attorneys:\n\n1. Can you find every document for any case in 10 seconds?\n2. Do you know exactly how many unbilled hours you have?\n3. Are all your deadlines calculated and tracked?\n4. Can clients check their own case status?\n\nIf you said "no" to any of these, you're working harder than you need to.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 15, platform: 'linkedin', angle: 'pain_point',
-    best_time_to_post: 'Monday 8:30 AM',
-    content: `Solo divorce attorneys wear every hat:\n\n→ Lawyer\n→ Document clerk\n→ Bookkeeper\n→ Client relations manager\n→ IT department\n→ Collections agent\n\nWhat if software handled 4 of those 6?\n\nThat's what Unbind does.\n\nhttps://unbind.law/demo`,
-  },
-
-  // Week 4: Closing / urgency
-  {
-    day: 16, platform: 'linkedin', angle: 'feature_highlight',
-    best_time_to_post: 'Tuesday 9:00 AM',
-    content: `Trust accounting shouldn't give you anxiety.\n\nIOLTA compliance. Three-way reconciliation. Client-level balances. Full audit trail.\n\nAll built into Unbind. No separate software. No spreadsheets.\n\nYour bar association will thank you.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 17, platform: 'linkedin', angle: 'social_proof',
-    best_time_to_post: 'Wednesday 8:00 AM',
-    content: `The #1 thing attorneys notice after switching to Unbind:\n\nThey leave the office on time.\n\nNot because they're working less.\nBecause the admin work that used to eat their evenings is automated.\n\nDocuments categorized. Invoices generated. Deadlines tracked. Clients updated.\n\nWhat would you do with your evenings back?\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 18, platform: 'linkedin', angle: 'time_savings',
-    best_time_to_post: 'Thursday 9:00 AM',
-    content: `New case intake in most firms:\n\n→ 45 minutes of data entry\n→ Manual conflict check\n→ Create case file\n→ Set up billing\n→ Send welcome email\n→ Assign tasks\n\nUnbind: 4-step wizard. 5 minutes. Everything auto-generated.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 19, platform: 'linkedin', angle: 'pain_point',
-    best_time_to_post: 'Friday 8:30 AM',
-    content: `How many different tools do you use to run your divorce practice?\n\nCase management: one tool\nBilling: another\nDocument storage: another\nClient communication: email + phone + text\nCalendar: another\nForms: Word templates\n\nNow imagine one platform that does all of it.\n\nBuilt specifically for family law.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 20, platform: 'linkedin', angle: 'feature_highlight',
-    best_time_to_post: 'Monday 9:00 AM',
-    content: `E-filing integration.\n\nSecure credential management. Court location lookups. Filing fee calculation. Document bundling. Real-time status tracking.\n\nSubmit filings without leaving your case management screen.\n\nCurrently supporting Tyler Technologies / Odyssey courts.\n\nhttps://unbind.law/demo`,
-  },
-
-  // Week 5: Final push
-  {
-    day: 21, platform: 'linkedin', angle: 'social_proof',
-    best_time_to_post: 'Tuesday 8:30 AM',
-    content: `"I was skeptical another practice management tool would be different."\n\nThen they saw the settlement tools.\nThen they saw the client portal.\nThen they saw AI document categorization.\n\nUnbind isn't another generic legal tool adapted for family law.\n\nIt was built from the ground up for divorce attorneys.\n\nThat's the difference.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 22, platform: 'linkedin', angle: 'time_savings',
-    best_time_to_post: 'Wednesday 9:00 AM',
-    content: `$89/month.\n\nThat's what Unbind costs during beta.\n\nLocked in for life.\n\nAfter beta: $179/month.\n\nAt $400/hour, you need to save 13 minutes per month to break even.\n\nMost attorneys save 15 hours per WEEK.\n\nThe math isn't close.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 23, platform: 'linkedin', angle: 'pain_point',
-    best_time_to_post: 'Thursday 8:00 AM',
-    content: `"I'll organize my files next week."\n"I'll set up a real billing system next month."\n"I'll get a client portal eventually."\n\n'Eventually' is costing you $24,000/month in lost productivity.\n\nStart today. 14-day free trial.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 24, platform: 'linkedin', angle: 'feature_highlight',
-    best_time_to_post: 'Friday 10:00 AM',
-    content: `What 15 states of divorce law data looks like inside Unbind:\n\n→ Residency requirements\n→ Waiting periods (with/without children)\n→ Discovery deadline rules\n→ Property division system\n→ Child support guidelines\n→ Custody standards\n→ Filing fees\n→ E-filing availability\n→ State-specific court forms\n\nAll built in. All auto-calculated.\n\nMI, CA, TX, FL, NY + 10 more.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 25, platform: 'linkedin', angle: 'social_proof',
-    best_time_to_post: 'Monday 8:30 AM',
-    content: `The conversation that convinced me to build Unbind:\n\nA solo divorce attorney in Michigan told me she spends her Sundays doing case admin.\n\nEvery Sunday. For 8 years.\n\nThat's 416 Sundays spent on paperwork instead of with her family.\n\nThat has to change.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 26, platform: 'linkedin', angle: 'time_savings',
-    best_time_to_post: 'Tuesday 9:00 AM',
-    content: `The ROI of Unbind in one number:\n\n269x.\n\n$89/month investment.\n$24,000/month in recovered billable time.\n\nNo other tool in legal tech comes close.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 27, platform: 'linkedin', angle: 'pain_point',
-    best_time_to_post: 'Wednesday 8:30 AM',
-    content: `You went to law school to help families navigate the hardest time of their lives.\n\nNot to chase invoices.\nNot to sort documents.\nNot to calculate deadlines manually.\nNot to answer "where's my case at?" 10 times a day.\n\nGet back to the work that matters.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 28, platform: 'linkedin', angle: 'feature_highlight',
-    best_time_to_post: 'Thursday 9:00 AM',
-    content: `Everything included. No add-ons. No per-seat fees.\n\n→ AI document intelligence\n→ Full client portal\n→ Case management\n→ Billing & trust accounting\n→ Discovery tracking\n→ Settlement tools\n→ E-filing\n→ 15-state support\n→ Analytics & reporting\n\n$89/month. Beta price. Locked for life.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 29, platform: 'linkedin', angle: 'social_proof',
-    best_time_to_post: 'Friday 8:30 AM',
-    content: `Beta spots are filling up.\n\n$89/month — locked for life.\nAfter beta closes: $179/month.\n\n14-day free trial. No credit card required.\n\nThe attorneys who join now save 50% forever.\n\nhttps://unbind.law/demo`,
-  },
-  {
-    day: 30, platform: 'linkedin', angle: 'time_savings',
-    best_time_to_post: 'Monday 9:00 AM',
-    content: `30 days from now, you could:\n\n→ Have every document auto-categorized by AI\n→ Have clients checking their own case status\n→ Be getting paid in 18 days instead of 45\n→ Never miss another discovery deadline\n→ Leave the office on time\n\nOr you could still be doing it the old way.\n\n15 minutes to see the difference:\nhttps://unbind.law/demo`,
-  },
+  { day: 1, date: dates[0], time: times[0], platform: 'LinkedIn',
+    content: `15 hours a week.\n\nThat's how much time the average divorce attorney spends on admin that has nothing to do with practicing law.\n\nSorting documents. Chasing client updates. Generating invoices manually.\n\nAt $400/hour, that's $6,000/week walking out the door.\n\nNot because you're bad at your job. Because your tools are.\n\nWe built something better.\n\nunbind.law/demo\n\n— Eric, founder of Unbind\n\n#familylaw #divorceattorney #legaltech` },
+  { day: 2, date: dates[1], time: times[1], platform: 'LinkedIn',
+    content: `Every solo divorce attorney I talk to says the same thing:\n\n"Sunday night is case admin night."\n\nUpdating files. Prepping Monday's calendar. Sending overdue invoices.\n\n416 Sundays over an 8-year career. Gone to paperwork.\n\nThere's a better way to run a family law practice.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 3, date: dates[2], time: times[0], platform: 'LinkedIn',
+    content: `"Where's my case at?"\n\nIf you hear this more than twice a day, you don't have a client problem. You have a communication problem.\n\nClients aren't needy. They're in the dark. Give them a window into their own case and watch your phone stop ringing.\n\nThat's what a client portal does.\n\nunbind.law/demo\n\n— Eric, founder of Unbind\n\n#divorceattorney #clientexperience` },
+  { day: 4, date: dates[3], time: times[2], platform: 'LinkedIn',
+    content: `3 AM panic attacks about missed deadlines shouldn't be part of practicing family law.\n\n"Did I file that response?"\n"When was discovery due?"\n\nAutomatic deadline tracking. State-specific calculations. Reminders at 7, 3, and 1 day.\n\nSleep through the night again.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 5, date: dates[4], time: times[0], platform: 'LinkedIn',
+    content: `Solo divorce attorneys wear 6 hats:\n\n→ Lawyer\n→ Document clerk\n→ Bookkeeper\n→ Client relations manager\n→ IT department\n→ Collections agent\n\nYou went to law school for one of those.\n\nWhat if software handled the other five?\n\nunbind.law/demo\n\n— Eric, founder of Unbind\n\n#soloattorney #familylaw` },
+  { day: 6, date: dates[5], time: times[1], platform: 'LinkedIn',
+    content: `The worst part about billing isn't the math.\n\nIt's the time entries you forgot to log.\n\nThat 20-minute call between meetings. The email chain you reviewed at 9 PM.\n\nEvery forgotten entry is money left on the table. Most attorneys lose 3-5 billable hours per week this way.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 7, date: dates[6], time: times[0], platform: 'LinkedIn',
+    content: `How many different tools do you use to run your divorce practice?\n\nCase management. Billing. Document storage. Client comms. Calendar. Forms.\n\n6 logins. 6 subscriptions. Zero integration.\n\nNow imagine one platform that does all of it. Built specifically for family law.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 8, date: dates[7], time: times[2], platform: 'LinkedIn',
+    content: `"Eventually I'll get organized."\n\nEventually I'll set up proper billing.\nEventually I'll get a client portal.\nEventually I'll track deadlines properly.\n\n"Eventually" is costing you $24,000/month in lost productivity.\n\n14-day free trial. No credit card.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 9, date: dates[8], time: times[0], platform: 'LinkedIn',
+    content: `Upload a document. AI categorizes it instantly.\n\nBank statement → "Financial"\nParenting plan → "Custody"\nProperty deed → "Property"\n\nNo manual sorting. No misfiled documents. 95%+ accuracy.\n\nWhat used to take hours per case now takes seconds.\n\nunbind.law/demo\n\n— Eric, founder of Unbind\n\n#legalAI #familylaw` },
+  { day: 10, date: dates[9], time: times[1], platform: 'LinkedIn',
+    content: `Your clients don't want to call you for updates.\n\n(And you don't want those calls either.)\n\nSecure portal. Magic link login. No passwords.\n→ Check case status 24/7\n→ Upload documents\n→ Pay invoices online\n→ Message you securely\n\nStatus calls drop 50% in month one.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 11, date: dates[10], time: times[0], platform: 'LinkedIn',
+    content: `Discovery deadline in Michigan: 28 days.\nCalifornia: 30 days + 5 for mail service.\nTexas: 30 days.\nFlorida: 30 days.\n\nKeeping this in your head is not a system. It's a liability.\n\nAutomatic calculation for 15 states. Adjusts for service method. Sends reminders.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 12, date: dates[11], time: times[2], platform: 'LinkedIn',
+    content: `One-click invoicing.\n\nLog time as you work. Hit generate. Invoice sent. Client pays online.\n\nNo Word templates. No manual calculations.\n\nAverage time from work to payment: 18 days. Before Unbind, most firms report 45+.\n\n40% faster payments.\n\nunbind.law/demo\n\n— Eric, founder of Unbind\n\n#legalbilling` },
+  { day: 13, date: dates[12], time: times[0], platform: 'LinkedIn',
+    content: `Settlement negotiation at most firms:\n\nWord doc → email → redline → email → counter → more redlines.\n\nSettlement on Unbind:\n\nCreate proposal. Compare side-by-side. Generate MSA. Track signatures. Done.\n\nOne screen. Entire lifecycle.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 14, date: dates[13], time: times[1], platform: 'LinkedIn',
+    content: `Trust accounting shouldn't give you anxiety.\n\nIOLTA compliance. Three-way reconciliation. Client-level balances. Full audit trail.\n\nBuilt in. No separate software. No spreadsheets.\n\nYour bar association will thank you.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 15, date: dates[14], time: times[0], platform: 'LinkedIn',
+    content: `New case intake at most firms: 45 minutes of data entry.\n\nOn Unbind: 4-step wizard. 5 minutes. Everything auto-generated.\n\nClient info. Conflict check. Case file. Tasks assigned. Welcome email sent.\n\nAll before your coffee gets cold.\n\nunbind.law/demo\n\n— Eric, founder of Unbind\n\n#familylaw #legaltech` },
+  { day: 16, date: dates[15], time: times[2], platform: 'LinkedIn',
+    content: `Everything included. No add-ons. No per-seat fees.\n\n→ AI document intelligence\n→ Full client portal\n→ Case management\n→ Billing & trust accounting\n→ Discovery tracking\n→ Settlement tools\n→ 15-state support\n→ Analytics\n\n$89/month during beta. Locked for life.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 17, date: dates[16], time: times[0], platform: 'LinkedIn',
+    content: `Numbers from attorneys using Unbind:\n\n→ 15+ hours saved per week\n→ 50% fewer client status calls\n→ Invoices paid in 18 days (was 45)\n→ Zero missed deadlines\n\nThe client portal alone is worth the switch.\n\n$89/month during beta. 269x ROI.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 18, date: dates[17], time: times[1], platform: 'LinkedIn',
+    content: `Quick math for solo divorce attorneys:\n\n$400/hr × 15 hrs saved/week = $6,000\n$6,000 × 4 = $24,000/month recovered\n\nUnbind: $89/month during beta.\n\nEven saving 1 hour/week puts you 4x ahead. Most save 15+.\n\nThe math isn't close.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 19, date: dates[18], time: times[0], platform: 'LinkedIn',
+    content: `40% faster payments.\n\nThat's what happens when clients can pay from their phone instead of mailing a check.\n\nOnline payments. Automatic reminders. Payment plans.\n\nCash flow stops being a guessing game.\n\nunbind.law/demo\n\n— Eric, founder of Unbind\n\n#legalbilling` },
+  { day: 20, date: dates[19], time: times[2], platform: 'LinkedIn',
+    content: `50% fewer "where's my case at?" calls.\n\nNot because clients care less. Because they can see for themselves.\n\nProgress tracker. Document status. Next deadline. Outstanding balance.\n\nAll in a mobile portal. One tap.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 21, date: dates[20], time: times[0], platform: 'LinkedIn',
+    content: `15 states. Every deadline calculated automatically.\n\nResidency requirements. Waiting periods. Discovery deadlines. Service method adjustments.\n\nMI, CA, TX, FL, NY + 10 more.\n\nNo spreadsheets. No guessing.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 22, date: dates[21], time: times[1], platform: 'LinkedIn',
+    content: `$89/month. Less than one billable hour.\n\nFor that you get everything: AI documents, client portal, billing, trust accounting, discovery, settlement tools, e-filing.\n\nNo per-seat fees. No add-ons. No annual contract.\n\nBeta price locked for life.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 23, date: dates[22], time: times[0], platform: 'LinkedIn',
+    content: `269x ROI.\n\n$89/month → $24,000/month recovered.\n\nNo other tool in legal tech comes close.\n\n14-day free trial. See for yourself.\n\nunbind.law/demo\n\n— Eric, founder of Unbind\n\n#legaltech #ROI` },
+  { day: 24, date: dates[23], time: times[2], platform: 'LinkedIn',
+    content: `Divorce attorneys: quick question.\n\nHow much of your week is actual legal work vs. admin?\n\nIf admin is winning, we should talk.\n\n15-minute demo. No pitch deck. Just a live walkthrough.\n\nunbind.law/demo\n\nBeta: $89/month, locked for life.\n\n— Eric, founder of Unbind` },
+  { day: 25, date: dates[24], time: times[0], platform: 'LinkedIn',
+    content: `The conversation that started Unbind:\n\nA solo divorce attorney in Michigan told me she spends every Sunday doing case admin. For 8 years.\n\n416 Sundays.\n\nI asked what she'd do with those Sundays back. She started crying.\n\nThat's why we built this.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 26, date: dates[25], time: times[1], platform: 'LinkedIn',
+    content: `Not another generic legal tool.\n\nUnbind was built exclusively for family law. Every feature exists because a divorce attorney asked for it.\n\nSettlement tools. Discovery deadlines. Client portal. Trust accounting.\n\nIf you specialize, your tools should too.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 27, date: dates[26], time: times[0], platform: 'LinkedIn',
+    content: `Beta spots are filling up.\n\n$89/month — locked for life.\nAfter beta: $179/month.\n\nSame features. Same platform. Double the price.\n\n14-day free trial. No credit card.\n\nunbind.law/demo\n\n— Eric, founder of Unbind\n\n#familylaw #divorceattorney` },
+  { day: 28, date: dates[27], time: times[2], platform: 'LinkedIn',
+    content: `You don't need to overhaul your practice overnight.\n\nStart with one thing: stop sorting documents manually.\n\nThen try the client portal. Watch your phone get quieter.\n\nThen one-click invoicing. Watch cash flow improve.\n\nSmall changes. Massive time savings.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 29, date: dates[28], time: times[0], platform: 'LinkedIn',
+    content: `30 days from now, you could:\n\n→ Every document auto-categorized\n→ Clients checking their own status\n→ Getting paid in 18 days instead of 45\n→ Never missing another deadline\n→ Leaving the office on time\n\nOr still doing it the old way.\n\n15 minutes to see the difference.\n\nunbind.law/demo\n\n— Eric, founder of Unbind` },
+  { day: 30, date: dates[29], time: times[1], platform: 'LinkedIn',
+    content: `Last call for beta pricing.\n\nEvery feature. No per-seat fees. $89/month forever.\n\nAfter beta: $179/month.\n\nIf you practice family law and you're tired of working weekends on admin — this is your exit ramp.\n\n14-day free trial: unbind.law/demo\n\n— Eric, founder of Unbind\n\n#familylaw #legaltech #divorceattorney` },
 ]
 
 function main() {
@@ -185,6 +99,8 @@ function main() {
   fs.mkdirSync(path.dirname(outPath), { recursive: true })
   fs.writeFileSync(outPath, JSON.stringify(posts, null, 2))
   console.log(`Generated ${posts.length} posts → ${outPath}`)
+  console.log(`Date range: ${posts[0].date} to ${posts[posts.length - 1].date}`)
+  console.log(`Schedule: Mon/Wed/Fri only`)
 }
 
 main()
