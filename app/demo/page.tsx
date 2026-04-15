@@ -78,22 +78,10 @@ export default function DemoPage() {
               </ul>
             </div>
 
-            {/* Walkthrough CTA */}
-            <div className="mt-8 pt-8 border-t border-white/10">
-              <p className="text-xs text-slate-500 uppercase tracking-wide mb-3">Or explore on your own</p>
-              <Link
-                href="/demo/walkthrough"
-                className="flex items-center justify-center gap-2 w-full py-3.5 border border-white/20 text-white rounded-xl font-medium hover:bg-white/5 transition-colors text-base"
-              >
-                Explore the interactive walkthrough
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <p className="text-center text-xs text-slate-600 mt-2">No login required. See a real case.</p>
-            </div>
           </div>
 
-          {/* Right: Stats + Book CTA */}
-          <div className="space-y-6">
+          {/* Right: Stats + Two CTAs */}
+          <div className="space-y-5">
             {/* Stats Card */}
             <div className="bg-slate-900 border border-white/10 rounded-2xl p-8 shadow-2xl">
               <div className="grid grid-cols-1 gap-8">
@@ -113,6 +101,23 @@ export default function DemoPage() {
               </div>
             </div>
 
+            {/* OR Divider */}
+            <div className="flex items-center gap-4">
+              <div className="flex-1 border-t border-white/10" />
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">or</span>
+              <div className="flex-1 border-t border-white/10" />
+            </div>
+
+            {/* Self-Explore CTA */}
+            <Link
+              href="/demo/walkthrough"
+              className="flex items-center justify-center gap-2 w-full py-3.5 border border-white/20 text-white rounded-xl font-medium hover:bg-white/5 transition-colors"
+            >
+              <span>Explore the interactive walkthrough</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <p className="text-center text-xs text-slate-600 -mt-2">No login required. See a real case.</p>
+
             {/* Book Demo CTA */}
             <a
               href={CAL_URL}
@@ -123,8 +128,8 @@ export default function DemoPage() {
             >
               Book Your 15-Min Demo
             </a>
-            <p className="text-center text-xs text-slate-500">
-              Free. No obligation. See Unbind live in 15 minutes.
+            <p className="text-center text-xs text-slate-500 -mt-2">
+              Free. No obligation. 15 minutes.
             </p>
           </div>
         </div>

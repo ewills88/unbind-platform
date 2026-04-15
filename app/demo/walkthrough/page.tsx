@@ -84,7 +84,7 @@ export default function DemoPage() {
             <span className="text-xs text-slate-500 bg-white/5 px-2 py-1 rounded ml-2">DEMO</span>
           </div>
           <div className="flex items-center gap-4">
-            <a href="https://cal.com/eric-wills-snawfe/15min" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:block">
+            <a href="https://cal.com/eric-wills-snawfe/15min" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-white transition-colors" style={{ cursor: 'pointer' }}>
               Book a call
             </a>
             <a
@@ -330,6 +330,7 @@ export default function DemoPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-3.5 border border-white/10 text-slate-300 rounded-lg font-medium hover:bg-white/5 transition-colors"
+              style={{ cursor: 'pointer' }}
             >
               Book a call with our team
             </a>
