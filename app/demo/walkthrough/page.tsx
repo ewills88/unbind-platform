@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import {
-  Scale, Briefcase, FileText, MessageSquare, CreditCard,
+  Briefcase, FileText, MessageSquare, CreditCard,
   Clock, CheckCircle2, AlertCircle, Search,
 } from 'lucide-react'
 
@@ -76,7 +76,10 @@ export default function DemoPage() {
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Scale className="w-7 h-7 text-amber-400" />
+            <svg width="28" height="20" viewBox="2 10 56 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ overflow: 'visible' }}>
+              <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#06b6d4" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="49" cy="14" r="2.5" fill="#f5a623"/>
+            </svg>
             <span className="text-xl font-bold text-white">Unbind</span>
             <span className="text-xs text-slate-500 bg-white/5 px-2 py-1 rounded ml-2">DEMO</span>
           </div>
