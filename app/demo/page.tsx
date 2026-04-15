@@ -78,14 +78,18 @@ export default function DemoPage() {
               </ul>
             </div>
 
-            {/* Walkthrough Link */}
-            <Link
-              href="/demo/walkthrough"
-              className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-amber-400 transition-colors"
-            >
-              Want to explore on your own first? Try the interactive walkthrough
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            {/* Walkthrough CTA */}
+            <div className="mt-8 pt-8 border-t border-white/10">
+              <p className="text-xs text-slate-500 uppercase tracking-wide mb-3">Or explore on your own</p>
+              <Link
+                href="/demo/walkthrough"
+                className="flex items-center justify-center gap-2 w-full py-3.5 border border-white/20 text-white rounded-xl font-medium hover:bg-white/5 transition-colors text-base"
+              >
+                Explore the interactive walkthrough
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <p className="text-center text-xs text-slate-600 mt-2">No login required. See a real case.</p>
+            </div>
           </div>
 
           {/* Right: Stats + Book CTA */}
