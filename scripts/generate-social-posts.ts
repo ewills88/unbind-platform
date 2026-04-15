@@ -19,17 +19,21 @@ interface Post {
 
 function getPostDates(count: number, start: string): string[] {
   const dates: string[] = []
-  const d = new Date(start)
+  const [y, m, day] = start.split('-').map(Number)
+  const d = new Date(Date.UTC(y, m - 1, day))
   while (dates.length < count) {
-    const dow = d.getDay()
-    if (dow === 1 || dow === 3 || dow === 5) dates.push(d.toISOString().split('T')[0])
-    d.setDate(d.getDate() + 1)
+    const dow = d.getUTCDay()
+    if (dow === 1 || dow === 3 || dow === 5) {
+      const iso = d.toISOString().split('T')[0]
+      dates.push(iso)
+    }
+    d.setUTCDate(d.getUTCDate() + 1)
   }
   return dates
 }
 
 const times = ['8:00 AM', '8:30 AM', '9:00 AM']
-const dates = getPostDates(30, '2026-04-16')
+const dates = getPostDates(30, '2026-04-20')
 
 const posts: Post[] = [
   { day: 1, date: dates[0], time: times[0], platform: 'LinkedIn',
