@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Scale, Check, Clock, CreditCard, PhoneOff, ArrowRight } from 'lucide-react'
+import { Check, Clock, CreditCard, PhoneOff, ArrowRight } from 'lucide-react'
 
 const CAL_URL = process.env.NEXT_PUBLIC_CALENDLY_URL || 'https://cal.com/eric-wills-snawfe/15min'
 
@@ -11,8 +11,11 @@ export default function DemoPage() {
       {/* Nav */}
       <nav className="border-b border-white/10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Scale className="w-7 h-7 text-amber-400" />
+          <Link href="/" className="flex items-center gap-3">
+            <svg width="28" height="20" viewBox="2 10 56 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ overflow: 'visible' }}>
+              <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#06b6d4" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="49" cy="14" r="2.5" fill="#f5a623"/>
+            </svg>
             <span className="text-xl font-bold text-white">Unbind</span>
           </Link>
           <div className="flex items-center gap-4">
@@ -85,18 +88,40 @@ export default function DemoPage() {
             </Link>
           </div>
 
-          {/* Right: Cal.com Embed */}
-          <div className="bg-white rounded-xl overflow-hidden shadow-2xl">
-            <iframe
-              src={`${CAL_URL}?embed=true&theme=light`}
-              width="100%"
-              height="700"
-              frameBorder="0"
-              title="Book a demo with Unbind"
-              className="w-full"
-              style={{ minHeight: '650px', border: 'none' }}
-              allow="camera;microphone"
-            />
+          {/* Right: Stats + Book CTA */}
+          <div className="space-y-6">
+            {/* Stats Card */}
+            <div className="bg-slate-900 border border-white/10 rounded-2xl p-8 shadow-2xl">
+              <div className="grid grid-cols-1 gap-8">
+                {[
+                  { stat: '15+', unit: 'hrs', label: 'Saved per week on case admin' },
+                  { stat: '40', unit: '%', label: 'Faster payments with online invoicing' },
+                  { stat: '50', unit: '%', label: 'Fewer client status calls' },
+                ].map((item) => (
+                  <div key={item.label} className="text-center">
+                    <div className="flex items-baseline justify-center gap-1">
+                      <span className="text-5xl font-bold" style={{ color: '#f5a623' }}>{item.stat}</span>
+                      <span className="text-2xl font-bold" style={{ color: '#f5a623' }}>{item.unit}</span>
+                    </div>
+                    <p className="text-sm text-slate-400 mt-2">{item.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Book Demo CTA */}
+            <a
+              href={CAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full text-center py-4 rounded-xl text-lg font-semibold transition-colors hover:opacity-90"
+              style={{ backgroundColor: '#f5a623', color: '#0a0f1e' }}
+            >
+              Book Your 15-Min Demo
+            </a>
+            <p className="text-center text-xs text-slate-500">
+              Free. No obligation. See Unbind live in 15 minutes.
+            </p>
           </div>
         </div>
       </div>
