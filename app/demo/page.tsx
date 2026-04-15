@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Scale, Check, Clock, CreditCard, PhoneOff, ArrowRight } from 'lucide-react'
 
-const CALENDLY_URL = process.env.NEXT_PUBLIC_CALENDLY_URL || 'https://calendly.com/your-link'
+const CAL_URL = process.env.NEXT_PUBLIC_CALENDLY_URL || 'https://cal.com/eric-wills-snawfe/15min'
 
 export default function DemoPage() {
   return (
@@ -85,16 +85,17 @@ export default function DemoPage() {
             </Link>
           </div>
 
-          {/* Right: Calendly Embed */}
+          {/* Right: Cal.com Embed */}
           <div className="bg-white rounded-xl overflow-hidden shadow-2xl">
             <iframe
-              src={CALENDLY_URL}
+              src={`${CAL_URL}?embed=true&theme=light`}
               width="100%"
               height="700"
               frameBorder="0"
               title="Book a demo with Unbind"
               className="w-full"
-              style={{ minHeight: '650px' }}
+              style={{ minHeight: '650px', border: 'none' }}
+              allow="camera;microphone"
             />
           </div>
         </div>
