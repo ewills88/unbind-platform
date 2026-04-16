@@ -154,14 +154,14 @@ export default function Sidebar() {
 <div className={`border-b border-gray-200 dark:border-[#1f2937] ${isCollapsed ? 'flex items-center justify-center py-5' : 'px-5 py-5'}`}>
   {isCollapsed ? (
     <svg width="44" height="28" viewBox="2 10 56 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ overflow: 'visible' }}>
-      <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#0a0f1e" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" className="stroke-[#0a0f1e] dark:stroke-white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
       <circle cx="49" cy="14" r="2.5" fill="#f5a623"/>
     </svg>
   ) : (
     <div>
       <div className="flex items-center gap-4">
         <svg width="40" height="28" viewBox="2 10 56 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" style={{ overflow: 'visible' }}>
-          <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#0a0f1e" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" className="stroke-[#0a0f1e] dark:stroke-white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
           <circle cx="49" cy="14" r="2.5" fill="#f5a623"/>
         </svg>
         <div>
@@ -262,7 +262,7 @@ export default function Sidebar() {
 <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white dark:bg-[#0a0f1e] border-b border-gray-200 dark:border-[#1f2937] px-4 py-3 safe-top flex items-center justify-between">
   <div className="flex items-center gap-3">
     <svg width="36" height="24" viewBox="2 10 56 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" style={{ overflow: 'visible' }}>
-      <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" className="stroke-[#0a0f1e] dark:stroke-cyan-400" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" className="stroke-[#0a0f1e] dark:stroke-white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
       <circle cx="49" cy="14" r="2" fill="#f5a623"/>
     </svg>
     <span className="text-base font-bold text-gray-900 dark:text-white">Unbind</span>
