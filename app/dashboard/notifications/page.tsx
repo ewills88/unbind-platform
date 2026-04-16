@@ -107,7 +107,7 @@ export default function NotificationsPage() {
   const unreadCount = notifications.filter(n => !n.is_read).length
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
 
       <main className="flex-1 overflow-auto">
@@ -115,8 +115,8 @@ export default function NotificationsPage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Notifications</h1>
-              <p className="mt-1 text-gray-600">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Notifications</h1>
+              <p className="mt-1 text-gray-600 dark:text-gray-300">
                 {unreadCount > 0 ? `${unreadCount} unread` : 'All caught up!'}
               </p>
             </div>
@@ -133,7 +133,7 @@ export default function NotificationsPage() {
 
           {/* Filters */}
           <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
-            <Filter className="w-4 h-4 text-gray-500 flex-shrink-0" />
+            <Filter className="w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0" />
             {[
               { value: 'all', label: 'All' },
               { value: 'unread', label: 'Unread' },
@@ -162,17 +162,17 @@ export default function NotificationsPage() {
               <div className="animate-spin h-8 w-8 border-2 border-blue-600 border-t-transparent rounded-full" />
             </div>
           ) : notifications.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+            <div className="text-center py-12 bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937]">
               <Bell className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No notifications</h3>
-              <p className="text-gray-600">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No notifications</h3>
+              <p className="text-gray-600 dark:text-gray-300">
                 {filter === 'unread'
                   ? "You've read all your notifications"
                   : 'Notifications will appear here'}
               </p>
             </div>
           ) : (
-            <div className="bg-white rounded-lg border border-gray-200 divide-y divide-gray-100">
+            <div className="bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937] divide-y divide-gray-100 dark:divide-[#1f2937]">
               {notifications.map((notification) => {
                 const Icon = NOTIFICATION_ICONS[notification.notification_type] || Bell
                 return (
@@ -202,10 +202,10 @@ export default function NotificationsPage() {
                             <span className="flex-shrink-0 w-2 h-2 bg-blue-600 rounded-full mt-2" />
                           )}
                         </div>
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                           {notification.message}
                         </p>
-                        <p className="text-xs text-gray-400 mt-2">
+                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
                           {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
                           {' · '}
                           {format(new Date(notification.created_at), 'MMM d, h:mm a')}

@@ -133,7 +133,7 @@ export default function ExportsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto p-6">
@@ -141,13 +141,13 @@ export default function ExportsPage() {
           <div className="flex items-center gap-3 mb-6">
             <button
               onClick={() => router.push('/dashboard/settings')}
-              className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-200 dark:hover:bg-[#374151] rounded-lg transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold text-gray-900">Accounting Exports</h1>
-              <p className="text-gray-500 text-sm mt-1">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Accounting Exports</h1>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
                 Export billing data for QuickBooks and other accounting software
               </p>
             </div>
@@ -169,18 +169,18 @@ export default function ExportsPage() {
           )}
 
           {/* QuickBooks Info Card */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">Supported Formats</h2>
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Supported Formats</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {(Object.entries(EXPORT_FORMAT_INFO) as [ExportFormat, typeof EXPORT_FORMAT_INFO[ExportFormat]][]).map(
                 ([key, info]) => (
-                  <div key={key} className="border border-gray-100 rounded-lg p-4 bg-gray-50">
+                  <div key={key} className="border border-gray-100 dark:border-[#1f2937] rounded-lg p-4 bg-gray-50 dark:bg-[#0d1526]">
                     <div className="flex items-center gap-2 mb-2">
                       <FileText className="w-5 h-5 text-blue-600" />
-                      <span className="font-medium text-gray-900">{info.label}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{info.label}</span>
                     </div>
-                    <p className="text-sm text-gray-500">{info.description}</p>
-                    <span className="inline-block mt-2 text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{info.description}</p>
+                    <span className="inline-block mt-2 text-xs bg-gray-200 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded">
                       .{info.extension}
                     </span>
                   </div>
@@ -190,23 +190,23 @@ export default function ExportsPage() {
           </div>
 
           {/* Export History */}
-          <div className="bg-white border border-gray-200 rounded-lg">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">Export History</h2>
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Export History</h2>
             </div>
 
             {loading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                <Loader2 className="w-6 h-6 animate-spin text-gray-400 dark:text-gray-500" />
               </div>
             ) : exports.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                 <Download className="w-10 h-10 mx-auto mb-3 text-gray-300" />
                 <p className="font-medium">No exports yet</p>
                 <p className="text-sm mt-1">Create your first export to see it here</p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-gray-100 dark:divide-[#1f2937]">
                 {exports.map((exp) => (
                   <div key={exp.id} className="px-6 py-4 flex items-center gap-4">
                     <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
@@ -214,14 +214,14 @@ export default function ExportsPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-gray-900 text-sm">
+                        <span className="font-medium text-gray-900 dark:text-white text-sm">
                           {exp.file_name || `Export ${exp.id.slice(0, 8)}`}
                         </span>
-                        <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">
+                        <span className="text-xs bg-gray-100 dark:bg-[#1f2937] text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded">
                           {EXPORT_FORMAT_INFO[exp.export_type]?.label || exp.export_type.toUpperCase()}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3 text-xs text-gray-500 mt-1">
+                      <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 mt-1">
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           {formatRelativeTime(exp.created_at)}
@@ -232,7 +232,7 @@ export default function ExportsPage() {
                         <span>{exp.record_count} records</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                       {exp.include_invoices && <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded">Invoices</span>}
                       {exp.include_payments && <span className="bg-green-50 text-green-700 px-2 py-0.5 rounded">Payments</span>}
                       {exp.include_time_entries && <span className="bg-purple-50 text-purple-700 px-2 py-0.5 rounded">Time</span>}
@@ -248,14 +248,14 @@ export default function ExportsPage() {
       {/* Export Modal */}
       {showExportModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg w-full max-w-lg mx-4 shadow-xl">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">New Export</h3>
+          <div className="bg-white dark:bg-[#111827] rounded-lg w-full max-w-lg mx-4 shadow-xl">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">New Export</h3>
               <button
                 onClick={() => { setShowExportModal(false); setError('') }}
-                className="p-1 hover:bg-gray-100 rounded"
+                className="p-1 hover:bg-gray-100 dark:hover:bg-[#1f2937] rounded"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-gray-400 dark:text-gray-500" />
               </button>
             </div>
 
@@ -269,7 +269,7 @@ export default function ExportsPage() {
 
               {/* Format Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Export Format</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Export Format</label>
                 <div className="space-y-2">
                   {(Object.entries(EXPORT_FORMAT_INFO) as [ExportFormat, typeof EXPORT_FORMAT_INFO[ExportFormat]][]).map(
                     ([key, info]) => (
@@ -290,8 +290,8 @@ export default function ExportsPage() {
                           className="text-blue-600"
                         />
                         <div>
-                          <span className="font-medium text-sm text-gray-900">{info.label}</span>
-                          <p className="text-xs text-gray-500">{info.description}</p>
+                          <span className="font-medium text-sm text-gray-900 dark:text-white">{info.label}</span>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{info.description}</p>
                         </div>
                       </label>
                     )
@@ -301,24 +301,24 @@ export default function ExportsPage() {
 
               {/* Date Range */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Date Range</label>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">Start Date</label>
+                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Start Date</label>
                     <input
                       type="date"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">End Date</label>
+                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">End Date</label>
                     <input
                       type="date"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                 </div>
@@ -326,7 +326,7 @@ export default function ExportsPage() {
 
               {/* Include Options */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Include Data</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Include Data</label>
                 <div className="space-y-2">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
@@ -336,8 +336,8 @@ export default function ExportsPage() {
                       className="rounded text-blue-600"
                     />
                     <div>
-                      <span className="text-sm font-medium text-gray-900">Invoices</span>
-                      <p className="text-xs text-gray-500">Invoice numbers, amounts, dates, and status</p>
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">Invoices</span>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Invoice numbers, amounts, dates, and status</p>
                     </div>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
@@ -348,8 +348,8 @@ export default function ExportsPage() {
                       className="rounded text-blue-600"
                     />
                     <div>
-                      <span className="text-sm font-medium text-gray-900">Payments</span>
-                      <p className="text-xs text-gray-500">Payment records with amounts and methods</p>
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">Payments</span>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Payment records with amounts and methods</p>
                     </div>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer">
@@ -360,18 +360,18 @@ export default function ExportsPage() {
                       className="rounded text-blue-600"
                     />
                     <div>
-                      <span className="text-sm font-medium text-gray-900">Time Entries</span>
-                      <p className="text-xs text-gray-500">Billable hours, rates, and descriptions</p>
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">Time Entries</span>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Billable hours, rates, and descriptions</p>
                     </div>
                   </label>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-[#1f2937] bg-gray-50 dark:bg-[#0d1526] rounded-b-lg">
               <button
                 onClick={() => { setShowExportModal(false); setError('') }}
-                className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+                className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#374151] rounded-lg transition-colors"
               >
                 Cancel
               </button>

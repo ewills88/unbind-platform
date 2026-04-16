@@ -56,7 +56,7 @@ export default function WebhooksPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -66,7 +66,7 @@ export default function WebhooksPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
       <main className="flex-1 overflow-auto">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -74,7 +74,7 @@ export default function WebhooksPage() {
           <div className="mb-8">
             <button
               onClick={() => router.push('/dashboard/settings')}
-              className="flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
+              className="flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 mb-4"
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
               Back to Settings
@@ -83,8 +83,8 @@ export default function WebhooksPage() {
               <div className="flex items-center gap-3">
                 <WebhookIcon className="w-8 h-8 text-blue-600" />
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Webhooks</h1>
-                  <p className="mt-1 text-gray-600">Send real-time data to external services</p>
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Webhooks</h1>
+                  <p className="mt-1 text-gray-600 dark:text-gray-300">Send real-time data to external services</p>
                 </div>
               </div>
               <button
@@ -110,10 +110,10 @@ export default function WebhooksPage() {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+            <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-12 text-center">
               <WebhookIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No webhooks configured</h3>
-              <p className="text-gray-500 mb-6">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No webhooks configured</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-6">
                 Webhooks let you send Unbind data to other apps in real-time
               </p>
               <button
@@ -204,21 +204,21 @@ function WebhookCard({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-6">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
           <div className={`w-3 h-3 rounded-full ${webhook.is_active ? 'bg-green-500' : 'bg-gray-300'}`} />
           <div>
-            <h3 className="font-semibold text-gray-900">{webhook.name}</h3>
-            <p className="text-sm text-gray-500 font-mono truncate max-w-md">{webhook.url}</p>
+            <h3 className="font-semibold text-gray-900 dark:text-white">{webhook.name}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-mono truncate max-w-md">{webhook.url}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <Switch checked={webhook.is_active} onCheckedChange={handleToggle} />
-          <button onClick={handleTest} disabled={testing} className="text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50">
+          <button onClick={handleTest} disabled={testing} className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 disabled:opacity-50">
             {testing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
           </button>
-          <button onClick={loadDeliveries} className="text-sm text-gray-500 hover:text-gray-700">
+          <button onClick={loadDeliveries} className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700">
             <History className="w-4 h-4" />
           </button>
           <button onClick={handleDelete} className="text-sm text-red-400 hover:text-red-600">
@@ -230,14 +230,14 @@ function WebhookCard({
       {/* Events */}
       <div className="flex flex-wrap gap-1.5 mb-3">
         {webhook.events.map(event => (
-          <span key={event} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+          <span key={event} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-[#1f2937] text-gray-700 dark:text-gray-200">
             {event}
           </span>
         ))}
       </div>
 
       {/* Stats */}
-      <div className="flex items-center gap-4 text-xs text-gray-500">
+      <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
         <span className="flex items-center gap-1">
           <Clock className="w-3 h-3" />
           {webhook.last_triggered_at ? formatRelativeTime(webhook.last_triggered_at) : 'Never triggered'}
@@ -260,17 +260,17 @@ function WebhookCard({
 
       {/* Delivery History */}
       {showDeliveries && (
-        <div className="mt-4 border-t border-gray-100 pt-4">
+        <div className="mt-4 border-t border-gray-100 dark:border-[#1f2937] pt-4">
           <div className="flex items-center justify-between mb-2">
-            <h4 className="text-sm font-medium text-gray-700">Recent Deliveries</h4>
-            <button onClick={() => setShowDeliveries(false)} className="text-gray-400 hover:text-gray-600">
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-200">Recent Deliveries</h4>
+            <button onClick={() => setShowDeliveries(false)} className="text-gray-400 dark:text-gray-500 hover:text-gray-600">
               <X className="w-4 h-4" />
             </button>
           </div>
           {deliveries.length > 0 ? (
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {deliveries.map(d => (
-                <div key={d.id} className="flex items-center justify-between text-xs py-1.5 px-2 bg-gray-50 rounded">
+                <div key={d.id} className="flex items-center justify-between text-xs py-1.5 px-2 bg-gray-50 dark:bg-[#0d1526] rounded">
                   <div className="flex items-center gap-2">
                     {d.status === 'success' ? (
                       <CheckCircle className="w-3 h-3 text-green-500" />
@@ -279,9 +279,9 @@ function WebhookCard({
                     ) : (
                       <Loader2 className="w-3 h-3 text-yellow-500 animate-spin" />
                     )}
-                    <span className="text-gray-700">{d.event_type}</span>
+                    <span className="text-gray-700 dark:text-gray-200">{d.event_type}</span>
                   </div>
-                  <div className="flex items-center gap-3 text-gray-500">
+                  <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
                     {d.response_status && <span>{d.response_status}</span>}
                     {d.duration_ms && <span>{d.duration_ms}ms</span>}
                     <span>{formatRelativeTime(d.created_at)}</span>
@@ -290,7 +290,7 @@ function WebhookCard({
               ))}
             </div>
           ) : (
-            <p className="text-xs text-gray-500">No deliveries yet.</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">No deliveries yet.</p>
           )}
         </div>
       )}
@@ -334,13 +334,13 @@ function CreateWebhookModal({ onClose, onCreated }: { onClose: () => void; onCre
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+      <div className="bg-white dark:bg-[#111827] rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b border-gray-200 dark:border-[#1f2937] flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Create Webhook</h2>
-            <p className="text-sm text-gray-500">Send real-time notifications to external services</p>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Create Webhook</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Send real-time notifications to external services</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="text-gray-400 dark:text-gray-500 hover:text-gray-600">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -354,7 +354,7 @@ function CreateWebhookModal({ onClose, onCreated }: { onClose: () => void; onCre
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="e.g., Zapier - New Cases"
-              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -366,7 +366,7 @@ function CreateWebhookModal({ onClose, onCreated }: { onClose: () => void; onCre
               value={url}
               onChange={e => setUrl(e.target.value)}
               placeholder="https://hooks.zapier.com/..."
-              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -377,21 +377,21 @@ function CreateWebhookModal({ onClose, onCreated }: { onClose: () => void; onCre
                 type="text"
                 value={secretKey}
                 readOnly
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 font-mono text-sm"
+                className="flex-1 px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg bg-gray-50 dark:bg-[#0d1526] font-mono text-sm"
               />
               <button
                 onClick={() => { navigator.clipboard.writeText(secretKey) }}
-                className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937]"
               >
                 <Copy className="w-4 h-4" />
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-1">Verify webhook authenticity via X-Webhook-Signature header.</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Verify webhook authenticity via X-Webhook-Signature header.</p>
           </div>
 
           <div>
             <Label>Events *</Label>
-            <p className="text-sm text-gray-500 mb-2">Select which events trigger this webhook</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Select which events trigger this webhook</p>
             <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
               {(Object.entries(WEBHOOK_EVENT_INFO) as [WebhookEventType, { label: string; description: string }][]).map(
                 ([event, info]) => (
@@ -409,11 +409,11 @@ function CreateWebhookModal({ onClose, onCreated }: { onClose: () => void; onCre
                       type="checkbox"
                       checked={selectedEvents.includes(event)}
                       onChange={() => toggleEvent(event)}
-                      className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                      className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300 dark:border-[#374151] rounded"
                     />
                     <div>
-                      <p className="text-sm font-medium text-gray-900">{info.label}</p>
-                      <p className="text-xs text-gray-500">{info.description}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">{info.label}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{info.description}</p>
                     </div>
                   </button>
                 )
@@ -422,8 +422,8 @@ function CreateWebhookModal({ onClose, onCreated }: { onClose: () => void; onCre
           </div>
         </div>
 
-        <div className="p-6 border-t border-gray-200 flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
+        <div className="p-6 border-t border-gray-200 dark:border-[#1f2937] flex justify-end gap-3">
+          <button onClick={onClose} className="px-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#1f2937]">
             Cancel
           </button>
           <button

@@ -47,8 +47,8 @@ export default function WorkloadDistribution() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Workload Distribution</h1>
-        <p className="text-gray-600 mt-1">Monitor and balance team capacity</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Workload Distribution</h1>
+        <p className="text-gray-600 dark:text-gray-300 mt-1">Monitor and balance team capacity</p>
       </div>
 
       {/* Capacity warnings */}
@@ -72,23 +72,23 @@ export default function WorkloadDistribution() {
       )}
 
       {/* Attorney workload */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+      <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
         <div className="mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Attorney Workload</h2>
-          <p className="text-sm text-gray-500">Active cases and billable hours by attorney</p>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Attorney Workload</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Active cases and billable hours by attorney</p>
         </div>
 
         <div className="space-y-6">
           {workloadData?.attorneys.map(attorney => (
-            <div key={attorney.user_id} className="pb-6 border-b border-gray-100 last:border-0 last:pb-0">
+            <div key={attorney.user_id} className="pb-6 border-b border-gray-100 dark:border-[#1f2937] last:border-0 last:pb-0">
               <div className="flex justify-between items-center mb-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-white font-semibold text-sm">{attorney.initials}</span>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{attorney.full_name}</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="font-medium text-gray-900 dark:text-white">{attorney.full_name}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                       {attorney.active_cases} cases &bull; {attorney.billable_hours_this_week}h this week
                     </p>
                   </div>
@@ -107,23 +107,23 @@ export default function WorkloadDistribution() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs text-gray-600 mb-1.5">Cases by Stage</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 mb-1.5">Cases by Stage</p>
                   <Progress
                     value={attorney.active_cases > 0
                       ? (attorney.cases_in_discovery / attorney.active_cases) * 100
                       : 0}
                     className="h-2"
                   />
-                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                  <div className="flex justify-between text-xs text-gray-600 dark:text-gray-300 mt-1">
                     <span>Discovery: {attorney.cases_in_discovery}</span>
                     <span>Settlement: {attorney.cases_in_settlement}</span>
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-xs text-gray-600 mb-1.5">Utilization Rate</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 mb-1.5">Utilization Rate</p>
                   <Progress value={attorney.utilization_rate} className="h-2" />
-                  <p className="text-xs text-gray-600 mt-1">
+                  <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
                     {attorney.billable_hours_this_month}h / {attorney.target_hours}h target
                   </p>
                 </div>
@@ -135,15 +135,15 @@ export default function WorkloadDistribution() {
         {(!workloadData?.attorneys || workloadData.attorneys.length === 0) && (
           <div className="text-center py-12">
             <Users className="mx-auto w-12 h-12 text-gray-300 mb-3" />
-            <p className="text-gray-500">No attorney workload data available</p>
+            <p className="text-gray-500 dark:text-gray-400">No attorney workload data available</p>
           </div>
         )}
       </div>
 
       {/* Recommendations */}
       {workloadData?.recommendations && workloadData.recommendations.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Recommendations</h2>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recommendations</h2>
           <div className="space-y-3">
             {workloadData.recommendations.map((rec, index) => (
               <div key={index} className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-3">

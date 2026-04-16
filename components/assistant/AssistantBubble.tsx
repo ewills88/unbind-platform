@@ -206,7 +206,7 @@ export default function AssistantBubble() {
       {/* Mobile: full-width bottom sheet overlay */}
       <div className="fixed inset-0 bg-black/30 z-40 sm:hidden" onClick={() => setIsOpen(false)} />
 
-      <div className="fixed z-50 right-0 w-full sm:right-6 sm:w-[380px] h-[520px] sm:h-[520px] max-h-[calc(100vh-2rem)] bg-white sm:rounded-2xl rounded-t-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden" style={{ bottom: 'calc(80px + env(safe-area-inset-bottom))' }}>
+      <div className="fixed z-50 right-0 w-full sm:right-6 sm:w-[380px] h-[520px] sm:h-[520px] max-h-[calc(100vh-2rem)] bg-white dark:bg-[#111827] sm:rounded-2xl rounded-t-2xl shadow-2xl border border-gray-200 dark:border-[#1f2937] flex flex-col overflow-hidden" style={{ bottom: 'calc(80px + env(safe-area-inset-bottom))' }}>
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 bg-blue-600 text-white shrink-0 sm:rounded-t-2xl rounded-t-2xl">
           <div className="flex items-center gap-2">
@@ -230,10 +230,10 @@ export default function AssistantBubble() {
                 <MoreVertical className="w-4 h-4" />
               </button>
               {showMenu && (
-                <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-[#111827] rounded-lg shadow-lg border border-gray-200 dark:border-[#1f2937] py-1 z-50">
                   <button
                     onClick={handleClearConversation}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#1f2937]"
                   >
                     Clear conversation
                   </button>
@@ -263,7 +263,7 @@ export default function AssistantBubble() {
           {messages.length === 0 && (
             <div className="text-center py-6">
               <Sparkles className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 {audience === 'attorney'
                   ? 'Ask me about your cases, deadlines, or billing.'
                   : 'Ask me about your case or how to use the portal.'}
@@ -287,7 +287,7 @@ export default function AssistantBubble() {
 
           {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
             <div className="flex justify-start">
-              <div className="bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3">
+              <div className="bg-gray-100 dark:bg-[#1f2937] rounded-2xl rounded-bl-md px-4 py-3">
                 <div className="flex items-center gap-1">
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -316,7 +316,7 @@ export default function AssistantBubble() {
         )}
 
         {/* Input */}
-        <form onSubmit={handleSubmit} className="p-3 border-t border-gray-200 shrink-0">
+        <form onSubmit={handleSubmit} className="p-3 border-t border-gray-200 dark:border-[#1f2937] shrink-0">
           <div className="flex items-end gap-2">
             <textarea
               ref={inputRef}
@@ -329,7 +329,7 @@ export default function AssistantBubble() {
               onKeyDown={handleKeyDown}
               placeholder="Ask anything..."
               rows={1}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="flex-1 px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               style={{ maxHeight: '80px' }}
               disabled={isLoading}
             />

@@ -89,17 +89,17 @@ export default function SubscriptionManagement() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Subscription</h1>
-        <p className="text-gray-600 mt-1">Manage your firm&apos;s plan and billing</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Subscription</h1>
+        <p className="text-gray-600 dark:text-gray-300 mt-1">Manage your firm&apos;s plan and billing</p>
       </div>
 
       {/* Current plan */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Current Plan</h2>
+      <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Current Plan</h2>
         <div className="flex items-start justify-between flex-wrap gap-6">
           <div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">{currentPlan.name}</h3>
-            <p className="text-gray-600 mb-4">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{currentPlan.name}</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
               {seatsUsed} of {currentPlan.seats} seats used
             </p>
             <div className="flex items-center gap-2 mb-4">
@@ -107,13 +107,13 @@ export default function SubscriptionManagement() {
                 value={(seatsUsed / currentPlan.seats) * 100}
                 className="w-64"
               />
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-600 dark:text-gray-300">
                 {seatsAvailable > 0 ? `${seatsAvailable} seats available` : 'All seats used'}
               </span>
             </div>
             <ul className="space-y-1">
               {currentPlan.features.map(feature => (
-                <li key={feature} className="text-sm text-gray-600 flex items-center gap-2">
+                <li key={feature} className="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-2">
                   <span className="text-green-500">&#10003;</span> {feature}
                 </li>
               ))}
@@ -121,8 +121,8 @@ export default function SubscriptionManagement() {
           </div>
 
           <div className="text-right">
-            <p className="text-4xl font-bold text-gray-900">${currentPlan.price}</p>
-            <p className="text-gray-600">/month</p>
+            <p className="text-4xl font-bold text-gray-900 dark:text-white">${currentPlan.price}</p>
+            <p className="text-gray-600 dark:text-gray-300">/month</p>
             <span className={`inline-flex mt-2 px-3 py-1 text-xs font-semibold rounded-full ${
               firm?.subscription_status === 'active'
                 ? 'bg-green-100 text-green-800'
@@ -133,14 +133,14 @@ export default function SubscriptionManagement() {
           </div>
         </div>
 
-        <div className="flex gap-3 mt-6 pt-6 border-t border-gray-200">
-          <button className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+        <div className="flex gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-[#1f2937]">
+          <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-[#374151] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937] transition-colors">
             Change Plan
           </button>
-          <button className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+          <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-[#374151] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937] transition-colors">
             Add Seats
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+          <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-[#374151] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937] transition-colors">
             <CreditCard className="w-4 h-4" />
             Update Payment Method
           </button>
@@ -148,8 +148,8 @@ export default function SubscriptionManagement() {
       </div>
 
       {/* Available plans */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Available Plans</h2>
+      <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Available Plans</h2>
         <div className="grid md:grid-cols-4 gap-4">
           {PLANS.map(plan => (
             <div
@@ -160,20 +160,20 @@ export default function SubscriptionManagement() {
                   : 'border-gray-200 hover:border-gray-300'
               }`}
             >
-              <h3 className="font-semibold text-gray-900 mb-1">{plan.name}</h3>
-              <p className="text-2xl font-bold text-gray-900 mb-3">
-                ${plan.price}<span className="text-sm font-normal text-gray-500">/mo</span>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-1">{plan.name}</h3>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                ${plan.price}<span className="text-sm font-normal text-gray-500 dark:text-gray-400">/mo</span>
               </p>
-              <p className="text-xs text-gray-600 mb-3">Up to {plan.seats} seats</p>
+              <p className="text-xs text-gray-600 dark:text-gray-300 mb-3">Up to {plan.seats} seats</p>
               <ul className="space-y-1 mb-4">
                 {plan.features.map(f => (
-                  <li key={f} className="text-xs text-gray-600">&#10003; {f}</li>
+                  <li key={f} className="text-xs text-gray-600 dark:text-gray-300">&#10003; {f}</li>
                 ))}
               </ul>
               {plan.id === currentPlan.id ? (
                 <span className="block text-center text-xs font-medium text-blue-600">Current Plan</span>
               ) : (
-                <button className="w-full px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <button className="w-full px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-[#374151] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937] transition-colors">
                   {plan.price > currentPlan.price ? 'Upgrade' : 'Downgrade'}
                 </button>
               )}
@@ -183,20 +183,20 @@ export default function SubscriptionManagement() {
       </div>
 
       {/* Active seats */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Active Seats ({seatsUsed})
         </h2>
         <div className="space-y-3">
           {activeSeats.map(member => (
-            <div key={member.user_id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+            <div key={member.user_id} className="flex items-center justify-between p-4 border border-gray-200 dark:border-[#1f2937] rounded-lg">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-white font-semibold text-sm">{member.initials}</span>
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900 text-sm">{member.full_name}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="font-medium text-gray-900 dark:text-white text-sm">{member.full_name}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {member.role}
                     {member.joined_at && ` \u2022 Joined ${new Date(member.joined_at).toLocaleDateString()}`}
                   </p>
@@ -204,7 +204,7 @@ export default function SubscriptionManagement() {
               </div>
 
               {member.role !== 'owner' && (
-                <button className="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                <button className="px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                   Deactivate
                 </button>
               )}
@@ -215,7 +215,7 @@ export default function SubscriptionManagement() {
         {activeSeats.length === 0 && (
           <div className="text-center py-8">
             <Users className="mx-auto w-12 h-12 text-gray-300 mb-3" />
-            <p className="text-gray-500 text-sm">No active team members</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">No active team members</p>
           </div>
         )}
       </div>

@@ -48,16 +48,16 @@ export default function CaseFilingsPage() {
   ]
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-6xl mx-auto p-6">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Court Filings & Hearings</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Court Filings & Hearings</h1>
           </div>
 
           {/* Top tabs */}
-          <div className="flex gap-1 bg-gray-100 rounded-lg p-1 mb-6">
+          <div className="flex gap-1 bg-gray-100 dark:bg-[#1f2937] rounded-lg p-1 mb-6">
             {TABS.map(tab => (
               <button
                 key={tab.key}

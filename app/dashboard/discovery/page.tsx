@@ -95,22 +95,22 @@ export default function DiscoveryDashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <main className="flex-1 flex items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+          <Loader2 className="w-8 h-8 animate-spin text-gray-400 dark:text-gray-500" />
         </main>
       </div>
     )
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-6xl mx-auto p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Discovery Dashboard</h1>
-          <p className="text-gray-500 text-sm mb-6">Firm-wide overview of discovery and depositions</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Discovery Dashboard</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Firm-wide overview of discovery and depositions</p>
 
           {/* Stats Cards */}
           {stats && (
@@ -147,16 +147,16 @@ export default function DiscoveryDashboardPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {/* Upcoming Deadlines */}
-            <div className="bg-white border border-gray-200 rounded-lg">
-              <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+            <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-[#1f2937]">
+                <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                   <Clock className="w-4 h-4 text-orange-500" /> Upcoming Deadlines
                 </h2>
-                <span className="text-xs text-gray-500">{deadlines.length} upcoming</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{deadlines.length} upcoming</span>
               </div>
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-gray-100 dark:divide-[#1f2937]">
                 {deadlines.length === 0 ? (
-                  <p className="p-4 text-sm text-gray-500 text-center">No upcoming deadlines</p>
+                  <p className="p-4 text-sm text-gray-500 dark:text-gray-400 text-center">No upcoming deadlines</p>
                 ) : (
                   deadlines.slice(0, 8).map(dl => {
                     const urgencyColors: Record<string, string> = {
@@ -173,14 +173,14 @@ export default function DiscoveryDashboardPage() {
                         onClick={() => router.push(`/dashboard/cases/${dl.case_id}/discovery/${dl.id}`)}
                       >
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">{dl.title}</p>
-                          <p className="text-xs text-gray-500">{typeInfo?.shortLabel || dl.discovery_type}</p>
+                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{dl.title}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{typeInfo?.shortLabel || dl.discovery_type}</p>
                         </div>
                         <div className="text-right shrink-0">
                           <p className={`text-sm font-semibold ${dl.days_until < 0 ? 'text-red-600' : dl.days_until <= 3 ? 'text-orange-600' : 'text-gray-600'}`}>
                             {dl.days_until < 0 ? `${Math.abs(dl.days_until)}d overdue` : dl.days_until === 0 ? 'Due today' : `${dl.days_until}d left`}
                           </p>
-                          <p className="text-xs text-gray-400">{formatDate(dl.due_date)}</p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500">{formatDate(dl.due_date)}</p>
                         </div>
                         <ArrowRight className="w-4 h-4 text-gray-300" />
                       </div>
@@ -191,35 +191,35 @@ export default function DiscoveryDashboardPage() {
             </div>
 
             {/* Upcoming Depositions */}
-            <div className="bg-white border border-gray-200 rounded-lg">
-              <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+            <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-[#1f2937]">
+                <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                   <Users className="w-4 h-4 text-blue-500" /> Upcoming Depositions
                 </h2>
-                <span className="text-xs text-gray-500">{depositions.length} scheduled</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{depositions.length} scheduled</span>
               </div>
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-gray-100 dark:divide-[#1f2937]">
                 {depositions.length === 0 ? (
-                  <p className="p-4 text-sm text-gray-500 text-center">No upcoming depositions</p>
+                  <p className="p-4 text-sm text-gray-500 dark:text-gray-400 text-center">No upcoming depositions</p>
                 ) : (
                   depositions.slice(0, 8).map(dep => {
                     const statusInfo = DEPOSITION_STATUS_INFO[dep.status]
                     return (
                       <div
                         key={dep.id}
-                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer"
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-[#1f2937] transition-colors cursor-pointer"
                         onClick={() => router.push(`/dashboard/cases/${dep.case_id}`)}
                       >
                         <div className="shrink-0">
                           {dep.location_type === 'remote' ? (
                             <Video className="w-5 h-5 text-blue-400" />
                           ) : (
-                            <Users className="w-5 h-5 text-gray-400" />
+                            <Users className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">{dep.deponent_name}</p>
-                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{dep.deponent_name}</p>
+                          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                             <span className="capitalize">{dep.deponent_type.replace('_', ' ')}</span>
                             {dep.location && (
                               <>
@@ -232,7 +232,7 @@ export default function DiscoveryDashboardPage() {
                           </div>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-gray-600 dark:text-gray-300">
                             {dep.scheduled_date ? formatDateTime(dep.scheduled_date) : 'TBD'}
                           </p>
                           <span className={`text-xs ${statusInfo?.color || 'text-gray-500'}`}>
@@ -248,24 +248,24 @@ export default function DiscoveryDashboardPage() {
           </div>
 
           {/* By Case Table */}
-          <div className="bg-white border border-gray-200 rounded-lg">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <h2 className="font-semibold text-gray-900 flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-gray-500" /> Discovery by Case
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-[#1f2937]">
+              <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-gray-500 dark:text-gray-400" /> Discovery by Case
               </h2>
-              <span className="text-xs text-gray-500">{byCase.length} cases</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">{byCase.length} cases</span>
             </div>
             {byCase.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-gray-50 border-b border-gray-200">
-                      <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500">Case</th>
-                      <th className="text-center px-4 py-2 text-xs font-semibold text-gray-500">Total</th>
-                      <th className="text-center px-4 py-2 text-xs font-semibold text-gray-500">Active</th>
-                      <th className="text-center px-4 py-2 text-xs font-semibold text-gray-500">Overdue</th>
-                      <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500">Next Deadline</th>
-                      <th className="text-right px-4 py-2 text-xs font-semibold text-gray-500"></th>
+                    <tr className="bg-gray-50 dark:bg-[#0d1526] border-b border-gray-200 dark:border-[#1f2937]">
+                      <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Case</th>
+                      <th className="text-center px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Total</th>
+                      <th className="text-center px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Active</th>
+                      <th className="text-center px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Overdue</th>
+                      <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Next Deadline</th>
+                      <th className="text-right px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -276,10 +276,10 @@ export default function DiscoveryDashboardPage() {
                         onClick={() => router.push(`/dashboard/cases/${cs.case_id}`)}
                       >
                         <td className="px-4 py-3">
-                          <p className="font-medium text-gray-900">{cs.case_name || 'Unknown'}</p>
-                          <p className="text-xs text-gray-500">{cs.case_number || 'No case #'}</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{cs.case_name || 'Unknown'}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{cs.case_number || 'No case #'}</p>
                         </td>
-                        <td className="px-4 py-3 text-center text-gray-600">{cs.total_discovery}</td>
+                        <td className="px-4 py-3 text-center text-gray-600 dark:text-gray-300">{cs.total_discovery}</td>
                         <td className="px-4 py-3 text-center">
                           <span className={cs.active > 0 ? 'text-blue-600 font-medium' : 'text-gray-400'}>
                             {cs.active}
@@ -291,10 +291,10 @@ export default function DiscoveryDashboardPage() {
                               <AlertTriangle className="w-3 h-3" /> {cs.overdue}
                             </span>
                           ) : (
-                            <span className="text-gray-400">0</span>
+                            <span className="text-gray-400 dark:text-gray-500">0</span>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-gray-600">
+                        <td className="px-4 py-3 text-gray-600 dark:text-gray-300">
                           {cs.next_deadline ? formatDate(cs.next_deadline) : '-'}
                         </td>
                         <td className="px-4 py-3 text-right">
@@ -306,7 +306,7 @@ export default function DiscoveryDashboardPage() {
                 </table>
               </div>
             ) : (
-              <p className="p-6 text-sm text-gray-500 text-center">No discovery data found</p>
+              <p className="p-6 text-sm text-gray-500 dark:text-gray-400 text-center">No discovery data found</p>
             )}
           </div>
         </div>
@@ -349,9 +349,9 @@ function StatCard({
           <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
         )}
       </div>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
-      <p className="text-xs text-gray-500">{label}</p>
-      {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
+      <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+      <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
+      {subtitle && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{subtitle}</p>}
     </div>
   )
 }

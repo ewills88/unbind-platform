@@ -57,8 +57,8 @@ export default function FinancialReports() {
       {/* Header */}
       <div className="flex justify-between items-start flex-wrap gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Financial Reports</h1>
-          <p className="text-gray-600 mt-1">Comprehensive financial analytics</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Financial Reports</h1>
+          <p className="text-gray-600 dark:text-gray-300 mt-1">Comprehensive financial analytics</p>
         </div>
 
         <div className="flex gap-3">
@@ -67,18 +67,18 @@ export default function FinancialReports() {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
             />
-            <span className="text-gray-500">to</span>
+            <span className="text-gray-500 dark:text-gray-400">to</span>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
             />
           </div>
 
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700">
+          <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937] text-sm font-medium text-gray-700 dark:text-gray-200">
             <Download className="w-4 h-4" />
             Export PDF
           </button>
@@ -117,40 +117,40 @@ function RevenueReport({ summary }: { summary: FinancialSummary | null }) {
   return (
     <div className="space-y-6">
       <div className="grid md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <p className="text-sm text-gray-600 mb-1">Total Billed</p>
-          <p className="text-3xl font-bold text-gray-900">{formatCurrency(summary?.billed || 0)}</p>
-          <p className="text-sm text-gray-500 mt-1">{summary?.invoices_sent || 0} invoices</p>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Total Billed</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-white">{formatCurrency(summary?.billed || 0)}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{summary?.invoices_sent || 0} invoices</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <p className="text-sm text-gray-600 mb-1">Total Collected</p>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Total Collected</p>
           <p className="text-3xl font-bold text-green-600">{formatCurrency(summary?.collected || 0)}</p>
-          <p className="text-sm text-gray-500 mt-1">{summary?.payments_received || 0} payments</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{summary?.payments_received || 0} payments</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <p className="text-sm text-gray-600 mb-1">Outstanding</p>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Outstanding</p>
           <p className="text-3xl font-bold text-orange-600">{formatCurrency(summary?.outstanding_ar || 0)}</p>
-          <p className="text-sm text-gray-500 mt-1">Avg. {summary?.avg_days_to_payment || 0} days to pay</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Avg. {summary?.avg_days_to_payment || 0} days to pay</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue Breakdown</h3>
+      <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Revenue Breakdown</h3>
         <div className="space-y-4">
-          <div className="flex justify-between items-center py-3 border-b border-gray-100">
-            <span className="text-sm text-gray-700">Collection Rate</span>
-            <span className="text-sm font-semibold text-gray-900">
+          <div className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2937]">
+            <span className="text-sm text-gray-700 dark:text-gray-200">Collection Rate</span>
+            <span className="text-sm font-semibold text-gray-900 dark:text-white">
               {summary && summary.billed > 0
                 ? `${Math.round((summary.collected / summary.billed) * 100)}%`
                 : '0%'}
             </span>
           </div>
-          <div className="flex justify-between items-center py-3 border-b border-gray-100">
-            <span className="text-sm text-gray-700">Average Days to Payment</span>
-            <span className="text-sm font-semibold text-gray-900">{summary?.avg_days_to_payment || 0} days</span>
+          <div className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2937]">
+            <span className="text-sm text-gray-700 dark:text-gray-200">Average Days to Payment</span>
+            <span className="text-sm font-semibold text-gray-900 dark:text-white">{summary?.avg_days_to_payment || 0} days</span>
           </div>
           <div className="flex justify-between items-center py-3">
-            <span className="text-sm text-gray-700">Outstanding Receivables</span>
+            <span className="text-sm text-gray-700 dark:text-gray-200">Outstanding Receivables</span>
             <span className="text-sm font-semibold text-orange-600">{formatCurrency(summary?.outstanding_ar || 0)}</span>
           </div>
         </div>
@@ -164,9 +164,9 @@ function ARAgingReport({ arData }: { arData: ARAgingData | null }) {
 
   if (!arData) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center">
+      <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-12 text-center">
         <FileText className="mx-auto w-12 h-12 text-gray-300 mb-3" />
-        <p className="text-gray-500">No outstanding receivables</p>
+        <p className="text-gray-500 dark:text-gray-400">No outstanding receivables</p>
       </div>
     )
   }
@@ -208,48 +208,48 @@ function ARAgingReport({ arData }: { arData: ARAgingData | null }) {
       </div>
 
       {/* Invoice detail */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Aging Detail by Client</h3>
+      <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Aging Detail by Client</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-[#0d1526]">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice #</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paid</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Balance</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Days Overdue</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Client</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Invoice #</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Due Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Paid</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Balance</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Days Overdue</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
               {arData.invoices.map(invoice => {
                 const severity = invoice.days_overdue > 90 ? 'high' : invoice.days_overdue > 60 ? 'medium' : 'low'
 
                 return (
-                  <tr key={invoice.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{invoice.client_name}</td>
+                  <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-[#1f2937]">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{invoice.client_name}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-medium">
                       #{invoice.invoice_number}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                       {new Date(invoice.issue_date).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                       {new Date(invoice.due_date).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       {formatCurrency(invoice.total_amount)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
                       {formatCurrency(invoice.amount_paid)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900 dark:text-white">
                       {formatCurrency(invoice.balance_due)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -267,22 +267,22 @@ function ARAgingReport({ arData }: { arData: ARAgingData | null }) {
                       <div className="relative">
                         <button
                           onClick={() => setOpenMenu(openMenu === invoice.id ? null : invoice.id)}
-                          className="p-1 hover:bg-gray-100 rounded"
+                          className="p-1 hover:bg-gray-100 dark:hover:bg-[#1f2937] rounded"
                         >
-                          <MoreVertical className="w-4 h-4 text-gray-500" />
+                          <MoreVertical className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                         </button>
                         {openMenu === invoice.id && (
-                          <div className="absolute right-0 top-8 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                          <div className="absolute right-0 top-8 w-48 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg shadow-lg z-10">
                             <button
                               onClick={() => setOpenMenu(null)}
-                              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#1f2937]"
                             >
                               <Mail className="w-4 h-4" />
                               Send Reminder
                             </button>
                             <button
                               onClick={() => setOpenMenu(null)}
-                              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#1f2937]"
                             >
                               <Eye className="w-4 h-4" />
                               View Invoice
@@ -300,7 +300,7 @@ function ARAgingReport({ arData }: { arData: ARAgingData | null }) {
 
         {arData.invoices.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500">No outstanding invoices</p>
+            <p className="text-gray-500 dark:text-gray-400">No outstanding invoices</p>
           </div>
         )}
       </div>
@@ -331,9 +331,9 @@ function AgingBucket({
     <div className={`rounded-xl border shadow-sm p-4 ${
       variant ? colorMap[variant] : 'border-gray-200 bg-white'
     }`}>
-      <p className="text-xs text-gray-600 mb-1">{title}</p>
-      <p className="text-xl font-bold text-gray-900">{formatCurrency(amount)}</p>
-      <p className="text-xs text-gray-500 mt-1">{subtitle || `${percent}% of total`}</p>
+      <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">{title}</p>
+      <p className="text-xl font-bold text-gray-900 dark:text-white">{formatCurrency(amount)}</p>
+      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{subtitle || `${percent}% of total`}</p>
     </div>
   )
 }
@@ -346,47 +346,47 @@ function ProfitabilityReport({ summary }: { summary: FinancialSummary | null }) 
   return (
     <div className="space-y-6">
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Profitability Overview</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Profitability Overview</h3>
           <div className="space-y-4">
-            <div className="flex justify-between items-center py-3 border-b border-gray-100">
-              <span className="text-sm text-gray-700">Revenue</span>
-              <span className="text-sm font-bold text-gray-900">{formatCurrency(summary?.billed || 0)}</span>
+            <div className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2937]">
+              <span className="text-sm text-gray-700 dark:text-gray-200">Revenue</span>
+              <span className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(summary?.billed || 0)}</span>
             </div>
-            <div className="flex justify-between items-center py-3 border-b border-gray-100">
-              <span className="text-sm text-gray-700">Collected</span>
+            <div className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2937]">
+              <span className="text-sm text-gray-700 dark:text-gray-200">Collected</span>
               <span className="text-sm font-bold text-green-600">{formatCurrency(summary?.collected || 0)}</span>
             </div>
-            <div className="flex justify-between items-center py-3 border-b border-gray-100">
-              <span className="text-sm text-gray-700">Write-offs</span>
+            <div className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2937]">
+              <span className="text-sm text-gray-700 dark:text-gray-200">Write-offs</span>
               <span className="text-sm font-bold text-red-600">
                 {formatCurrency(Math.max(0, (summary?.billed || 0) - (summary?.collected || 0) - (summary?.outstanding_ar || 0)))}
               </span>
             </div>
             <div className="flex justify-between items-center py-3">
-              <span className="text-sm font-semibold text-gray-900">Net Collection Rate</span>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">Net Collection Rate</span>
               <span className="text-sm font-bold text-blue-600">{collectionRate}%</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Key Indicators</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Key Indicators</h3>
           <div className="space-y-4">
-            <div className="flex justify-between items-center py-3 border-b border-gray-100">
-              <span className="text-sm text-gray-700">Average Invoice Amount</span>
-              <span className="text-sm font-semibold text-gray-900">
+            <div className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2937]">
+              <span className="text-sm text-gray-700 dark:text-gray-200">Average Invoice Amount</span>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">
                 {summary && summary.invoices_sent > 0
                   ? formatCurrency(summary.billed / summary.invoices_sent)
                   : '$0'}
               </span>
             </div>
-            <div className="flex justify-between items-center py-3 border-b border-gray-100">
-              <span className="text-sm text-gray-700">Days Sales Outstanding</span>
-              <span className="text-sm font-semibold text-gray-900">{summary?.avg_days_to_payment || 0} days</span>
+            <div className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-[#1f2937]">
+              <span className="text-sm text-gray-700 dark:text-gray-200">Days Sales Outstanding</span>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">{summary?.avg_days_to_payment || 0} days</span>
             </div>
             <div className="flex justify-between items-center py-3">
-              <span className="text-sm text-gray-700">Outstanding Receivables</span>
+              <span className="text-sm text-gray-700 dark:text-gray-200">Outstanding Receivables</span>
               <span className="text-sm font-semibold text-orange-600">{formatCurrency(summary?.outstanding_ar || 0)}</span>
             </div>
           </div>
@@ -400,30 +400,30 @@ function CollectionsReport({ summary }: { summary: FinancialSummary | null }) {
   return (
     <div className="space-y-6">
       <div className="grid md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <p className="text-sm text-gray-600 mb-1">Invoices Sent</p>
-          <p className="text-3xl font-bold text-gray-900">{summary?.invoices_sent || 0}</p>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Invoices Sent</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-white">{summary?.invoices_sent || 0}</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <p className="text-sm text-gray-600 mb-1">Payments Received</p>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Payments Received</p>
           <p className="text-3xl font-bold text-green-600">{summary?.payments_received || 0}</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <p className="text-sm text-gray-600 mb-1">Amount Collected</p>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Amount Collected</p>
           <p className="text-3xl font-bold text-green-600">{formatCurrency(summary?.collected || 0)}</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <p className="text-sm text-gray-600 mb-1">Avg. Days to Pay</p>
-          <p className="text-3xl font-bold text-gray-900">{summary?.avg_days_to_payment || 0}</p>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Avg. Days to Pay</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-white">{summary?.avg_days_to_payment || 0}</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Collection Performance</h3>
+      <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Collection Performance</h3>
         <div className="space-y-4">
           <div>
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-gray-700">Collection Rate</span>
+              <span className="text-sm text-gray-700 dark:text-gray-200">Collection Rate</span>
               <span className="text-sm font-semibold">
                 {summary && summary.billed > 0
                   ? `${Math.round((summary.collected / summary.billed) * 100)}%`
@@ -443,16 +443,16 @@ function CollectionsReport({ summary }: { summary: FinancialSummary | null }) {
           </div>
 
           <div className="grid md:grid-cols-3 gap-4 mt-6">
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <p className="text-xs text-gray-600 mb-1">Total Billed</p>
-              <p className="text-lg font-bold text-gray-900">{formatCurrency(summary?.billed || 0)}</p>
+            <div className="p-4 bg-gray-50 dark:bg-[#0d1526] rounded-lg">
+              <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">Total Billed</p>
+              <p className="text-lg font-bold text-gray-900 dark:text-white">{formatCurrency(summary?.billed || 0)}</p>
             </div>
             <div className="p-4 bg-green-50 rounded-lg">
-              <p className="text-xs text-gray-600 mb-1">Total Collected</p>
+              <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">Total Collected</p>
               <p className="text-lg font-bold text-green-600">{formatCurrency(summary?.collected || 0)}</p>
             </div>
             <div className="p-4 bg-orange-50 rounded-lg">
-              <p className="text-xs text-gray-600 mb-1">Outstanding</p>
+              <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">Outstanding</p>
               <p className="text-lg font-bold text-orange-600">{formatCurrency(summary?.outstanding_ar || 0)}</p>
             </div>
           </div>

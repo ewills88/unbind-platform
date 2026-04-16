@@ -116,8 +116,8 @@ export default function AdminCustomFieldsPage() {
     <div className="max-w-5xl mx-auto px-6 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Custom Fields</h1>
-          <p className="text-gray-600 mt-1">Add custom data fields to your entities</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Custom Fields</h1>
+          <p className="text-gray-600 dark:text-gray-300 mt-1">Add custom data fields to your entities</p>
         </div>
         <button onClick={() => setShowCreate(true)}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
@@ -133,7 +133,7 @@ export default function AdminCustomFieldsPage() {
       )}
 
       {/* Entity Type Tabs */}
-      <div className="flex gap-1 border-b border-gray-200 mb-6 overflow-x-auto">
+      <div className="flex gap-1 border-b border-gray-200 dark:border-[#1f2937] mb-6 overflow-x-auto">
         {ENTITY_TYPES.map(t => (
           <button key={t.key} onClick={() => setEntityType(t.key)}
             className={`px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 -mb-px ${
@@ -148,31 +148,31 @@ export default function AdminCustomFieldsPage() {
       {loading ? (
         <div className="flex items-center justify-center py-16"><Loader2 className="w-6 h-6 animate-spin text-blue-600" /></div>
       ) : fields.length === 0 ? (
-        <div className="text-center py-16 text-gray-500">
+        <div className="text-center py-16 text-gray-500 dark:text-gray-400">
           <Columns3 className="w-8 h-8 mx-auto mb-2 text-gray-300" />
           <p>No custom fields for {entityType}s</p>
           <p className="text-sm mt-1">Add a custom field to capture additional data.</p>
         </div>
       ) : (
-        <div className="bg-white border border-gray-200 rounded-lg divide-y divide-gray-200">
+        <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg divide-y divide-gray-200 dark:divide-[#1f2937]">
           {fields.map(field => (
-            <div key={field.id} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+            <div key={field.id} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-[#1f2937]">
               <GripVertical className="w-4 h-4 text-gray-300 flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium text-gray-900">{field.field_name}</p>
-                  <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded">{field.field_type}</span>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{field.field_name}</p>
+                  <span className="text-xs px-1.5 py-0.5 bg-gray-100 dark:bg-[#1f2937] text-gray-600 dark:text-gray-300 rounded">{field.field_type}</span>
                   {field.is_required && <span className="text-xs text-red-600">Required</span>}
                 </div>
-                {field.description && <p className="text-xs text-gray-500 mt-0.5">{field.description}</p>}
-                <p className="text-xs text-gray-400">Key: {field.field_key}</p>
+                {field.description && <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{field.description}</p>}
+                <p className="text-xs text-gray-400 dark:text-gray-500">Key: {field.field_key}</p>
               </div>
-              <div className="flex items-center gap-4 text-xs text-gray-400">
+              <div className="flex items-center gap-4 text-xs text-gray-400 dark:text-gray-500">
                 {field.is_visible_in_list && <span>List</span>}
                 {field.is_visible_in_portal && <span>Portal</span>}
               </div>
               <button onClick={() => handleDelete(field.id)}
-                className="p-1 text-gray-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                className="p-1 text-gray-400 dark:text-gray-500 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
             </div>
           ))}
         </div>
@@ -181,40 +181,40 @@ export default function AdminCustomFieldsPage() {
       {/* Create Modal */}
       {showCreate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowCreate(false)}>
-          <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-white dark:bg-[#111827] rounded-xl p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Add Custom Field</h2>
-              <button onClick={() => setShowCreate(false)} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Add Custom Field</h2>
+              <button onClick={() => setShowCreate(false)} className="text-gray-400 dark:text-gray-500 hover:text-gray-600"><X className="w-5 h-5" /></button>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Field Name *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Field Name *</label>
                 <input type="text" value={form.field_name} onChange={e => setForm(p => ({ ...p, field_name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="e.g. Opposing Counsel" />
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" placeholder="e.g. Opposing Counsel" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Field Type *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Field Type *</label>
                 <select value={form.field_type} onChange={e => setForm(p => ({ ...p, field_type: e.target.value as CustomFieldType }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm">
                   {FIELD_TYPES.map(t => <option key={t.key} value={t.key}>{t.label}</option>)}
                 </select>
               </div>
               {['select', 'multiselect'].includes(form.field_type) && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Options (one per line)</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Options (one per line)</label>
                   <textarea rows={4} value={form.options} onChange={e => setForm(p => ({ ...p, options: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Option 1\nOption 2\nOption 3" />
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" placeholder="Option 1\nOption 2\nOption 3" />
                 </div>
               )}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Description</label>
                 <input type="text" value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Help text for this field" />
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" placeholder="Help text for this field" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Placeholder</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Placeholder</label>
                 <input type="text" value={form.placeholder} onChange={e => setForm(p => ({ ...p, placeholder: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
               </div>
               <div className="space-y-2">
                 {[
@@ -226,14 +226,14 @@ export default function AdminCustomFieldsPage() {
                     <input type="checkbox"
                       checked={!!(form as Record<string, unknown>)[item.field]}
                       onChange={e => setForm(p => ({ ...p, [item.field]: e.target.checked }))}
-                      className="w-4 h-4 text-blue-600 border-gray-300 rounded" />
-                    <span className="text-sm text-gray-700">{item.label}</span>
+                      className="w-4 h-4 text-blue-600 border-gray-300 dark:border-[#374151] rounded" />
+                    <span className="text-sm text-gray-700 dark:text-gray-200">{item.label}</span>
                   </label>
                 ))}
               </div>
             </div>
             <div className="flex justify-end gap-3 mt-6">
-              <button onClick={() => setShowCreate(false)} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">Cancel</button>
+              <button onClick={() => setShowCreate(false)} className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#1f2937] rounded-lg">Cancel</button>
               <button onClick={handleCreate} disabled={saving || !form.field_name}
                 className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50">
                 {saving ? 'Creating...' : 'Create Field'}

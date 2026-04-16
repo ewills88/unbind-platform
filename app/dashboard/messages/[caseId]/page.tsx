@@ -67,7 +67,7 @@ export default function CaseMessagesPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
@@ -78,11 +78,11 @@ export default function CaseMessagesPage() {
 
   if (error || !caseData || !currentUserId) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-gray-600 mb-4">{error || 'Something went wrong'}</p>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">{error || 'Something went wrong'}</p>
             <button
               onClick={() => router.push('/dashboard/messages')}
               className="text-blue-600 hover:text-blue-700"
@@ -96,17 +96,17 @@ export default function CaseMessagesPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
 
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
+        <div className="bg-white dark:bg-[#111827] border-b border-gray-200 dark:border-[#1f2937] px-4 py-3 flex items-center gap-3">
           <button
             onClick={() => router.push('/dashboard/messages')}
-            className="p-1 hover:bg-gray-100 rounded-full"
+            className="p-1 hover:bg-gray-100 dark:hover:bg-[#1f2937] rounded-full"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
+            <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
           </button>
 
           <div className="flex items-center gap-3">
@@ -114,9 +114,9 @@ export default function CaseMessagesPage() {
               <MessageSquare className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <h2 className="font-semibold text-gray-900">{caseData.client_name}</h2>
+              <h2 className="font-semibold text-gray-900 dark:text-white">{caseData.client_name}</h2>
               <div className="flex items-center gap-2 text-xs">
-                <span className="text-gray-500">
+                <span className="text-gray-500 dark:text-gray-400">
                   Case #{caseData.case_number || 'Pending'}
                 </span>
                 <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${

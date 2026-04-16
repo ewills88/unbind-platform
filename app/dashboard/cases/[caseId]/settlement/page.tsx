@@ -31,12 +31,12 @@ export default function SettlementPage() {
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null)
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-6xl mx-auto p-6">
           {/* Tab Navigation */}
-          <div className="flex gap-1 bg-gray-100 rounded-lg p-1 mb-6">
+          <div className="flex gap-1 bg-gray-100 dark:bg-[#1f2937] rounded-lg p-1 mb-6">
             {TABS.map(tab => {
               const Icon = tab.icon
               return (
@@ -117,7 +117,7 @@ function DocumentsTab({ caseId, onSelectDoc }: { caseId: string; onSelectDoc: (i
       <div>
         <button
           onClick={() => setShowGenerator(false)}
-          className="mb-4 text-sm text-gray-600 hover:text-gray-900"
+          className="mb-4 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900"
         >
           &larr; Back to documents
         </button>
@@ -143,7 +143,7 @@ function DocumentsTab({ caseId, onSelectDoc }: { caseId: string; onSelectDoc: (i
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">Settlement Documents</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Settlement Documents</h3>
         <button
           onClick={() => setShowGenerator(true)}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 flex items-center gap-2"
@@ -154,12 +154,12 @@ function DocumentsTab({ caseId, onSelectDoc }: { caseId: string; onSelectDoc: (i
 
       {loading ? (
         <div className="flex justify-center py-8">
-          <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-gray-300 dark:border-[#374151] border-t-blue-600 rounded-full animate-spin" />
         </div>
       ) : docs.length === 0 ? (
-        <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-lg">
+        <div className="text-center py-12 border-2 border-dashed border-gray-200 dark:border-[#1f2937] rounded-lg">
           <FileText className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-          <p className="text-gray-500 mb-4">No settlement documents generated yet.</p>
+          <p className="text-gray-500 dark:text-gray-400 mb-4">No settlement documents generated yet.</p>
           <button
             onClick={() => setShowGenerator(true)}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
@@ -173,21 +173,21 @@ function DocumentsTab({ caseId, onSelectDoc }: { caseId: string; onSelectDoc: (i
             <button
               key={doc.id}
               onClick={() => onSelectDoc(doc.id)}
-              className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors"
+              className="w-full text-left p-4 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg hover:border-gray-300 transition-colors"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <FileText className="w-5 h-5 text-gray-400" />
+                  <FileText className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{doc.document_title}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{doc.document_title}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                       v{doc.version} &middot; {new Date(doc.created_at).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   {doc.signature_summary.total > 0 && (
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
                       {doc.signature_summary.signed}/{doc.signature_summary.total} signed
                     </span>
                   )}

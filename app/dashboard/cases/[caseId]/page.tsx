@@ -243,13 +243,13 @@ export default function CaseDetailPage() {
       case 'downloaded': return <Download className="w-4 h-4 text-green-600" />
       case 'comment': return <MessageSquare className="w-4 h-4 text-purple-600" />
       case 'shared': return <Share2 className="w-4 h-4 text-orange-600" />
-      default: return <Activity className="w-4 h-4 text-gray-600" />
+      default: return <Activity className="w-4 h-4 text-gray-600 dark:text-gray-300" />
     }
   }
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -260,12 +260,12 @@ export default function CaseDetailPage() {
 
   if (!caseData) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-gray-600 mb-2">Case not found</p>
-            <p className="text-sm text-gray-500 mb-4">Case ID: {caseId}</p>
+            <p className="text-gray-600 dark:text-gray-300 mb-2">Case not found</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Case ID: {caseId}</p>
             <button
               onClick={() => router.push('/dashboard')}
               className="text-blue-600 hover:text-blue-700 underline"
@@ -279,13 +279,13 @@ export default function CaseDetailPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
 
       <main className="flex-1 overflow-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-4">
             <button
               onClick={() => router.push('/dashboard')}
               className="hover:text-gray-900"
@@ -295,18 +295,18 @@ export default function CaseDetailPage() {
             <span>/</span>
             <span>Cases</span>
             <span>/</span>
-            <span className="text-gray-900 font-medium">{caseData.client_name}</span>
+            <span className="text-gray-900 dark:text-white font-medium">{caseData.client_name}</span>
           </div>
 
           {/* Case Header */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-6 mb-6">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                   {caseData.client_name} v. {caseData.spouse_name}
                 </h1>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-gray-600 dark:text-gray-300">
                     Case #{caseData.case_number || 'Pending'}
                   </span>
                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-${getStatusColor(caseData.status)}-100 text-${getStatusColor(caseData.status)}-800`}>
@@ -315,7 +315,7 @@ export default function CaseDetailPage() {
                 </div>
               </div>
               {userRole === 'admin' && (
-                <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2">
+                <button className="px-4 py-2 bg-gray-100 dark:bg-[#1f2937] text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-[#374151] transition-colors flex items-center gap-2">
                   <Edit className="w-4 h-4" />
                   Edit Case
                 </button>
@@ -325,8 +325,8 @@ export default function CaseDetailPage() {
             {/* Progress Bar */}
             <div className="mb-2">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-gray-700">Progress: {caseData.progress_percentage}%</span>
-                <span className="text-sm text-gray-600">{caseData.current_step}</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Progress: {caseData.progress_percentage}%</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">{caseData.current_step}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3">
                 <div
@@ -339,19 +339,19 @@ export default function CaseDetailPage() {
             {/* Key Dates */}
             <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
               <div>
-                <span className="text-gray-600">Filed:</span>
-                <span className="ml-2 font-medium text-gray-900">{formatDate(caseData.filing_date)}</span>
+                <span className="text-gray-600 dark:text-gray-300">Filed:</span>
+                <span className="ml-2 font-medium text-gray-900 dark:text-white">{formatDate(caseData.filing_date)}</span>
               </div>
               <div>
-                <span className="text-gray-600">Target Completion:</span>
-                <span className="ml-2 font-medium text-gray-900">{formatDate(caseData.target_completion_date)}</span>
+                <span className="text-gray-600 dark:text-gray-300">Target Completion:</span>
+                <span className="ml-2 font-medium text-gray-900 dark:text-white">{formatDate(caseData.target_completion_date)}</span>
               </div>
             </div>
           </div>
 
           {/* Tabs */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-            <div className="border-b border-gray-200">
+          <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] mb-6">
+            <div className="border-b border-gray-200 dark:border-[#1f2937]">
               <nav className="flex -mb-px overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                 {[
                   { id: 'overview', label: 'Overview', icon: Briefcase },
@@ -387,7 +387,7 @@ export default function CaseDetailPage() {
                       </span>
                     )}
                     {tab.disabled && (
-                      <span className="ml-1 text-xs text-gray-400">(Coming Soon)</span>
+                      <span className="ml-1 text-xs text-gray-400 dark:text-gray-500">(Coming Soon)</span>
                     )}
                   </button>
                 ))}
@@ -401,48 +401,48 @@ export default function CaseDetailPage() {
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Case Information */}
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Case Details</h3>
+                    <div className="bg-gray-50 dark:bg-[#0d1526] rounded-lg p-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Case Details</h3>
                       <dl className="space-y-3">
                         <div>
-                          <dt className="text-sm font-medium text-gray-600">Status</dt>
-                          <dd className="mt-1 text-sm text-gray-900 capitalize">{caseData.status}</dd>
+                          <dt className="text-sm font-medium text-gray-600 dark:text-gray-300">Status</dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white capitalize">{caseData.status}</dd>
                         </div>
                         <div>
-                          <dt className="text-sm font-medium text-gray-600">State</dt>
-                          <dd className="mt-1 text-sm text-gray-900">{caseData.state || 'Not specified'}</dd>
+                          <dt className="text-sm font-medium text-gray-600 dark:text-gray-300">State</dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">{caseData.state || 'Not specified'}</dd>
                         </div>
                         <div>
-                          <dt className="text-sm font-medium text-gray-600">Case Type</dt>
-                          <dd className="mt-1 text-sm text-gray-900">{caseData.case_type || 'Standard'}</dd>
+                          <dt className="text-sm font-medium text-gray-600 dark:text-gray-300">Case Type</dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">{caseData.case_type || 'Standard'}</dd>
                         </div>
                         <div>
-                          <dt className="text-sm font-medium text-gray-600">Children Involved</dt>
-                          <dd className="mt-1 text-sm text-gray-900">{caseData.has_children ? 'Yes' : 'No'}</dd>
+                          <dt className="text-sm font-medium text-gray-600 dark:text-gray-300">Children Involved</dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">{caseData.has_children ? 'Yes' : 'No'}</dd>
                         </div>
                       </dl>
                     </div>
 
                     {/* Financial Summary */}
                     {userRole === 'admin' && (
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Financial Summary</h3>
+                      <div className="bg-gray-50 dark:bg-[#0d1526] rounded-lg p-4">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Financial Summary</h3>
                         <dl className="space-y-3">
                           <div>
-                            <dt className="text-sm font-medium text-gray-600">Assets Disclosed</dt>
-                            <dd className="mt-1 text-sm font-semibold text-gray-900">
+                            <dt className="text-sm font-medium text-gray-600 dark:text-gray-300">Assets Disclosed</dt>
+                            <dd className="mt-1 text-sm font-semibold text-gray-900 dark:text-white">
                               {formatCurrency(caseData.total_assets_disclosed)}
                             </dd>
                           </div>
                           <div>
-                            <dt className="text-sm font-medium text-gray-600">Debts Disclosed</dt>
-                            <dd className="mt-1 text-sm font-semibold text-gray-900">
+                            <dt className="text-sm font-medium text-gray-600 dark:text-gray-300">Debts Disclosed</dt>
+                            <dd className="mt-1 text-sm font-semibold text-gray-900 dark:text-white">
                               {formatCurrency(caseData.total_debts_disclosed)}
                             </dd>
                           </div>
                           <div>
-                            <dt className="text-sm font-medium text-gray-600">Estimated Fees</dt>
-                            <dd className="mt-1 text-sm font-semibold text-gray-900">
+                            <dt className="text-sm font-medium text-gray-600 dark:text-gray-300">Estimated Fees</dt>
+                            <dd className="mt-1 text-sm font-semibold text-gray-900 dark:text-white">
                               {formatCurrency(caseData.estimated_fees)}
                             </dd>
                           </div>
@@ -451,27 +451,27 @@ export default function CaseDetailPage() {
                     )}
 
                     {/* Party Information */}
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Parties</h3>
+                    <div className="bg-gray-50 dark:bg-[#0d1526] rounded-lg p-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Parties</h3>
                       <dl className="space-y-3">
                         <div>
-                          <dt className="text-sm font-medium text-gray-600">Client</dt>
-                          <dd className="mt-1 text-sm text-gray-900">{caseData.client_name}</dd>
+                          <dt className="text-sm font-medium text-gray-600 dark:text-gray-300">Client</dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">{caseData.client_name}</dd>
                         </div>
                         <div>
-                          <dt className="text-sm font-medium text-gray-600">Spouse / Opposing Party</dt>
-                          <dd className="mt-1 text-sm text-gray-900">{caseData.opposing_party_name || caseData.spouse_name}</dd>
+                          <dt className="text-sm font-medium text-gray-600 dark:text-gray-300">Spouse / Opposing Party</dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-white">{caseData.opposing_party_name || caseData.spouse_name}</dd>
                           {caseData.opposing_party_address && (
-                            <dd className="text-xs text-gray-500 mt-0.5">{caseData.opposing_party_address}</dd>
+                            <dd className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{caseData.opposing_party_address}</dd>
                           )}
                         </div>
                         {caseData.opposing_counsel_name && (
                           <div>
-                            <dt className="text-sm font-medium text-gray-600">Opposing Counsel</dt>
-                            <dd className="mt-1 text-sm text-gray-900">
+                            <dt className="text-sm font-medium text-gray-600 dark:text-gray-300">Opposing Counsel</dt>
+                            <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                               {caseData.opposing_counsel_name}
                               {caseData.opposing_counsel_firm && (
-                                <span className="text-gray-500"> ({caseData.opposing_counsel_firm})</span>
+                                <span className="text-gray-500 dark:text-gray-400"> ({caseData.opposing_counsel_firm})</span>
                               )}
                             </dd>
                           </div>
@@ -481,22 +481,22 @@ export default function CaseDetailPage() {
 
                     {/* Court Information */}
                     {(caseData.court_name || caseData.judge_name) && (
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Court</h3>
+                      <div className="bg-gray-50 dark:bg-[#0d1526] rounded-lg p-4">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Court</h3>
                         <dl className="space-y-3">
                           {caseData.court_name && (
                             <div>
-                              <dt className="text-sm font-medium text-gray-600">Court</dt>
-                              <dd className="mt-1 text-sm text-gray-900">
+                              <dt className="text-sm font-medium text-gray-600 dark:text-gray-300">Court</dt>
+                              <dd className="mt-1 text-sm text-gray-900 dark:text-white">
                                 {caseData.court_name}
-                                {caseData.court_county && <span className="text-gray-500"> - {caseData.court_county} County</span>}
+                                {caseData.court_county && <span className="text-gray-500 dark:text-gray-400"> - {caseData.court_county} County</span>}
                               </dd>
                             </div>
                           )}
                           {caseData.judge_name && (
                             <div>
-                              <dt className="text-sm font-medium text-gray-600">Judge</dt>
-                              <dd className="mt-1 text-sm text-gray-900">{caseData.judge_name}</dd>
+                              <dt className="text-sm font-medium text-gray-600 dark:text-gray-300">Judge</dt>
+                              <dd className="mt-1 text-sm text-gray-900 dark:text-white">{caseData.judge_name}</dd>
                             </div>
                           )}
                         </dl>
@@ -505,8 +505,8 @@ export default function CaseDetailPage() {
 
                     {/* Next Steps */}
                     <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Next Steps</h3>
-                      <p className="text-sm text-gray-700 mb-4">{caseData.current_step}</p>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Next Steps</h3>
+                      <p className="text-sm text-gray-700 dark:text-gray-200 mb-4">{caseData.current_step}</p>
                       {userRole === 'admin' && (
                         <div className="flex gap-2">
                           <button
@@ -517,7 +517,7 @@ export default function CaseDetailPage() {
                           </button>
                           <button
                             onClick={() => setActiveTab('documents')}
-                            className="px-3 py-1.5 bg-white text-blue-600 border border-blue-600 rounded text-sm hover:bg-blue-50"
+                            className="px-3 py-1.5 bg-white dark:bg-[#111827] text-blue-600 border border-blue-600 rounded text-sm hover:bg-blue-50"
                           >
                             Upload Document
                           </button>
@@ -537,8 +537,8 @@ export default function CaseDetailPage() {
               {activeTab === 'documents' && (
                 <div className="space-y-6">
                   {userRole === 'admin' && showUpload && (
-                    <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Upload Documents</h3>
+                    <div className="bg-gray-50 dark:bg-[#0d1526] rounded-lg p-6 border border-gray-200 dark:border-[#1f2937]">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Upload Documents</h3>
                       <DocumentUpload
                         caseId={caseId}
                         onUploadComplete={() => {
@@ -550,7 +550,7 @@ export default function CaseDetailPage() {
                   )}
 
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                       Case Documents ({filteredDocuments.length})
                     </h3>
                     {userRole === 'admin' && (
@@ -566,19 +566,19 @@ export default function CaseDetailPage() {
 
                   <div className="flex gap-4">
                     <div className="flex-1 relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
                       <input
                         type="text"
                         placeholder="Search documents..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
                     <select
                       value={categoryFilter}
                       onChange={(e) => setCategoryFilter(e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="all">All Categories</option>
                       {DOCUMENT_CATEGORIES.map((cat) => (
@@ -590,10 +590,10 @@ export default function CaseDetailPage() {
                   </div>
 
                   {filteredDocuments.length === 0 ? (
-                    <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
-                      <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">No documents found</h3>
-                      <p className="text-gray-600">
+                    <div className="text-center py-12 bg-gray-50 dark:bg-[#0d1526] rounded-lg border border-gray-200 dark:border-[#1f2937]">
+                      <FileText className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No documents found</h3>
+                      <p className="text-gray-600 dark:text-gray-300">
                         {searchQuery || categoryFilter !== 'all'
                           ? 'Try adjusting your filters'
                           : 'Upload your first document to get started'}
@@ -604,17 +604,17 @@ export default function CaseDetailPage() {
                       {filteredDocuments.map((doc) => (
                         <div
                           key={doc.id}
-                          className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
+                          className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-4 hover:shadow-md transition-shadow"
                         >
                           <div className="flex items-start gap-3 mb-3">
                             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                               <FileText className="w-5 h-5 text-blue-600" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-medium text-gray-900 truncate">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">
                                 {doc.original_filename}
                               </h4>
-                              <p className="text-xs text-gray-500">{formatFileSize(doc.file_size)}</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">{formatFileSize(doc.file_size)}</p>
                             </div>
                           </div>
 
@@ -625,12 +625,12 @@ export default function CaseDetailPage() {
                           </div>
 
                           {doc.description && (
-                            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
                               {doc.description}
                             </p>
                           )}
 
-                          <div className="flex items-center gap-2 pt-3 border-t border-gray-200">
+                          <div className="flex items-center gap-2 pt-3 border-t border-gray-200 dark:border-[#1f2937]">
                             <button
                               onClick={() => router.push('/dashboard/documents')}
                               className="flex-1 px-3 py-1.5 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center justify-center gap-1"
@@ -703,10 +703,10 @@ export default function CaseDetailPage() {
                 </div>
               )}
               {activeTab === 'state_law' && !caseData.state && (
-                <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
-                  <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No State Specified</h3>
-                  <p className="text-gray-600">Set the filing state on this case to view state-specific divorce law information.</p>
+                <div className="text-center py-12 bg-gray-50 dark:bg-[#0d1526] rounded-lg border border-gray-200 dark:border-[#1f2937]">
+                  <BookOpen className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No State Specified</h3>
+                  <p className="text-gray-600 dark:text-gray-300">Set the filing state on this case to view state-specific divorce law information.</p>
                 </div>
               )}
 
@@ -729,43 +729,43 @@ export default function CaseDetailPage() {
                 </div>
               )}
               {activeTab === 'calculators' && !caseData.state && (
-                <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
-                  <Calculator className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No State Specified</h3>
-                  <p className="text-gray-600">Set the filing state on this case to use state-specific calculators.</p>
+                <div className="text-center py-12 bg-gray-50 dark:bg-[#0d1526] rounded-lg border border-gray-200 dark:border-[#1f2937]">
+                  <Calculator className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No State Specified</h3>
+                  <p className="text-gray-600 dark:text-gray-300">Set the filing state on this case to use state-specific calculators.</p>
                 </div>
               )}
 
               {/* Activity Tab */}
               {activeTab === 'activity' && (
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
                   {activities.length === 0 ? (
-                    <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
-                      <Activity className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">No activity yet</h3>
-                      <p className="text-gray-600">Activity will appear here as actions are taken on this case</p>
+                    <div className="text-center py-12 bg-gray-50 dark:bg-[#0d1526] rounded-lg border border-gray-200 dark:border-[#1f2937]">
+                      <Activity className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No activity yet</h3>
+                      <p className="text-gray-600 dark:text-gray-300">Activity will appear here as actions are taken on this case</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
                       {activities.map((activity) => (
-                        <div key={activity.id} className="bg-white rounded-lg border border-gray-200 p-4">
+                        <div key={activity.id} className="bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937] p-4">
                           <div className="flex gap-3">
                             <div className="flex-shrink-0 mt-1">
                               {getActivityIcon(activity.activity_type)}
                             </div>
                             <div className="flex-1">
-                              <p className="text-sm font-medium text-gray-900">
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">
                                 {activity.user?.full_name || 'Unknown User'}
                               </p>
-                              <p className="text-sm text-gray-700 mt-1">
+                              <p className="text-sm text-gray-700 dark:text-gray-200 mt-1">
                                 {activity.comment || (
                                   <>
                                     {activity.activity_type} <span className="font-medium">{activity.document?.original_filename}</span>
                                   </>
                                 )}
                               </p>
-                              <p className="text-xs text-gray-500 mt-1">
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                 {new Date(activity.created_at).toLocaleString()}
                               </p>
                             </div>

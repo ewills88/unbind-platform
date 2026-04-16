@@ -74,7 +74,7 @@ function MessagesContent() {
 
   if (!currentUserId) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
@@ -84,7 +84,7 @@ function MessagesContent() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
 
       <main className="flex-1 overflow-hidden">
@@ -118,13 +118,13 @@ function MessagesContent() {
             {selectedCaseId ? (
               <>
                 {/* Thread header */}
-                <div className="px-4 py-3 border-b border-gray-200 flex items-center gap-3">
+                <div className="px-4 py-3 border-b border-gray-200 dark:border-[#1f2937] flex items-center gap-3">
                   {isMobileView && (
                     <button
                       onClick={handleBackToInbox}
-                      className="p-1 hover:bg-gray-100 rounded-full"
+                      className="p-1 hover:bg-gray-100 dark:hover:bg-[#1f2937] rounded-full"
                     >
-                      <ChevronLeft className="w-5 h-5 text-gray-600" />
+                      <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     </button>
                   )}
                   <div className="flex items-center gap-3 flex-1">
@@ -132,7 +132,7 @@ function MessagesContent() {
                       <MessageSquare className="w-5 h-5 text-blue-600" />
                     </div>
                     <div>
-                      <h2 className="font-semibold text-gray-900">{selectedCaseName || 'Messages'}</h2>
+                      <h2 className="font-semibold text-gray-900 dark:text-white">{selectedCaseName || 'Messages'}</h2>
                       <button
                         onClick={() => router.push(`/dashboard/cases/${selectedCaseId}`)}
                         className="text-xs text-blue-600 hover:text-blue-700"
@@ -141,7 +141,7 @@ function MessagesContent() {
                       </button>
                     </div>
                   </div>
-                  <div className="text-xs text-gray-400 hidden sm:block">
+                  <div className="text-xs text-gray-400 dark:text-gray-500 hidden sm:block">
                     Press Ctrl+F to search
                   </div>
                 </div>
@@ -161,8 +161,8 @@ function MessagesContent() {
                 <div className="flex-1 flex items-center justify-center">
                   <div className="text-center">
                     <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">Select a conversation</h3>
-                    <p className="text-gray-600">Choose a case from the sidebar to view messages</p>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Select a conversation</h3>
+                    <p className="text-gray-600 dark:text-gray-300">Choose a case from the sidebar to view messages</p>
                   </div>
                 </div>
               )
@@ -177,7 +177,7 @@ function MessagesContent() {
 export default function MessagesPage() {
   return (
     <Suspense fallback={
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />

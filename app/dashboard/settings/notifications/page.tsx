@@ -137,7 +137,7 @@ export default function NotificationSettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -147,7 +147,7 @@ export default function NotificationSettingsPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
 
       <main className="flex-1 overflow-auto">
@@ -156,7 +156,7 @@ export default function NotificationSettingsPage() {
           <div className="mb-8">
             <button
               onClick={() => router.push('/dashboard/settings')}
-              className="flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
+              className="flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 mb-4"
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
               Back to Settings
@@ -164,8 +164,8 @@ export default function NotificationSettingsPage() {
             <div className="flex items-center gap-3">
               <Bell className="w-8 h-8 text-blue-600" />
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Notification Settings</h1>
-                <p className="mt-1 text-gray-600">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Notification Settings</h1>
+                <p className="mt-1 text-gray-600 dark:text-gray-300">
                   Control how and when you receive notifications
                 </p>
               </div>
@@ -174,14 +174,14 @@ export default function NotificationSettingsPage() {
 
           <div className="space-y-6">
             {/* Section 1: Global Settings */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">Global Settings</h2>
+            <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Global Settings</h2>
 
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <Label htmlFor="email_enabled" className="text-base">Email Notifications</Label>
-                    <p className="text-sm text-gray-500">Receive notifications via email</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Receive notifications via email</p>
                   </div>
                   <Switch
                     id="email_enabled"
@@ -193,7 +193,7 @@ export default function NotificationSettingsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label htmlFor="push_enabled" className="text-base">Push Notifications</Label>
-                    <p className="text-sm text-gray-500">Receive in-app and browser notifications</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Receive in-app and browser notifications</p>
                   </div>
                   <Switch
                     id="push_enabled"
@@ -202,7 +202,7 @@ export default function NotificationSettingsPage() {
                   />
                 </div>
 
-                <div className="border-t border-gray-200 pt-6">
+                <div className="border-t border-gray-200 dark:border-[#1f2937] pt-6">
                   <Label className="text-base mb-3 block">Email Frequency</Label>
                   <div className="space-y-3">
                     {EMAIL_FREQUENCY_OPTIONS.map((option) => (
@@ -216,11 +216,11 @@ export default function NotificationSettingsPage() {
                           value={option.value}
                           checked={prefs.frequency === option.value}
                           onChange={() => setPrefs({ ...prefs, frequency: option.value })}
-                          className="mt-1 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                          className="mt-1 h-4 w-4 text-blue-600 border-gray-300 dark:border-[#374151] focus:ring-blue-500"
                         />
                         <div>
-                          <span className="text-sm font-medium text-gray-900">{option.label}</span>
-                          <p className="text-sm text-gray-500">{option.description}</p>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">{option.label}</span>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">{option.description}</p>
                         </div>
                       </label>
                     ))}
@@ -230,9 +230,9 @@ export default function NotificationSettingsPage() {
             </div>
 
             {/* Section 2: Quiet Hours */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">Quiet Hours</h2>
-              <p className="text-sm text-gray-500 mb-6">
+            <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Quiet Hours</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
                 Emails will be deferred until quiet hours end. Leave empty to disable.
               </p>
 
@@ -244,7 +244,7 @@ export default function NotificationSettingsPage() {
                     type="time"
                     value={prefs.quiet_hours_start}
                     onChange={(e) => setPrefs({ ...prefs, quiet_hours_start: e.target.value })}
-                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -254,7 +254,7 @@ export default function NotificationSettingsPage() {
                     type="time"
                     value={prefs.quiet_hours_end}
                     onChange={(e) => setPrefs({ ...prefs, quiet_hours_end: e.target.value })}
-                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -263,7 +263,7 @@ export default function NotificationSettingsPage() {
                     id="timezone"
                     value={prefs.timezone}
                     onChange={(e) => setPrefs({ ...prefs, timezone: e.target.value })}
-                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                    className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-[#111827]"
                   >
                     {US_TIMEZONES.map((tz) => (
                       <option key={tz.value} value={tz.value}>
@@ -276,19 +276,19 @@ export default function NotificationSettingsPage() {
             </div>
 
             {/* Section 3: Per-Type Preferences */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">Notification Types</h2>
-              <p className="text-sm text-gray-500 mb-6">
+            <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Notification Types</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
                 Choose which notifications you want to receive for each channel
               </p>
 
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left text-sm font-medium text-gray-500 pb-3 pr-4">Type</th>
-                      <th className="text-center text-sm font-medium text-gray-500 pb-3 px-4 w-24">Email</th>
-                      <th className="text-center text-sm font-medium text-gray-500 pb-3 px-4 w-24">Push</th>
+                    <tr className="border-b border-gray-200 dark:border-[#1f2937]">
+                      <th className="text-left text-sm font-medium text-gray-500 dark:text-gray-400 pb-3 pr-4">Type</th>
+                      <th className="text-center text-sm font-medium text-gray-500 dark:text-gray-400 pb-3 px-4 w-24">Email</th>
+                      <th className="text-center text-sm font-medium text-gray-500 dark:text-gray-400 pb-3 px-4 w-24">Push</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -296,10 +296,10 @@ export default function NotificationSettingsPage() {
                       ([type, info]) => {
                         const typePref = prefs.preferences[type] || { email: info.defaultEmail, push: info.defaultPush }
                         return (
-                          <tr key={type} className="border-b border-gray-100 last:border-0">
+                          <tr key={type} className="border-b border-gray-100 dark:border-[#1f2937] last:border-0">
                             <td className="py-4 pr-4">
-                              <div className="text-sm font-medium text-gray-900">{info.label}</div>
-                              <div className="text-xs text-gray-500">{info.description}</div>
+                              <div className="text-sm font-medium text-gray-900 dark:text-white">{info.label}</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400">{info.description}</div>
                             </td>
                             <td className="py-4 px-4 text-center">
                               <input
@@ -307,7 +307,7 @@ export default function NotificationSettingsPage() {
                                 checked={typePref.email}
                                 disabled={!prefs.email_enabled}
                                 onChange={(e) => updateTypePreference(type, 'email', e.target.checked)}
-                                className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-40"
+                                className="h-4 w-4 text-blue-600 border-gray-300 dark:border-[#374151] rounded focus:ring-blue-500 disabled:opacity-40"
                               />
                             </td>
                             <td className="py-4 px-4 text-center">
@@ -316,7 +316,7 @@ export default function NotificationSettingsPage() {
                                 checked={typePref.push}
                                 disabled={!prefs.app_notifications_enabled}
                                 onChange={(e) => updateTypePreference(type, 'push', e.target.checked)}
-                                className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-40"
+                                className="h-4 w-4 text-blue-600 border-gray-300 dark:border-[#374151] rounded focus:ring-blue-500 disabled:opacity-40"
                               />
                             </td>
                           </tr>

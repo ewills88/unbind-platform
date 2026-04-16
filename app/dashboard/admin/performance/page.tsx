@@ -152,7 +152,7 @@ export default function PerformanceDashboard() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <RefreshCw className="w-8 h-8 animate-spin text-blue-500" />
-        <span className="ml-3 text-lg text-gray-600">Loading performance data...</span>
+        <span className="ml-3 text-lg text-gray-600 dark:text-gray-300">Loading performance data...</span>
       </div>
     );
   }
@@ -169,28 +169,28 @@ export default function PerformanceDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <Activity className="w-7 h-7 text-blue-600" />
             Performance Dashboard
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             System health, metrics, and performance monitoring
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2 text-sm text-gray-600">
+          <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
             <input
               type="checkbox"
               checked={autoRefresh}
               onChange={(e) => setAutoRefresh(e.target.checked)}
-              className="rounded border-gray-300"
+              className="rounded border-gray-300 dark:border-[#374151]"
             />
             Auto-refresh
           </label>
           <select
             value={refreshInterval}
             onChange={(e) => setRefreshInterval(Number(e.target.value))}
-            className="text-sm border border-gray-300 rounded-md px-2 py-1"
+            className="text-sm border border-gray-300 dark:border-[#374151] rounded-md px-2 py-1"
             disabled={!autoRefresh}
           >
             <option value={10}>10s</option>
@@ -210,57 +210,57 @@ export default function PerformanceDashboard() {
       {/* Status Overview */}
       {health && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937] p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Server className="w-5 h-5 text-gray-400" />
-                <span className="text-sm font-medium text-gray-600">System Status</span>
+                <Server className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-300">System Status</span>
               </div>
               <StatusBadge status={health.status} />
             </div>
             <div className="mt-2">
-              <p className="text-2xl font-bold text-gray-900">{health.status}</p>
-              <p className="text-xs text-gray-500">v{health.version}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{health.status}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">v{health.version}</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937] p-4">
             <div className="flex items-center gap-2">
-              <Clock className="w-5 h-5 text-gray-400" />
-              <span className="text-sm font-medium text-gray-600">Uptime</span>
+              <Clock className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Uptime</span>
             </div>
-            <p className="mt-2 text-2xl font-bold text-gray-900">
+            <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
               {formatUptime(health.uptime)}
             </p>
-            <p className="text-xs text-gray-500">since last restart</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">since last restart</p>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937] p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Database className="w-5 h-5 text-gray-400" />
-                <span className="text-sm font-medium text-gray-600">Database</span>
+                <Database className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Database</span>
               </div>
               <StatusBadge status={health.checks.database.status} />
             </div>
-            <p className="mt-2 text-2xl font-bold text-gray-900">
+            <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
               {health.checks.database.latency ?? '—'}ms
             </p>
-            <p className="text-xs text-gray-500">response latency</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">response latency</p>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937] p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-gray-400" />
-                <span className="text-sm font-medium text-gray-600">Redis Cache</span>
+                <Zap className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Redis Cache</span>
               </div>
               <StatusBadge status={health.checks.redis.status} />
             </div>
-            <p className="mt-2 text-2xl font-bold text-gray-900">
+            <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
               {health.checks.redis.latency !== undefined ? `${health.checks.redis.latency}ms` : 'N/A'}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               {health.checks.redis.status === 'not_configured' ? 'not configured' : 'response latency'}
             </p>
           </div>
@@ -269,8 +269,8 @@ export default function PerformanceDashboard() {
 
       {/* Memory & Latency Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2 mb-4">
+        <div className="bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937] p-4">
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2 mb-4">
             <Cpu className="w-4 h-4" />
             Memory Usage Over Time (MB)
           </h3>
@@ -300,14 +300,14 @@ export default function PerformanceDashboard() {
               </LineChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex items-center justify-center h-[250px] text-gray-400 text-sm">
+            <div className="flex items-center justify-center h-[250px] text-gray-400 dark:text-gray-500 text-sm">
               Collecting data...
             </div>
           )}
         </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2 mb-4">
+        <div className="bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937] p-4">
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2 mb-4">
             <TrendingUp className="w-4 h-4" />
             Service Latency Over Time (ms)
           </h3>
@@ -337,7 +337,7 @@ export default function PerformanceDashboard() {
               </LineChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex items-center justify-center h-[250px] text-gray-400 text-sm">
+            <div className="flex items-center justify-center h-[250px] text-gray-400 dark:text-gray-500 text-sm">
               Collecting data...
             </div>
           )}
@@ -346,15 +346,15 @@ export default function PerformanceDashboard() {
 
       {/* Memory Gauge */}
       {health && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2 mb-4">
+        <div className="bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937] p-4">
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2 mb-4">
             <HardDrive className="w-4 h-4" />
             Current Memory Usage
           </h3>
           <div className="grid grid-cols-3 gap-4">
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span className="text-gray-600">Heap Used</span>
+                <span className="text-gray-600 dark:text-gray-300">Heap Used</span>
                 <span className="font-medium">{health.checks.memory.heapUsed} MB</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -365,13 +365,13 @@ export default function PerformanceDashboard() {
                   }}
                 />
               </div>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                 of {health.checks.memory.heapTotal} MB total heap
               </p>
             </div>
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span className="text-gray-600">Heap Total</span>
+                <span className="text-gray-600 dark:text-gray-300">Heap Total</span>
                 <span className="font-medium">{health.checks.memory.heapTotal} MB</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -382,17 +382,17 @@ export default function PerformanceDashboard() {
                   }}
                 />
               </div>
-              <p className="text-xs text-gray-400 mt-1">of {health.checks.memory.rss} MB RSS</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">of {health.checks.memory.rss} MB RSS</p>
             </div>
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span className="text-gray-600">RSS</span>
+                <span className="text-gray-600 dark:text-gray-300">RSS</span>
                 <span className="font-medium">{health.checks.memory.rss} MB</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2.5">
                 <div className="bg-purple-500 h-2.5 rounded-full" style={{ width: '100%' }} />
               </div>
-              <p className="text-xs text-gray-400 mt-1">resident set size</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">resident set size</p>
             </div>
           </div>
         </div>
@@ -402,29 +402,29 @@ export default function PerformanceDashboard() {
       {metrics && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Tracing Stats */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2 mb-4">
+          <div className="bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937] p-4">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2 mb-4">
               <Activity className="w-4 h-4" />
               Request Tracing
             </h3>
             <div className="grid grid-cols-2 gap-4 mb-4">
-              <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs text-gray-500">Total Spans</p>
-                <p className="text-xl font-bold text-gray-900">{metrics.tracing.totalSpans}</p>
+              <div className="bg-gray-50 dark:bg-[#0d1526] rounded-lg p-3">
+                <p className="text-xs text-gray-500 dark:text-gray-400">Total Spans</p>
+                <p className="text-xl font-bold text-gray-900 dark:text-white">{metrics.tracing.totalSpans}</p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs text-gray-500">Active Spans</p>
-                <p className="text-xl font-bold text-gray-900">{metrics.tracing.activeSpans}</p>
+              <div className="bg-gray-50 dark:bg-[#0d1526] rounded-lg p-3">
+                <p className="text-xs text-gray-500 dark:text-gray-400">Active Spans</p>
+                <p className="text-xl font-bold text-gray-900 dark:text-white">{metrics.tracing.activeSpans}</p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs text-gray-500">Avg Duration</p>
-                <p className="text-xl font-bold text-gray-900">
+              <div className="bg-gray-50 dark:bg-[#0d1526] rounded-lg p-3">
+                <p className="text-xs text-gray-500 dark:text-gray-400">Avg Duration</p>
+                <p className="text-xl font-bold text-gray-900 dark:text-white">
                   {metrics.tracing.avgDuration.toFixed(1)}ms
                 </p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs text-gray-500">Error Rate</p>
-                <p className="text-xl font-bold text-gray-900">
+              <div className="bg-gray-50 dark:bg-[#0d1526] rounded-lg p-3">
+                <p className="text-xs text-gray-500 dark:text-gray-400">Error Rate</p>
+                <p className="text-xl font-bold text-gray-900 dark:text-white">
                   {(metrics.tracing.errorRate * 100).toFixed(1)}%
                 </p>
               </div>
@@ -432,12 +432,12 @@ export default function PerformanceDashboard() {
 
             {slowOps.length > 0 && (
               <div>
-                <p className="text-xs font-medium text-gray-500 mb-2">Slowest Operations</p>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Slowest Operations</p>
                 <div className="space-y-2">
                   {slowOps.slice(0, 5).map((op, i) => (
                     <div key={i} className="flex items-center justify-between text-sm">
-                      <span className="text-gray-700 truncate max-w-[200px]">{op.operation}</span>
-                      <span className="font-mono text-gray-500">{op.avgDuration.toFixed(1)}ms</span>
+                      <span className="text-gray-700 dark:text-gray-200 truncate max-w-[200px]">{op.operation}</span>
+                      <span className="font-mono text-gray-500 dark:text-gray-400">{op.avgDuration.toFixed(1)}ms</span>
                     </div>
                   ))}
                 </div>
@@ -446,25 +446,25 @@ export default function PerformanceDashboard() {
           </div>
 
           {/* Error Stats */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2 mb-4">
+          <div className="bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937] p-4">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2 mb-4">
               <AlertTriangle className="w-4 h-4" />
               Error Tracking
             </h3>
             <div className="grid grid-cols-2 gap-4 mb-4">
-              <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs text-gray-500">Total Errors</p>
-                <p className="text-xl font-bold text-gray-900">{metrics.errors.totalErrors}</p>
+              <div className="bg-gray-50 dark:bg-[#0d1526] rounded-lg p-3">
+                <p className="text-xs text-gray-500 dark:text-gray-400">Total Errors</p>
+                <p className="text-xl font-bold text-gray-900 dark:text-white">{metrics.errors.totalErrors}</p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs text-gray-500">Last 24h</p>
+              <div className="bg-gray-50 dark:bg-[#0d1526] rounded-lg p-3">
+                <p className="text-xs text-gray-500 dark:text-gray-400">Last 24h</p>
                 <p className="text-xl font-bold text-red-600">{metrics.errors.last24h}</p>
               </div>
             </div>
 
             {severityData.length > 0 && (
               <div className="mb-4">
-                <p className="text-xs font-medium text-gray-500 mb-2">By Severity</p>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">By Severity</p>
                 <ResponsiveContainer width="100%" height={150}>
                   <PieChart>
                     <Pie
@@ -488,7 +488,7 @@ export default function PerformanceDashboard() {
 
             {topErrorsData.length > 0 && (
               <div>
-                <p className="text-xs font-medium text-gray-500 mb-2">Top Errors (24h)</p>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Top Errors (24h)</p>
                 <ResponsiveContainer width="100%" height={150}>
                   <BarChart data={topErrorsData.slice(0, 5)} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -510,7 +510,7 @@ export default function PerformanceDashboard() {
       )}
 
       {/* Last Updated */}
-      <div className="text-center text-xs text-gray-400">
+      <div className="text-center text-xs text-gray-400 dark:text-gray-500">
         Last updated: {health?.timestamp ? new Date(health.timestamp).toLocaleString() : '—'}
       </div>
     </div>

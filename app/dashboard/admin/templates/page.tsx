@@ -90,8 +90,8 @@ export default function AdminTemplatesPage() {
     <div className="max-w-5xl mx-auto px-6 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Templates</h1>
-          <p className="text-gray-600 mt-1">Manage task, email, and document templates</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Templates</h1>
+          <p className="text-gray-600 dark:text-gray-300 mt-1">Manage task, email, and document templates</p>
         </div>
         <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
           <Plus className="w-4 h-4" /> New Template
@@ -105,7 +105,7 @@ export default function AdminTemplatesPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-gray-200 mb-6">
+      <div className="flex gap-1 border-b border-gray-200 dark:border-[#1f2937] mb-6">
         {TABS.map(t => {
           const Icon = t.icon
           return (
@@ -123,10 +123,10 @@ export default function AdminTemplatesPage() {
       {tab === 'task' && (
         <div>
           {taskTemplates.length === 0 ? (
-            <div className="text-center py-16 bg-white border border-gray-200 rounded-lg">
+            <div className="text-center py-16 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg">
               <CheckSquare className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-              <p className="font-medium text-gray-900">No Task Templates</p>
-              <p className="text-sm text-gray-500 mt-1">Create reusable task sets for different case types and phases.</p>
+              <p className="font-medium text-gray-900 dark:text-white">No Task Templates</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Create reusable task sets for different case types and phases.</p>
               <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
                 Create Task Template
               </button>
@@ -134,12 +134,12 @@ export default function AdminTemplatesPage() {
           ) : (
             <div className="space-y-3">
               {taskTemplates.map(t => (
-                <div key={t.id} className="bg-white border border-gray-200 rounded-lg p-4">
+                <div key={t.id} className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium text-gray-900">{t.template_name}</h3>
-                      {t.description && <p className="text-sm text-gray-500 mt-0.5">{t.description}</p>}
-                      <p className="text-xs text-gray-400 mt-1">{t.tasks.length} tasks | Used {t.use_count} times</p>
+                      <h3 className="font-medium text-gray-900 dark:text-white">{t.template_name}</h3>
+                      {t.description && <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{t.description}</p>}
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{t.tasks.length} tasks | Used {t.use_count} times</p>
                     </div>
                     <span className={`text-xs px-2 py-0.5 rounded-full ${t.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
                       {t.is_active ? 'Active' : 'Inactive'}
@@ -154,19 +154,19 @@ export default function AdminTemplatesPage() {
 
       {/* Email Templates */}
       {tab === 'email' && (
-        <div className="text-center py-16 bg-white border border-gray-200 rounded-lg">
+        <div className="text-center py-16 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg">
           <Mail className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-          <p className="font-medium text-gray-900">Email Templates</p>
-          <p className="text-sm text-gray-500 mt-1">System email templates are managed in the notification settings. Custom templates coming soon.</p>
+          <p className="font-medium text-gray-900 dark:text-white">Email Templates</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">System email templates are managed in the notification settings. Custom templates coming soon.</p>
         </div>
       )}
 
       {/* Document Templates */}
       {tab === 'document' && (
-        <div className="text-center py-16 bg-white border border-gray-200 rounded-lg">
+        <div className="text-center py-16 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg">
           <FileText className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-          <p className="font-medium text-gray-900">Document Templates</p>
-          <p className="text-sm text-gray-500 mt-1">Document templates are managed in the Document Templates section. Visit the templates page to create and edit them.</p>
+          <p className="font-medium text-gray-900 dark:text-white">Document Templates</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Document templates are managed in the Document Templates section. Visit the templates page to create and edit them.</p>
         </div>
       )}
     </div>

@@ -179,7 +179,7 @@ export default function CalendarPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
@@ -189,15 +189,15 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
 
       <main className="flex-1 overflow-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">Calendar</h1>
-            <p className="mt-1 text-gray-600">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Calendar</h1>
+            <p className="mt-1 text-gray-600 dark:text-gray-300">
               View and manage events across all your cases
             </p>
           </div>
@@ -214,20 +214,20 @@ export default function CalendarPage() {
       {/* Add Event — Case Selection Modal */}
       {showEventForm && !editingEvent && !selectedCaseId && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg">
-            <div className="p-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">
+          <div className="bg-white dark:bg-[#111827] rounded-xl shadow-xl w-full max-w-lg">
+            <div className="p-4 border-b border-gray-200 dark:border-[#1f2937]">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Add Event - {selectedDate && format(selectedDate, 'MMMM d, yyyy')}
               </h2>
             </div>
             <div className="p-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                 Select a case for this event
               </label>
               <select
                 value={selectedCaseId}
                 onChange={(e) => handleCaseSelect(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Choose a case...</option>
                 {cases.map((c) => (
@@ -242,7 +242,7 @@ export default function CalendarPage() {
                     setShowEventForm(false)
                     setSelectedDate(null)
                   }}
-                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+                  className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#1f2937] rounded-lg"
                 >
                   Cancel
                 </button>

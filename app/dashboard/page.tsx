@@ -67,23 +67,23 @@ function RightSidebar() {
             <UpcomingDeadlines limit={5} />
 
             {/* Collapsible Recent Activity */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937]">
               <button
                 onClick={() => setActivityOpen(!activityOpen)}
-                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-[#1f2937] transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm font-semibold text-gray-900">Recent Activity</span>
+                  <Activity className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">Recent Activity</span>
                 </div>
                 {activityOpen ? (
-                  <ChevronUp className="w-4 h-4 text-gray-400" />
+                  <ChevronUp className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                 ) : (
-                  <ChevronDown className="w-4 h-4 text-gray-400" />
+                  <ChevronDown className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                 )}
               </button>
               {activityOpen && (
-                <div className="border-t border-gray-200">
+                <div className="border-t border-gray-200 dark:border-[#1f2937]">
                   <RecentActivity />
                 </div>
               )}
@@ -151,7 +151,7 @@ export default function DashboardPage() {
         <div className="flex-1 flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading your dashboard...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-300">Loading your dashboard...</p>
           </div>
         </div>
       </>
@@ -178,7 +178,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
       
       {/* Attorney Dashboard with 3-column layout */}
@@ -188,10 +188,10 @@ export default function DashboardPage() {
           <main className="flex-1 overflow-auto">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
               <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                   Welcome, {profile.full_name || 'Attorney'}
                 </h1>
-                <p className="mt-2 text-gray-600">
+                <p className="mt-2 text-gray-600 dark:text-gray-300">
                   Let&apos;s get your practice set up. This should only take a few minutes.
                 </p>
               </div>
@@ -205,10 +205,10 @@ export default function DashboardPage() {
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
               {/* Welcome Header */}
               <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                   Welcome back, {profile.full_name || 'Attorney'}
                 </h1>
-                <p className="mt-2 text-gray-600">
+                <p className="mt-2 text-gray-600 dark:text-gray-300">
                   Manage your cases and collaborate with clients efficiently.
                 </p>
               </div>
@@ -239,10 +239,10 @@ export default function DashboardPage() {
         <main className="flex-1 overflow-auto">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                 Welcome, {profile.full_name || 'User'}
               </h1>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
                 Track your divorce case progress and stay informed about next steps.
               </p>
             </div>

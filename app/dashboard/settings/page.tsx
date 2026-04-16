@@ -149,7 +149,7 @@ export default function SettingsPage() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">
+            <p className="mt-2 text-gray-600 dark:text-gray-300 dark:text-gray-400">
               Manage your account settings and preferences
             </p>
           </div>
@@ -219,10 +219,10 @@ export default function SettingsPage() {
                     {getInitials()}
                   </div>
                   <div>
-                    <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium">
+                    <button className="px-4 py-2 bg-gray-100 dark:bg-[#1f2937] text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-[#374151] transition-colors text-sm font-medium">
                       Change Avatar
                     </button>
-                    <p className="text-xs text-gray-500 mt-1">JPG, PNG or GIF. Max 2MB.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">JPG, PNG or GIF. Max 2MB.</p>
                   </div>
                 </div>
 
@@ -235,7 +235,7 @@ export default function SettingsPage() {
                       type="text"
                       value={formData.full_name}
                       onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                      className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
@@ -247,7 +247,7 @@ export default function SettingsPage() {
                       type="email"
                       value={profile?.email || ''}
                       disabled
-                      className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
+                      className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg bg-gray-50 dark:bg-[#0d1526] text-gray-500 dark:text-gray-400"
                     />
                   </div>
 
@@ -259,7 +259,7 @@ export default function SettingsPage() {
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
@@ -273,7 +273,7 @@ export default function SettingsPage() {
                           type="text"
                           value={formData.firm_name}
                           onChange={(e) => setFormData({ ...formData, firm_name: e.target.value })}
-                          className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
 
@@ -284,7 +284,7 @@ export default function SettingsPage() {
                           type="text"
                           value={formData.bar_number}
                           onChange={(e) => setFormData({ ...formData, bar_number: e.target.value })}
-                          className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                     </>
@@ -313,7 +313,7 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label htmlFor="email_notifications" className="text-base">Email Notifications</Label>
-                      <p className="text-sm text-gray-500">Receive notifications via email</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Receive notifications via email</p>
                     </div>
                     <Switch
                       id="email_notifications"
@@ -326,7 +326,7 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label htmlFor="sms_notifications" className="text-base">SMS Notifications</Label>
-                      <p className="text-sm text-gray-500">Receive notifications via text message</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Receive notifications via text message</p>
                     </div>
                     <Switch
                       id="sms_notifications"
@@ -335,8 +335,8 @@ export default function SettingsPage() {
                     />
                   </div>
 
-                  <div className="border-t border-gray-200 pt-6">
-                    <h3 className="text-sm font-medium text-gray-900 mb-4">Notification Types</h3>
+                  <div className="border-t border-gray-200 dark:border-[#1f2937] pt-6">
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-4">Notification Types</h3>
                     
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
@@ -413,7 +413,7 @@ export default function SettingsPage() {
                   {/* Change Password */}
                   <div>
                     <Label>Password</Label>
-                    <button className="mt-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium">
+                    <button className="mt-2 px-4 py-2 bg-gray-100 dark:bg-[#1f2937] text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-[#374151] transition-colors text-sm font-medium">
                       Change Password
                     </button>
                   </div>
@@ -426,7 +426,7 @@ export default function SettingsPage() {
                         Coming Soon
                       </span>
                     </div>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       Add an extra layer of security to your account
                     </p>
                   </div>
@@ -445,9 +445,9 @@ export default function SettingsPage() {
                     <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900">Current Plan</h3>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Current Plan</h3>
                           <p className="text-2xl font-bold text-blue-600 mt-1">Free Trial</p>
-                          <p className="text-sm text-gray-600 mt-1">14 days remaining</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">14 days remaining</p>
                         </div>
                         <CreditCard className="w-12 h-12 text-blue-600" />
                       </div>
@@ -458,7 +458,7 @@ export default function SettingsPage() {
                       <button className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all font-medium text-lg">
                         Upgrade to Pro - $99/month
                       </button>
-                      <p className="text-sm text-gray-500 text-center mt-2">
+                      <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
                         Unlimited cases • Priority support • Advanced features
                       </p>
                     </div>

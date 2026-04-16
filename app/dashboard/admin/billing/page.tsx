@@ -81,12 +81,12 @@ export default function AdminBillingPage() {
     <div className="max-w-5xl mx-auto px-6 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Billing & Subscription</h1>
-          <p className="text-gray-600 mt-1">Manage your plan and payment details</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Billing & Subscription</h1>
+          <p className="text-gray-600 dark:text-gray-300 mt-1">Manage your plan and payment details</p>
         </div>
         {subscription?.stripe_customer_id && (
           <button onClick={handleManageBilling}
-            className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50">
+            className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#1f2937]">
             <ExternalLink className="w-4 h-4" /> Manage Billing
           </button>
         )}
@@ -99,7 +99,7 @@ export default function AdminBillingPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-gray-200 mb-6">
+      <div className="flex gap-1 border-b border-gray-200 dark:border-[#1f2937] mb-6">
         {[
           { key: 'overview', label: 'Overview' },
           { key: 'plans', label: 'Plans' },
@@ -117,12 +117,12 @@ export default function AdminBillingPage() {
       {/* Overview */}
       {tab === 'overview' && (
         <div className="space-y-6">
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-6">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-gray-500">Current Plan</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{subscription?.plan_name || 'Free'}</p>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400">Current Plan</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{subscription?.plan_name || 'Free'}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                   {subscription?.status === 'active' ? 'Active' :
                    subscription?.status === 'trialing' ? 'Trial' :
                    subscription?.status || 'No active subscription'}
@@ -130,24 +130,24 @@ export default function AdminBillingPage() {
               </div>
               {subscription && (
                 <div className="text-right">
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
                     {subscription.billing_cycle === 'annual' ? 'Annual' : 'Monthly'} billing
                   </p>
-                  <p className="text-xl font-bold text-gray-900">
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">
                     ${subscription.billing_cycle === 'annual' ? subscription.annual_price : subscription.monthly_price}
-                    <span className="text-sm font-normal text-gray-500">/{subscription.billing_cycle === 'annual' ? 'yr' : 'mo'}</span>
+                    <span className="text-sm font-normal text-gray-500 dark:text-gray-400">/{subscription.billing_cycle === 'annual' ? 'yr' : 'mo'}</span>
                   </p>
                 </div>
               )}
             </div>
             {subscription && (
-              <div className="mt-4 grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+              <div className="mt-4 grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-[#1f2937]">
                 <div>
-                  <p className="text-xs text-gray-500">Seats Used</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Seats Used</p>
                   <p className="text-lg font-semibold">{subscription.seats_used} / {subscription.seats_included}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">Next Billing</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Next Billing</p>
                   <p className="text-lg font-semibold">
                     {subscription.current_period_end ? new Date(subscription.current_period_end).toLocaleDateString() : '—'}
                   </p>
@@ -170,21 +170,21 @@ export default function AdminBillingPage() {
                     <Check className="w-3 h-3" /> Current
                   </span>
                 )}
-                <h3 className="text-lg font-bold text-gray-900">{plan.plan_name}</h3>
-                <p className="text-sm text-gray-500 mt-1">{plan.description}</p>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">{plan.plan_name}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{plan.description}</p>
                 <div className="mt-4">
-                  <p className="text-3xl font-bold text-gray-900">
-                    ${plan.monthly_price}<span className="text-sm font-normal text-gray-500">/mo</span>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                    ${plan.monthly_price}<span className="text-sm font-normal text-gray-500 dark:text-gray-400">/mo</span>
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     ${plan.annual_price}/yr (save ${(plan.monthly_price * 12 - plan.annual_price).toFixed(0)})
                   </p>
                 </div>
                 <div className="mt-4 space-y-1.5">
-                  <p className="text-xs text-gray-600">{plan.seats_included} seat{plan.seats_included !== 1 ? 's' : ''} included</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300">{plan.seats_included} seat{plan.seats_included !== 1 ? 's' : ''} included</p>
                   {Object.entries(plan.features || {}).slice(0, 5).map(([key, val]) => (
                     val && (
-                      <p key={key} className="text-xs text-gray-600 flex items-center gap-1">
+                      <p key={key} className="text-xs text-gray-600 dark:text-gray-300 flex items-center gap-1">
                         <Check className="w-3 h-3 text-green-500" />
                         {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                       </p>
@@ -205,23 +205,23 @@ export default function AdminBillingPage() {
 
       {/* Invoices */}
       {tab === 'invoices' && (
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+        <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gray-50 dark:bg-[#0d1526] border-b border-gray-200 dark:border-[#1f2937]">
               <tr>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Invoice</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Date</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Amount</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">PDF</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Invoice</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Amount</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">PDF</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
               {invoices.map(inv => (
                 <tr key={inv.id}>
-                  <td className="px-4 py-3 text-sm text-gray-900">{inv.invoice_number || '—'}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{new Date(inv.created_at).toLocaleDateString()}</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 font-medium">${inv.total.toFixed(2)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{inv.invoice_number || '—'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">{new Date(inv.created_at).toLocaleDateString()}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">${inv.total.toFixed(2)}</td>
                   <td className="px-4 py-3">
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                       inv.status === 'paid' ? 'bg-green-100 text-green-700' :
@@ -242,7 +242,7 @@ export default function AdminBillingPage() {
             </tbody>
           </table>
           {invoices.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
               <Receipt className="w-8 h-8 mx-auto mb-2 text-gray-300" />
               <p className="text-sm">No invoices yet</p>
             </div>

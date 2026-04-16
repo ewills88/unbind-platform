@@ -27,29 +27,29 @@ export default function CalculatorsPage() {
   const rules = getStateRules(selectedState)
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
       <main className="flex-1 overflow-auto">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-6">
             <Link
               href="/dashboard/resources"
-              className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
+              className="inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 mb-4"
             >
               <ChevronLeft className="w-4 h-4 mr-1" />
               Back to Resources
             </Link>
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Support Calculators</h1>
-                <p className="mt-2 text-gray-600">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Support Calculators</h1>
+                <p className="mt-2 text-gray-600 dark:text-gray-300">
                   Estimate support amounts and property division using state-specific formulas.
                 </p>
               </div>
               <select
                 value={selectedState}
                 onChange={(e) => setSelectedState(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="px-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               >
                 {allStates.map((s) => (
                   <option key={s.code} value={s.code}>{s.name}</option>
@@ -76,7 +76,7 @@ export default function CalculatorsPage() {
           )}
 
           {/* Tab Navigation */}
-          <div className="border-b border-gray-200 mb-6">
+          <div className="border-b border-gray-200 dark:border-[#1f2937] mb-6">
             <nav className="flex space-x-8">
               {tabs.map((tab) => {
                 const Icon = tab.icon

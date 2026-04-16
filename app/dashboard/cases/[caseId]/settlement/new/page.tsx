@@ -443,20 +443,20 @@ export default function NewProposalPage() {
     : ''
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto p-6">
           {/* Back link */}
           <button
             onClick={() => router.push(`/dashboard/cases/${caseId}/settlement`)}
-            className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4"
+            className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 mb-4"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Settlement
           </button>
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Create Settlement Proposal</h1>
-          <p className="text-gray-500 text-sm mb-6">{caseName}</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Create Settlement Proposal</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">{caseName}</p>
 
           {/* Progress Steps */}
           <div className="flex items-center justify-between mb-8 overflow-x-auto pb-2">
@@ -482,39 +482,39 @@ export default function NewProposalPage() {
           </div>
 
           {/* Step Content */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-6">
             {/* STEP 1: Basic Info */}
             {step === 1 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">Basic Information</h2>
-                  <p className="text-sm text-gray-500">Set up the proposal details</p>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Basic Information</h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Set up the proposal details</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Proposal Title</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Proposal Title</label>
                   <input type="text" value={title} onChange={e => setTitle(e.target.value)}
                     placeholder="e.g., Wife's Initial Proposal"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Created By</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Created By</label>
                   <select value={createdByParty} onChange={e => setCreatedByParty(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm">
                     <option value="our_client">Our Client</option>
                     <option value="opposing">Opposing Party</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Cover Letter / Notes</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Cover Letter / Notes</label>
                   <textarea value={coverLetter} onChange={e => setCoverLetter(e.target.value)}
                     rows={3} placeholder="Optional cover letter or transmittal notes..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none" />
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm resize-none" />
                 </div>
 
-                <div className="flex justify-end pt-4 border-t border-gray-100">
+                <div className="flex justify-end pt-4 border-t border-gray-100 dark:border-[#1f2937]">
                   <button onClick={handleCreateProposal} disabled={saving}
                     className="flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50">
                     {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
@@ -528,8 +528,8 @@ export default function NewProposalPage() {
             {step === 2 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">Property Division</h2>
-                  <p className="text-sm text-gray-500">Allocate assets and debts between the parties</p>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Property Division</h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Allocate assets and debts between the parties</p>
                 </div>
 
                 {/* Summary Cards */}
@@ -539,8 +539,8 @@ export default function NewProposalPage() {
                     <p className="text-xl font-bold text-blue-800">{formatCurrency(propertyTotals.hNet)}</p>
                     <p className="text-xs text-blue-500">{propertyTotals.hPct}%</p>
                   </div>
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center">
-                    <p className="text-xs text-gray-600">Community Estate</p>
+                  <div className="bg-gray-50 dark:bg-[#0d1526] border border-gray-200 dark:border-[#1f2937] rounded-lg p-3 text-center">
+                    <p className="text-xs text-gray-600 dark:text-gray-300">Community Estate</p>
                     <p className="text-xl font-bold">{formatCurrency(propertyTotals.total)}</p>
                     {propertyTotals.equalization > 0 && (
                       <p className="text-xs text-orange-600">
@@ -558,20 +558,20 @@ export default function NewProposalPage() {
                 {/* Assets */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-semibold text-gray-700">Assets</h3>
+                    <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">Assets</h3>
                     <button onClick={addPropertyItem} className="text-xs text-blue-600 hover:text-blue-700 flex items-center gap-1">
                       <Plus className="w-3 h-3" /> Add Asset
                     </button>
                   </div>
-                  <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                  <div className="overflow-x-auto border border-gray-200 dark:border-[#1f2937] rounded-lg">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="bg-gray-50 border-b border-gray-200">
-                          <th className="text-left px-3 py-2 text-xs font-semibold text-gray-500">Description</th>
-                          <th className="text-right px-3 py-2 text-xs font-semibold text-gray-500">Value</th>
-                          <th className="text-right px-3 py-2 text-xs font-semibold text-gray-500">Liens</th>
-                          <th className="text-right px-3 py-2 text-xs font-semibold text-gray-500">Net</th>
-                          <th className="px-3 py-2 text-xs font-semibold text-gray-500">Allocation</th>
+                        <tr className="bg-gray-50 dark:bg-[#0d1526] border-b border-gray-200 dark:border-[#1f2937]">
+                          <th className="text-left px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Description</th>
+                          <th className="text-right px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Value</th>
+                          <th className="text-right px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Liens</th>
+                          <th className="text-right px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Net</th>
+                          <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Allocation</th>
                           <th className="text-right px-3 py-2 text-xs font-semibold text-blue-600">H</th>
                           <th className="text-right px-3 py-2 text-xs font-semibold text-pink-600">W</th>
                           <th className="w-8"></th>
@@ -581,7 +581,7 @@ export default function NewProposalPage() {
                         {propertyItems.filter(i => i.item_type === 'asset').map((item) => {
                           const idx = propertyItems.indexOf(item)
                           return (
-                            <tr key={item.id} className="border-b border-gray-100">
+                            <tr key={item.id} className="border-b border-gray-100 dark:border-[#1f2937]">
                               <td className="px-3 py-2">
                                 <input type="text" value={item.description}
                                   onChange={e => updatePropertyAllocation(idx, 'description', e.target.value)}
@@ -590,18 +590,18 @@ export default function NewProposalPage() {
                               <td className="px-3 py-2">
                                 <input type="number" value={item.gross_value}
                                   onChange={e => updatePropertyAllocation(idx, 'gross_value', parseFloat(e.target.value) || 0)}
-                                  className="w-24 text-right text-sm border border-gray-200 rounded px-1 py-0.5" />
+                                  className="w-24 text-right text-sm border border-gray-200 dark:border-[#1f2937] rounded px-1 py-0.5" />
                               </td>
                               <td className="px-3 py-2">
                                 <input type="number" value={item.encumbrance}
                                   onChange={e => updatePropertyAllocation(idx, 'encumbrance', parseFloat(e.target.value) || 0)}
-                                  className="w-24 text-right text-sm border border-gray-200 rounded px-1 py-0.5" />
+                                  className="w-24 text-right text-sm border border-gray-200 dark:border-[#1f2937] rounded px-1 py-0.5" />
                               </td>
                               <td className="px-3 py-2 text-right font-medium">{formatCurrency(item.net_value)}</td>
                               <td className="px-3 py-2">
                                 <select value={item.allocated_to}
                                   onChange={e => updatePropertyAllocation(idx, 'allocated_to', e.target.value)}
-                                  className="text-xs border border-gray-200 rounded px-1 py-0.5">
+                                  className="text-xs border border-gray-200 dark:border-[#1f2937] rounded px-1 py-0.5">
                                   <option value="husband">Husband</option>
                                   <option value="wife">Wife</option>
                                   <option value="sell">Sell</option>
@@ -610,7 +610,7 @@ export default function NewProposalPage() {
                                 {item.allocated_to === 'split' && (
                                   <input type="number" value={item.allocation_percentage}
                                     onChange={e => updatePropertyAllocation(idx, 'allocation_percentage', parseFloat(e.target.value) || 50)}
-                                    className="w-14 text-xs border border-gray-200 rounded px-1 py-0.5 ml-1" />
+                                    className="w-14 text-xs border border-gray-200 dark:border-[#1f2937] rounded px-1 py-0.5 ml-1" />
                                 )}
                               </td>
                               <td className="px-3 py-2 text-right text-blue-600 font-medium">{formatCurrency(item.husband_receives)}</td>
@@ -623,8 +623,8 @@ export default function NewProposalPage() {
                             </tr>
                           )
                         })}
-                        <tr className="bg-gray-50 font-semibold">
-                          <td colSpan={5} className="px-3 py-2 text-xs text-gray-600">Assets Subtotal</td>
+                        <tr className="bg-gray-50 dark:bg-[#0d1526] font-semibold">
+                          <td colSpan={5} className="px-3 py-2 text-xs text-gray-600 dark:text-gray-300">Assets Subtotal</td>
                           <td className="px-3 py-2 text-right text-blue-600">{formatCurrency(propertyTotals.hAssets)}</td>
                           <td className="px-3 py-2 text-right text-pink-600">{formatCurrency(propertyTotals.wAssets)}</td>
                           <td></td>
@@ -637,7 +637,7 @@ export default function NewProposalPage() {
                 {/* Debts */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-semibold text-gray-700">Debts</h3>
+                    <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">Debts</h3>
                     <button onClick={() => setPropertyItems(prev => [...prev, {
                       id: `new-debt-${Date.now()}`, item_type: 'debt', description: '', category: '',
                       gross_value: 0, encumbrance: 0, net_value: 0, characterization: 'community',
@@ -646,13 +646,13 @@ export default function NewProposalPage() {
                       <Plus className="w-3 h-3" /> Add Debt
                     </button>
                   </div>
-                  <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                  <div className="overflow-x-auto border border-gray-200 dark:border-[#1f2937] rounded-lg">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="bg-gray-50 border-b border-gray-200">
-                          <th className="text-left px-3 py-2 text-xs font-semibold text-gray-500">Description</th>
-                          <th className="text-right px-3 py-2 text-xs font-semibold text-gray-500">Balance</th>
-                          <th className="px-3 py-2 text-xs font-semibold text-gray-500">Allocation</th>
+                        <tr className="bg-gray-50 dark:bg-[#0d1526] border-b border-gray-200 dark:border-[#1f2937]">
+                          <th className="text-left px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Description</th>
+                          <th className="text-right px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Balance</th>
+                          <th className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Allocation</th>
                           <th className="text-right px-3 py-2 text-xs font-semibold text-blue-600">H Owes</th>
                           <th className="text-right px-3 py-2 text-xs font-semibold text-pink-600">W Owes</th>
                           <th className="w-8"></th>
@@ -662,7 +662,7 @@ export default function NewProposalPage() {
                         {propertyItems.filter(i => i.item_type === 'debt').map((item) => {
                           const idx = propertyItems.indexOf(item)
                           return (
-                            <tr key={item.id} className="border-b border-gray-100">
+                            <tr key={item.id} className="border-b border-gray-100 dark:border-[#1f2937]">
                               <td className="px-3 py-2">
                                 <input type="text" value={item.description}
                                   onChange={e => updatePropertyAllocation(idx, 'description', e.target.value)}
@@ -675,12 +675,12 @@ export default function NewProposalPage() {
                                     updatePropertyAllocation(idx, 'gross_value', v)
                                     updatePropertyAllocation(idx, 'net_value', v)
                                   }}
-                                  className="w-24 text-right text-sm border border-gray-200 rounded px-1 py-0.5" />
+                                  className="w-24 text-right text-sm border border-gray-200 dark:border-[#1f2937] rounded px-1 py-0.5" />
                               </td>
                               <td className="px-3 py-2">
                                 <select value={item.allocated_to}
                                   onChange={e => updatePropertyAllocation(idx, 'allocated_to', e.target.value)}
-                                  className="text-xs border border-gray-200 rounded px-1 py-0.5">
+                                  className="text-xs border border-gray-200 dark:border-[#1f2937] rounded px-1 py-0.5">
                                   <option value="husband">Husband</option>
                                   <option value="wife">Wife</option>
                                   <option value="split">Split</option>
@@ -696,8 +696,8 @@ export default function NewProposalPage() {
                             </tr>
                           )
                         })}
-                        <tr className="bg-gray-50 font-semibold">
-                          <td colSpan={3} className="px-3 py-2 text-xs text-gray-600">Debts Subtotal</td>
+                        <tr className="bg-gray-50 dark:bg-[#0d1526] font-semibold">
+                          <td colSpan={3} className="px-3 py-2 text-xs text-gray-600 dark:text-gray-300">Debts Subtotal</td>
                           <td className="px-3 py-2 text-right text-blue-600">({formatCurrency(propertyTotals.hDebts)})</td>
                           <td className="px-3 py-2 text-right text-pink-600">({formatCurrency(propertyTotals.wDebts)})</td>
                           <td></td>
@@ -707,8 +707,8 @@ export default function NewProposalPage() {
                   </div>
                 </div>
 
-                <div className="flex justify-between pt-4 border-t border-gray-100">
-                  <button onClick={() => setStep(1)} className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-800">
+                <div className="flex justify-between pt-4 border-t border-gray-100 dark:border-[#1f2937]">
+                  <button onClick={() => setStep(1)} className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800">
                     <ArrowLeft className="w-4 h-4" /> Back
                   </button>
                   <button onClick={handleSaveProperty} disabled={saving}
@@ -724,12 +724,12 @@ export default function NewProposalPage() {
             {step === 3 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">Spousal Support</h2>
-                  <p className="text-sm text-gray-500">Define alimony / maintenance terms</p>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Spousal Support</h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Define alimony / maintenance terms</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Support Type</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Support Type</label>
                   <div className="grid grid-cols-2 gap-2">
                     {Object.entries(SUPPORT_TYPE_INFO).map(([k, v]) => (
                       <label key={k} className={`flex items-start gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${
@@ -740,7 +740,7 @@ export default function NewProposalPage() {
                           className="mt-0.5" />
                         <div>
                           <p className="text-sm font-medium">{v.label}</p>
-                          <p className="text-xs text-gray-500">{v.description}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{v.description}</p>
                         </div>
                       </label>
                     ))}
@@ -751,36 +751,36 @@ export default function NewProposalPage() {
                   <>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Payor</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Payor</label>
                         <select value={supportPayor} onChange={e => setSupportPayor(e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm">
                           <option value="husband">{caseData?.client_name || 'Husband'}</option>
                           <option value="wife">{caseData?.spouse_name || 'Wife'}</option>
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Monthly Amount</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Monthly Amount</label>
                         <input type="number" value={supportAmount}
                           onChange={e => setSupportAmount(parseFloat(e.target.value) || 0)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                       </div>
                     </div>
 
                     {supportType !== 'lump_sum' && supportType !== 'permanent' && (
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Duration (Months)</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Duration (Months)</label>
                           <input type="number" value={supportDuration}
                             onChange={e => setSupportDuration(parseInt(e.target.value) || 0)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-                          <p className="text-xs text-gray-500 mt-1">= {(supportDuration / 12).toFixed(1)} years</p>
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">= {(supportDuration / 12).toFixed(1)} years</p>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Duration Description</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Duration Description</label>
                           <input type="text" value={supportDurationDesc}
                             onChange={e => setSupportDurationDesc(e.target.value)}
                             placeholder="e.g., Until wife completes degree"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                         </div>
                       </div>
                     )}
@@ -788,7 +788,7 @@ export default function NewProposalPage() {
                     {/* Step-downs */}
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-medium text-gray-700">Step-Down Schedule</label>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Step-Down Schedule</label>
                         <button onClick={() => setStepDowns(prev => [...prev, { month: 24, amount: supportAmount * 0.75 }])}
                           className="text-xs text-blue-600 hover:text-blue-700">+ Add Step</button>
                       </div>
@@ -797,21 +797,21 @@ export default function NewProposalPage() {
                           <span>After month</span>
                           <input type="number" value={sd.month}
                             onChange={e => setStepDowns(prev => prev.map((s, j) => j === i ? { ...s, month: parseInt(e.target.value) || 0 } : s))}
-                            className="w-16 border border-gray-300 rounded px-2 py-1 text-sm" />
+                            className="w-16 border border-gray-300 dark:border-[#374151] rounded px-2 py-1 text-sm" />
                           <span>reduce to $</span>
                           <input type="number" value={sd.amount}
                             onChange={e => setStepDowns(prev => prev.map((s, j) => j === i ? { ...s, amount: parseFloat(e.target.value) || 0 } : s))}
-                            className="w-24 border border-gray-300 rounded px-2 py-1 text-sm" />
+                            className="w-24 border border-gray-300 dark:border-[#374151] rounded px-2 py-1 text-sm" />
                           <span>/mo</span>
                           <button onClick={() => setStepDowns(prev => prev.filter((_, j) => j !== i))}
-                            className="text-gray-400 hover:text-red-500"><X className="w-3 h-3" /></button>
+                            className="text-gray-400 dark:text-gray-500 hover:text-red-500"><X className="w-3 h-3" /></button>
                         </div>
                       ))}
                     </div>
 
                     {/* Termination events */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Termination Events</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Termination Events</label>
                       <div className="grid grid-cols-2 gap-2">
                         {TERMINATION_EVENTS.map(ev => (
                           <label key={ev.value} className="flex items-center gap-2 text-sm cursor-pointer">
@@ -842,9 +842,9 @@ export default function NewProposalPage() {
 
                     {/* Security */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Security</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Security</label>
                       <select value={securityType} onChange={e => setSecurityType(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm">
                         <option value="none">None</option>
                         <option value="life_insurance">Life Insurance</option>
                         <option value="bond">Bond</option>
@@ -853,7 +853,7 @@ export default function NewProposalPage() {
                         <input type="number" value={securityAmount}
                           onChange={e => setSecurityAmount(parseFloat(e.target.value) || 0)}
                           placeholder="Security amount"
-                          className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                          className="w-full mt-2 px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                       )}
                     </div>
 
@@ -861,7 +861,7 @@ export default function NewProposalPage() {
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-sm">Total Support Value (NPV)</p>
-                        <p className="text-xs text-gray-600">
+                        <p className="text-xs text-gray-600 dark:text-gray-300">
                           {formatCurrency(supportAmount)}/mo x {supportType === 'permanent' ? '10yr cap' : `${supportDuration}mo`} @ 5%
                         </p>
                       </div>
@@ -870,8 +870,8 @@ export default function NewProposalPage() {
                   </>
                 )}
 
-                <div className="flex justify-between pt-4 border-t border-gray-100">
-                  <button onClick={() => setStep(2)} className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-800">
+                <div className="flex justify-between pt-4 border-t border-gray-100 dark:border-[#1f2937]">
+                  <button onClick={() => setStep(2)} className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800">
                     <ArrowLeft className="w-4 h-4" /> Back
                   </button>
                   <button onClick={handleSaveSpousalSupport} disabled={saving}
@@ -887,39 +887,39 @@ export default function NewProposalPage() {
             {step === 4 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">Child Support</h2>
-                  <p className="text-sm text-gray-500">Define child support terms and add-ons</p>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Child Support</h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Define child support terms and add-ons</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Payor</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Payor</label>
                     <select value={csPayor} onChange={e => setCsPayor(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm">
                       <option value="husband">{caseData?.client_name || 'Husband'}</option>
                       <option value="wife">{caseData?.spouse_name || 'Wife'}</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Guideline Amount</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Guideline Amount</label>
                     <input type="number" value={guidelineAmount}
                       onChange={e => setGuidelineAmount(parseFloat(e.target.value) || 0)}
                       placeholder="From state calculator"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Proposed Amount</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Proposed Amount</label>
                     <input type="number" value={proposedAmount}
                       onChange={e => setProposedAmount(parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Deviation</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Deviation</label>
                     <select value={deviationType} onChange={e => setDeviationType(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm">
                       <option value="none">None (at guideline)</option>
                       <option value="upward">Upward deviation</option>
                       <option value="downward">Downward deviation</option>
@@ -929,35 +929,35 @@ export default function NewProposalPage() {
 
                 {deviationType !== 'none' && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Deviation Reason</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Deviation Reason</label>
                     <textarea value={deviationReason} onChange={e => setDeviationReason(e.target.value)}
-                      rows={2} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none" />
+                      rows={2} className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm resize-none" />
                   </div>
                 )}
 
-                <h3 className="text-sm font-semibold text-gray-700 pt-2">Add-Ons</h3>
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 pt-2">Add-Ons</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Health Insurance Provider</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Health Insurance Provider</label>
                     <select value={healthInsProvider} onChange={e => setHealthInsProvider(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm">
                       <option value="husband">Husband</option>
                       <option value="wife">Wife</option>
                       <option value="split">Split</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Monthly Insurance Cost</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Monthly Insurance Cost</label>
                     <input type="number" value={healthInsCost}
                       onChange={e => setHealthInsCost(parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Unreimbursed Medical Split</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Unreimbursed Medical Split</label>
                     <select value={medicalSplit} onChange={e => setMedicalSplit(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm">
                       <option value="50/50">50/50</option>
                       <option value="60/40">60/40 (H/W)</option>
                       <option value="70/30">70/30 (H/W)</option>
@@ -965,32 +965,32 @@ export default function NewProposalPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Childcare Monthly Cost</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Childcare Monthly Cost</label>
                     <input type="number" value={childcareCost}
                       onChange={e => setChildcareCost(parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Childcare Split</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Childcare Split</label>
                     <select value={childcareSplit} onChange={e => setChildcareSplit(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm">
                       <option value="50/50">50/50</option>
                       <option value="60/40">60/40</option>
                       <option value="70/30">70/30</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Extracurricular Cap (Annual)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Extracurricular Cap (Annual)</label>
                     <input type="number" value={extraCap}
                       onChange={e => setExtraCap(parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                   </div>
                 </div>
 
-                <div className="flex justify-between pt-4 border-t border-gray-100">
-                  <button onClick={() => setStep(3)} className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-800">
+                <div className="flex justify-between pt-4 border-t border-gray-100 dark:border-[#1f2937]">
+                  <button onClick={() => setStep(3)} className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800">
                     <ArrowLeft className="w-4 h-4" /> Back
                   </button>
                   <button onClick={handleSaveChildSupport} disabled={saving}
@@ -1006,24 +1006,24 @@ export default function NewProposalPage() {
             {step === 5 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">Custody & Parenting</h2>
-                  <p className="text-sm text-gray-500">Define custody, schedule, and decision-making</p>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Custody & Parenting</h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Define custody, schedule, and decision-making</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Legal Custody</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Legal Custody</label>
                     <select value={legalCustody} onChange={e => setLegalCustody(e.target.value as LegalCustodyType)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm">
                       {Object.entries(LEGAL_CUSTODY_INFO).map(([k, v]) => (
                         <option key={k} value={k}>{v.label}</option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Physical Custody</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Physical Custody</label>
                     <select value={physicalCustody} onChange={e => setPhysicalCustody(e.target.value as PhysicalCustodyType)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm">
                       {Object.entries(PHYSICAL_CUSTODY_INFO).map(([k, v]) => (
                         <option key={k} value={k}>{v.label}</option>
                       ))}
@@ -1032,7 +1032,7 @@ export default function NewProposalPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Parenting Schedule</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Parenting Schedule</label>
                   <div className="grid grid-cols-2 gap-2">
                     {Object.entries(SCHEDULE_TYPE_INFO).map(([k, v]) => (
                       <label key={k} className={`flex items-start gap-2 p-3 border rounded-lg cursor-pointer ${
@@ -1042,7 +1042,7 @@ export default function NewProposalPage() {
                           onChange={() => setScheduleType(k as ScheduleType)} className="mt-0.5" />
                         <div>
                           <p className="text-sm font-medium">{v.label}</p>
-                          <p className="text-xs text-gray-500">{v.husbandPct}/{v.wifePct} split</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{v.husbandPct}/{v.wifePct} split</p>
                         </div>
                       </label>
                     ))}
@@ -1052,22 +1052,22 @@ export default function NewProposalPage() {
                 {scheduleType === 'custom' && (
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Husband %</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Husband %</label>
                       <input type="number" value={husbandPct}
                         onChange={e => { const v = parseFloat(e.target.value) || 0; setHusbandPct(v); setWifePct(100 - v) }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Wife %</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Wife %</label>
                       <input type="number" value={wifePct} disabled
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-gray-50" />
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm bg-gray-50 dark:bg-[#0d1526]" />
                     </div>
                   </div>
                 )}
 
                 {/* Custody percentage display */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-sm font-medium text-gray-700 mb-2">Custody Time Split</p>
+                <div className="bg-gray-50 dark:bg-[#0d1526] rounded-lg p-4">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Custody Time Split</p>
                   <div className="flex items-center gap-2">
                     <div className="flex-1 bg-blue-100 rounded-l-full h-5" style={{ width: `${husbandPct}%` }}>
                       <span className="text-xs text-blue-700 pl-2">{husbandPct}%</span>
@@ -1080,20 +1080,20 @@ export default function NewProposalPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Exchange Day/Time</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Exchange Day/Time</label>
                     <input type="text" value={exchangeDay} onChange={e => setExchangeDay(e.target.value)}
                       placeholder="e.g., Friday at 6:00 PM"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Exchange Location</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Exchange Location</label>
                     <input type="text" value={exchangeLocation} onChange={e => setExchangeLocation(e.target.value)}
                       placeholder="e.g., School, police station"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                   </div>
                 </div>
 
-                <h3 className="text-sm font-semibold text-gray-700 pt-2">Decision-Making</h3>
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 pt-2">Decision-Making</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {([
                     ['Education', decEducation, setDecEducation],
@@ -1102,9 +1102,9 @@ export default function NewProposalPage() {
                     ['Extracurricular', decExtra, setDecExtra],
                   ] as [string, DecisionType, (v: DecisionType) => void][]).map(([label, value, setter]) => (
                     <div key={label}>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">{label}</label>
+                      <label className="block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">{label}</label>
                       <select value={value} onChange={e => setter(e.target.value as DecisionType)}
-                        className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm">
+                        className="w-full px-2 py-1.5 border border-gray-300 dark:border-[#374151] rounded text-sm">
                         <option value="joint">Joint</option>
                         <option value="husband">Husband</option>
                         <option value="wife">Wife</option>
@@ -1115,21 +1115,21 @@ export default function NewProposalPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Right of First Refusal (hours)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Right of First Refusal (hours)</label>
                     <input type="number" value={rofrHours} onChange={e => setRofrHours(e.target.value ? parseInt(e.target.value) : '')}
                       placeholder="e.g., 4"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Relocation Restriction (miles)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Relocation Restriction (miles)</label>
                     <input type="number" value={relocMiles} onChange={e => setRelocMiles(e.target.value ? parseInt(e.target.value) : '')}
                       placeholder="e.g., 50"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                   </div>
                 </div>
 
-                <div className="flex justify-between pt-4 border-t border-gray-100">
-                  <button onClick={() => setStep(4)} className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-800">
+                <div className="flex justify-between pt-4 border-t border-gray-100 dark:border-[#1f2937]">
+                  <button onClick={() => setStep(4)} className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800">
                     <ArrowLeft className="w-4 h-4" /> Back
                   </button>
                   <button onClick={handleSaveCustody} disabled={saving}
@@ -1145,36 +1145,36 @@ export default function NewProposalPage() {
             {step === 6 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">Other Terms</h2>
-                  <p className="text-sm text-gray-500">Name change, tax, insurance, attorney fees, etc.</p>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Other Terms</h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Name change, tax, insurance, attorney fees, etc.</p>
                 </div>
 
                 {otherTerms.map((term, i) => (
-                  <div key={term.id} className="border border-gray-200 rounded-lg p-3 space-y-3">
+                  <div key={term.id} className="border border-gray-200 dark:border-[#1f2937] rounded-lg p-3 space-y-3">
                     <div className="flex items-center justify-between">
                       <select value={term.category}
                         onChange={e => setOtherTerms(prev => prev.map((t, j) => j === i ? { ...t, category: e.target.value as OtherTermCategory } : t))}
-                        className="text-sm border border-gray-300 rounded px-2 py-1">
+                        className="text-sm border border-gray-300 dark:border-[#374151] rounded px-2 py-1">
                         {Object.entries(OTHER_TERM_CATEGORIES).map(([k, v]) => (
                           <option key={k} value={k}>{v.label}</option>
                         ))}
                       </select>
                       <button onClick={() => setOtherTerms(prev => prev.filter((_, j) => j !== i))}
-                        className="text-gray-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
+                        className="text-gray-400 dark:text-gray-500 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
                     </div>
                     <input type="text" value={term.term_title}
                       onChange={e => setOtherTerms(prev => prev.map((t, j) => j === i ? { ...t, term_title: e.target.value } : t))}
                       placeholder="Term title"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm" />
                     <textarea value={term.term_description}
                       onChange={e => setOtherTerms(prev => prev.map((t, j) => j === i ? { ...t, term_description: e.target.value } : t))}
                       placeholder="Description..."
                       rows={2}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none" />
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm resize-none" />
                     <div className="grid grid-cols-2 gap-3">
                       <select value={term.responsible_party}
                         onChange={e => setOtherTerms(prev => prev.map((t, j) => j === i ? { ...t, responsible_party: e.target.value } : t))}
-                        className="text-sm border border-gray-300 rounded px-2 py-1.5">
+                        className="text-sm border border-gray-300 dark:border-[#374151] rounded px-2 py-1.5">
                         <option value="husband">Husband</option>
                         <option value="wife">Wife</option>
                         <option value="both">Both</option>
@@ -1183,7 +1183,7 @@ export default function NewProposalPage() {
                       <input type="number" value={term.amount || ''}
                         onChange={e => setOtherTerms(prev => prev.map((t, j) => j === i ? { ...t, amount: parseFloat(e.target.value) || null } : t))}
                         placeholder="Amount (optional)"
-                        className="text-sm border border-gray-300 rounded px-2 py-1.5" />
+                        className="text-sm border border-gray-300 dark:border-[#374151] rounded px-2 py-1.5" />
                     </div>
                   </div>
                 ))}
@@ -1196,8 +1196,8 @@ export default function NewProposalPage() {
                   <Plus className="w-4 h-4" /> Add Term
                 </button>
 
-                <div className="flex justify-between pt-4 border-t border-gray-100">
-                  <button onClick={() => setStep(5)} className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-800">
+                <div className="flex justify-between pt-4 border-t border-gray-100 dark:border-[#1f2937]">
+                  <button onClick={() => setStep(5)} className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800">
                     <ArrowLeft className="w-4 h-4" /> Back
                   </button>
                   <button onClick={handleSaveOtherTerms} disabled={saving}
@@ -1213,24 +1213,24 @@ export default function NewProposalPage() {
             {step === 7 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">Proposal Review</h2>
-                  <p className="text-sm text-gray-500">Review all terms before saving</p>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Proposal Review</h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Review all terms before saving</p>
                 </div>
 
                 {/* Property Summary */}
-                <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2">Property Division</h3>
+                <div className="border border-gray-200 dark:border-[#1f2937] rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Property Division</h3>
                   <div className="grid grid-cols-3 gap-4 text-center text-sm">
                     <div>
-                      <p className="text-gray-500">Husband Net</p>
+                      <p className="text-gray-500 dark:text-gray-400">Husband Net</p>
                       <p className="text-lg font-bold text-blue-600">{formatCurrency(propertyTotals.hNet)}</p>
                     </div>
                     <div>
-                      <p className="text-gray-500">Total Estate</p>
+                      <p className="text-gray-500 dark:text-gray-400">Total Estate</p>
                       <p className="text-lg font-bold">{formatCurrency(propertyTotals.total)}</p>
                     </div>
                     <div>
-                      <p className="text-gray-500">Wife Net</p>
+                      <p className="text-gray-500 dark:text-gray-400">Wife Net</p>
                       <p className="text-lg font-bold text-pink-600">{formatCurrency(propertyTotals.wNet)}</p>
                     </div>
                   </div>
@@ -1242,59 +1242,59 @@ export default function NewProposalPage() {
                 </div>
 
                 {/* Support Summary */}
-                <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2">Spousal Support</h3>
+                <div className="border border-gray-200 dark:border-[#1f2937] rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Spousal Support</h3>
                   {supportType === 'none' ? (
-                    <p className="text-sm text-gray-500">No spousal support</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">No spousal support</p>
                   ) : (
                     <div className="text-sm space-y-1">
-                      <p><span className="text-gray-500">Type:</span> {SUPPORT_TYPE_INFO[supportType].label}</p>
-                      <p><span className="text-gray-500">Amount:</span> {formatCurrency(supportAmount)}/month</p>
+                      <p><span className="text-gray-500 dark:text-gray-400">Type:</span> {SUPPORT_TYPE_INFO[supportType].label}</p>
+                      <p><span className="text-gray-500 dark:text-gray-400">Amount:</span> {formatCurrency(supportAmount)}/month</p>
                       {supportType !== 'permanent' && supportType !== 'lump_sum' && (
-                        <p><span className="text-gray-500">Duration:</span> {supportDuration} months ({(supportDuration/12).toFixed(1)} years)</p>
+                        <p><span className="text-gray-500 dark:text-gray-400">Duration:</span> {supportDuration} months ({(supportDuration/12).toFixed(1)} years)</p>
                       )}
-                      <p><span className="text-gray-500">NPV:</span> {formatCurrency(supportNPV)}</p>
+                      <p><span className="text-gray-500 dark:text-gray-400">NPV:</span> {formatCurrency(supportNPV)}</p>
                     </div>
                   )}
                 </div>
 
                 {/* Child Support Summary */}
-                <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2">Child Support</h3>
+                <div className="border border-gray-200 dark:border-[#1f2937] rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Child Support</h3>
                   <div className="text-sm space-y-1">
-                    <p><span className="text-gray-500">Proposed:</span> {formatCurrency(proposedAmount)}/month</p>
+                    <p><span className="text-gray-500 dark:text-gray-400">Proposed:</span> {formatCurrency(proposedAmount)}/month</p>
                     {guidelineAmount > 0 && (
-                      <p><span className="text-gray-500">Guideline:</span> {formatCurrency(guidelineAmount)}/month</p>
+                      <p><span className="text-gray-500 dark:text-gray-400">Guideline:</span> {formatCurrency(guidelineAmount)}/month</p>
                     )}
                   </div>
                 </div>
 
                 {/* Custody Summary */}
-                <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2">Custody</h3>
+                <div className="border border-gray-200 dark:border-[#1f2937] rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Custody</h3>
                   <div className="text-sm space-y-1">
-                    <p><span className="text-gray-500">Legal:</span> {LEGAL_CUSTODY_INFO[legalCustody].label}</p>
-                    <p><span className="text-gray-500">Physical:</span> {PHYSICAL_CUSTODY_INFO[physicalCustody].label}</p>
-                    <p><span className="text-gray-500">Schedule:</span> {SCHEDULE_TYPE_INFO[scheduleType].label} ({husbandPct}/{wifePct})</p>
+                    <p><span className="text-gray-500 dark:text-gray-400">Legal:</span> {LEGAL_CUSTODY_INFO[legalCustody].label}</p>
+                    <p><span className="text-gray-500 dark:text-gray-400">Physical:</span> {PHYSICAL_CUSTODY_INFO[physicalCustody].label}</p>
+                    <p><span className="text-gray-500 dark:text-gray-400">Schedule:</span> {SCHEDULE_TYPE_INFO[scheduleType].label} ({husbandPct}/{wifePct})</p>
                   </div>
                 </div>
 
                 {/* Other Terms */}
                 {otherTerms.length > 0 && (
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <h3 className="text-sm font-semibold text-gray-700 mb-2">Other Terms ({otherTerms.length})</h3>
+                  <div className="border border-gray-200 dark:border-[#1f2937] rounded-lg p-4">
+                    <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Other Terms ({otherTerms.length})</h3>
                     <div className="space-y-1">
                       {otherTerms.map(t => (
                         <p key={t.id} className="text-sm">
-                          <span className="text-gray-500">{OTHER_TERM_CATEGORIES[t.category]?.label}:</span> {t.term_title}
+                          <span className="text-gray-500 dark:text-gray-400">{OTHER_TERM_CATEGORIES[t.category]?.label}:</span> {t.term_title}
                         </p>
                       ))}
                     </div>
                   </div>
                 )}
 
-                <div className="flex justify-between pt-4 border-t border-gray-100">
-                  <button onClick={() => setStep(6)} className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-800">
+                <div className="flex justify-between pt-4 border-t border-gray-100 dark:border-[#1f2937]">
+                  <button onClick={() => setStep(6)} className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800">
                     <ArrowLeft className="w-4 h-4" /> Back
                   </button>
                   <button onClick={handleFinalize}

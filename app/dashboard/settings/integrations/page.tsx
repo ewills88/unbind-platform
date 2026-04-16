@@ -194,7 +194,7 @@ export default function IntegrationsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -204,7 +204,7 @@ export default function IntegrationsPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
 
       <main className="flex-1 overflow-auto">
@@ -213,7 +213,7 @@ export default function IntegrationsPage() {
           <div className="mb-8">
             <button
               onClick={() => router.push('/dashboard/settings')}
-              className="flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
+              className="flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 mb-4"
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
               Back to Settings
@@ -221,8 +221,8 @@ export default function IntegrationsPage() {
             <div className="flex items-center gap-3">
               <Calendar className="w-8 h-8 text-blue-600" />
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Integrations</h1>
-                <p className="mt-1 text-gray-600">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Integrations</h1>
+                <p className="mt-1 text-gray-600 dark:text-gray-300">
                   Connect Unbind to your other tools
                 </p>
               </div>
@@ -231,17 +231,17 @@ export default function IntegrationsPage() {
 
           <div className="space-y-6">
             {/* Google Calendar Card */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937]">
               {/* Card Header */}
-              <div className="p-6 border-b border-gray-100">
+              <div className="p-6 border-b border-gray-100 dark:border-[#1f2937]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-white border border-gray-200 rounded-lg flex items-center justify-center">
+                    <div className="w-12 h-12 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg flex items-center justify-center">
                       <Image src="/icons/google-calendar.svg" alt="Google Calendar" width={32} height={32} />
                     </div>
                     <div>
-                      <h2 className="text-lg font-semibold text-gray-900">Google Calendar</h2>
-                      <p className="text-sm text-gray-500">
+                      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Google Calendar</h2>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
                         Sync court dates, deadlines, and appointments
                       </p>
                     </div>
@@ -253,7 +253,7 @@ export default function IntegrationsPage() {
                       Connected
                     </span>
                   ) : (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-[#1f2937] text-gray-600 dark:text-gray-300">
                       Not connected
                     </span>
                   )}
@@ -265,12 +265,12 @@ export default function IntegrationsPage() {
                 {connection ? (
                   <div className="space-y-5">
                     {/* Sync Status Bar */}
-                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-[#0d1526] rounded-lg">
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
                           Syncing to: {connection.calendar_name || 'Primary Calendar'}
                         </p>
-                        <p className="text-xs text-gray-500 mt-0.5">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                           Last synced: {connection.last_synced_at
                             ? formatRelativeTime(connection.last_synced_at)
                             : 'Never'
@@ -282,7 +282,7 @@ export default function IntegrationsPage() {
                           checked={connection.sync_enabled}
                           onCheckedChange={handleToggleSync}
                         />
-                        <span className="text-sm text-gray-600">
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
                           {connection.sync_enabled ? 'Sync on' : 'Paused'}
                         </span>
                       </div>
@@ -313,7 +313,7 @@ export default function IntegrationsPage() {
                           id="calendar_select"
                           value={connection.calendar_id || ''}
                           onChange={(e) => handleChangeCalendar(e.target.value)}
-                          className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm"
+                          className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-[#111827] text-sm"
                         >
                           {calendars.map(cal => (
                             <option key={cal.id} value={cal.id}>
@@ -329,7 +329,7 @@ export default function IntegrationsPage() {
                       <button
                         onClick={handleManualSync}
                         disabled={isSyncing}
-                        className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-[#111827] hover:bg-gray-50 dark:hover:bg-[#1f2937] disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isSyncing ? (
                           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -340,7 +340,7 @@ export default function IntegrationsPage() {
                       </button>
                       <button
                         onClick={handleDisconnect}
-                        className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                        className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-[#111827] hover:bg-gray-50 dark:hover:bg-[#1f2937]"
                       >
                         Disconnect
                       </button>
@@ -348,10 +348,10 @@ export default function IntegrationsPage() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                       Connect your Google Calendar to automatically sync:
                     </p>
-                    <ul className="list-disc list-inside text-sm text-gray-500 space-y-1">
+                    <ul className="list-disc list-inside text-sm text-gray-500 dark:text-gray-400 space-y-1">
                       <li>Court dates and hearings</li>
                       <li>Filing deadlines</li>
                       <li>Client appointments</li>
@@ -381,36 +381,36 @@ export default function IntegrationsPage() {
             </div>
 
             {/* Microsoft Outlook Placeholder */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 opacity-60">
+            <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] opacity-60">
               <div className="p-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white border border-gray-200 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg flex items-center justify-center">
                     <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none">
                       <rect x="3" y="5" width="18" height="14" rx="2" stroke="#0078D4" strokeWidth="1.5"/>
                       <path d="M3 8l9 5 9-5" stroke="#0078D4" strokeWidth="1.5" strokeLinecap="round"/>
                     </svg>
                   </div>
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">Microsoft Outlook</h2>
-                    <p className="text-sm text-gray-500">Coming soon</p>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Microsoft Outlook</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Coming soon</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* QuickBooks Placeholder */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 opacity-60">
+            <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] opacity-60">
               <div className="p-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white border border-gray-200 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg flex items-center justify-center">
                     <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none">
                       <circle cx="12" cy="12" r="9" stroke="#2CA01C" strokeWidth="1.5"/>
                       <path d="M9 12h6M12 9v6" stroke="#2CA01C" strokeWidth="1.5" strokeLinecap="round"/>
                     </svg>
                   </div>
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">QuickBooks</h2>
-                    <p className="text-sm text-gray-500">Coming soon</p>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white">QuickBooks</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Coming soon</p>
                   </div>
                 </div>
               </div>

@@ -233,14 +233,14 @@ export default function ReportsPage() {
   ]
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
       <main className="flex-1 p-6 md:p-8 md:ml-64 max-w-7xl">
         {/* Header */}
         <div className="flex justify-between items-start flex-wrap gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Reports</h1>
-            <p className="text-gray-600 mt-1">Financial, attorney, and case analytics</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Reports</h1>
+            <p className="text-gray-600 dark:text-gray-300 mt-1">Financial, attorney, and case analytics</p>
           </div>
           <div className="flex items-center gap-2">
             {category !== 'scheduled' && (
@@ -249,18 +249,18 @@ export default function ReportsPage() {
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 />
-                <span className="text-gray-500">to</span>
+                <span className="text-gray-500 dark:text-gray-400">to</span>
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 />
                 <button
                   onClick={() => setShowExportModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700"
+                  className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937] text-sm font-medium text-gray-700 dark:text-gray-200"
                 >
                   <Download className="w-4 h-4" />
                   Export
@@ -289,7 +289,7 @@ export default function ReportsPage() {
         </div>
 
         {/* Sub-tabs */}
-        <div className="flex gap-1 mb-6 bg-white rounded-lg border border-gray-200 p-1 overflow-x-auto">
+        <div className="flex gap-1 mb-6 bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937] p-1 overflow-x-auto">
           {category === 'financial' && financialTabs.map(tab => (
             <button
               key={tab.key}
@@ -392,19 +392,19 @@ export default function ReportsPage() {
         {/* Export Modal */}
         {showExportModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md mx-4">
+            <div className="bg-white dark:bg-[#111827] rounded-xl shadow-xl p-6 w-full max-w-md mx-4">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Export Report</h3>
-                <button onClick={() => setShowExportModal(false)} className="text-gray-400 hover:text-gray-600">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Export Report</h3>
+                <button onClick={() => setShowExportModal(false)} className="text-gray-400 dark:text-gray-500 hover:text-gray-600">
                   <X className="w-5 h-5" />
                 </button>
               </div>
-              <p className="text-sm text-gray-600 mb-4">{getCurrentReportName()}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{getCurrentReportName()}</p>
 
               <div className="space-y-3 mb-6">
-                <label className="text-sm font-medium text-gray-700">Export Format</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Export Format</label>
                 {(['pdf', 'excel', 'csv'] as const).map(fmt => (
-                  <label key={fmt} className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50">
+                  <label key={fmt} className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-[#1f2937] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1f2937]">
                     <input
                       type="radio"
                       name="export_format"
@@ -413,10 +413,10 @@ export default function ReportsPage() {
                       className="w-4 h-4 text-blue-600"
                     />
                     <div>
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">
                         {fmt === 'pdf' ? 'PDF' : fmt === 'excel' ? 'Excel (.xlsx)' : 'CSV'}
                       </span>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         {fmt === 'pdf' ? 'Formatted report document' : fmt === 'excel' ? 'Multi-sheet workbook with formatting' : 'Raw data for import'}
                       </p>
                     </div>
@@ -427,7 +427,7 @@ export default function ReportsPage() {
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => setShowExportModal(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-[#374151] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937]"
                 >
                   Cancel
                 </button>
@@ -466,8 +466,8 @@ function RevenueSection({ data }: { data: RevenueReport }) {
 
       {/* Revenue by month chart */}
       {data.byMonth.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue by Month</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Revenue by Month</h3>
           <ResponsiveContainer width="100%" height={320}>
             <BarChart data={data.byMonth}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -485,18 +485,18 @@ function RevenueSection({ data }: { data: RevenueReport }) {
       {/* Revenue by attorney and case type */}
       <div className="grid md:grid-cols-2 gap-6">
         {data.byAttorney.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue by Attorney</h3>
+          <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Revenue by Attorney</h3>
             <div className="space-y-3">
               {data.byAttorney.map((a, i) => (
                 <div key={i} className="flex items-center justify-between">
                   <div className="flex items-center gap-2 min-w-0">
                     <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                    <span className="text-sm text-gray-700 truncate">{a.name || 'Unassigned'}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{a.name || 'Unassigned'}</span>
                   </div>
                   <div className="text-right flex-shrink-0 ml-4">
-                    <span className="text-sm font-semibold text-gray-900">{formatCurrency(a.billed)}</span>
-                    <span className="text-xs text-gray-500 ml-2">({a.count} inv.)</span>
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white">{formatCurrency(a.billed)}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">({a.count} inv.)</span>
                   </div>
                 </div>
               ))}
@@ -505,8 +505,8 @@ function RevenueSection({ data }: { data: RevenueReport }) {
         )}
 
         {data.byCaseType.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue by Case Type</h3>
+          <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Revenue by Case Type</h3>
             <ResponsiveContainer width="100%" height={250}>
               <RPieChart>
                 <Pie
@@ -531,27 +531,27 @@ function RevenueSection({ data }: { data: RevenueReport }) {
 
       {/* Top clients */}
       {data.byClient.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Top Clients by Revenue</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Top Clients by Revenue</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-[#0d1526]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Client</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Billed</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Collected</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Realization</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Client</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Billed</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Collected</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Realization</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
                 {data.byClient.slice(0, 10).map((c, i) => (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="px-6 py-3 text-sm font-medium text-gray-900">{c.name}</td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-900">{formatCurrency(c.billed)}</td>
+                  <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#1f2937]">
+                    <td className="px-6 py-3 text-sm font-medium text-gray-900 dark:text-white">{c.name}</td>
+                    <td className="px-6 py-3 text-sm text-right text-gray-900 dark:text-white">{formatCurrency(c.billed)}</td>
                     <td className="px-6 py-3 text-sm text-right text-green-600 font-medium">{formatCurrency(c.collected)}</td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-900">
+                    <td className="px-6 py-3 text-sm text-right text-gray-900 dark:text-white">
                       {c.billed > 0 ? `${Math.round((c.collected / c.billed) * 100)}%` : '-'}
                     </td>
                   </tr>
@@ -594,8 +594,8 @@ function ARAgingSection({ data }: { data: ARAgingReport }) {
       </div>
 
       {/* Aging buckets chart */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Aging Distribution</h3>
+      <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Aging Distribution</h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -613,33 +613,33 @@ function ARAgingSection({ data }: { data: ARAgingReport }) {
 
       {/* By client table */}
       {data.byClient.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Aging by Client</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Aging by Client</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-[#0d1526]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Client</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Current</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">1-30</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">31-60</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">61-90</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">90+</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Client</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Current</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">1-30</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">31-60</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">61-90</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">90+</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Total</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
                 {data.byClient.slice(0, 15).map((c, i) => (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="px-6 py-3 text-sm font-medium text-gray-900">{c.name}</td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-900">{c.current > 0 ? formatCurrency(c.current) : '-'}</td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-900">{c.days_1_30 > 0 ? formatCurrency(c.days_1_30) : '-'}</td>
+                  <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#1f2937]">
+                    <td className="px-6 py-3 text-sm font-medium text-gray-900 dark:text-white">{c.name}</td>
+                    <td className="px-6 py-3 text-sm text-right text-gray-900 dark:text-white">{c.current > 0 ? formatCurrency(c.current) : '-'}</td>
+                    <td className="px-6 py-3 text-sm text-right text-gray-900 dark:text-white">{c.days_1_30 > 0 ? formatCurrency(c.days_1_30) : '-'}</td>
                     <td className="px-6 py-3 text-sm text-right text-amber-600">{c.days_31_60 > 0 ? formatCurrency(c.days_31_60) : '-'}</td>
                     <td className="px-6 py-3 text-sm text-right text-red-500">{c.days_61_90 > 0 ? formatCurrency(c.days_61_90) : '-'}</td>
                     <td className="px-6 py-3 text-sm text-right text-red-700 font-medium">{c.days_90_plus > 0 ? formatCurrency(c.days_90_plus) : '-'}</td>
-                    <td className="px-6 py-3 text-sm text-right font-semibold text-gray-900">{formatCurrency(c.total)}</td>
+                    <td className="px-6 py-3 text-sm text-right font-semibold text-gray-900 dark:text-white">{formatCurrency(c.total)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -666,8 +666,8 @@ function CollectionsSection({ data }: { data: CollectionsReport }) {
 
       {/* Collections by month */}
       {data.byMonth.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Collections by Month</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Collections by Month</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data.byMonth}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -683,8 +683,8 @@ function CollectionsSection({ data }: { data: CollectionsReport }) {
       <div className="grid md:grid-cols-2 gap-6">
         {/* By payment method */}
         {data.byMethod.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">By Payment Method</h3>
+          <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">By Payment Method</h3>
             <ResponsiveContainer width="100%" height={250}>
               <RPieChart>
                 <Pie
@@ -708,14 +708,14 @@ function CollectionsSection({ data }: { data: CollectionsReport }) {
 
         {/* Top paying clients */}
         {data.byClient.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Paying Clients</h3>
+          <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Paying Clients</h3>
             <div className="space-y-3">
               {data.byClient.slice(0, 8).map((c, i) => (
                 <div key={i} className="flex items-center justify-between">
                   <div className="flex items-center gap-2 min-w-0">
                     <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                    <span className="text-sm text-gray-700 truncate">{c.name}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{c.name}</span>
                   </div>
                   <span className="text-sm font-semibold text-green-600 flex-shrink-0 ml-4">{formatCurrency(c.amount)}</span>
                 </div>
@@ -744,8 +744,8 @@ function ProfitabilitySection({ data }: { data: ProfitabilityReport }) {
 
       {/* By case type chart */}
       {data.byCaseType.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Profitability by Case Type</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Profitability by Case Type</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data.byCaseType}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -762,34 +762,34 @@ function ProfitabilitySection({ data }: { data: ProfitabilityReport }) {
 
       {/* Case profitability table */}
       {data.cases.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Case Profitability Details</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Case Profitability Details</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-[#0d1526]">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Case</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Client</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Billed</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Collected</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Hours</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Eff. Rate</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Days</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Realization</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Case</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Client</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Billed</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Collected</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Hours</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Eff. Rate</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Days</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Realization</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
                 {data.cases.slice(0, 20).map((c, i) => (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm font-medium text-gray-900">{c.caseNumber || '-'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">{c.clientName}</td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-900">{formatCurrency(c.totalBilled)}</td>
+                  <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#1f2937]">
+                    <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{c.caseNumber || '-'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{c.clientName}</td>
+                    <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{formatCurrency(c.totalBilled)}</td>
                     <td className="px-4 py-3 text-sm text-right text-green-600">{formatCurrency(c.totalCollected)}</td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-900">{c.billableHours}h</td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-900">{formatCurrency(c.effectiveRate)}/hr</td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-900">{c.daysOpen}</td>
+                    <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{c.billableHours}h</td>
+                    <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{formatCurrency(c.effectiveRate)}/hr</td>
+                    <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{c.daysOpen}</td>
                     <td className="px-4 py-3 text-sm text-right">
                       <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${
                         c.realizationRate >= 80 ? 'bg-green-100 text-green-800' :
@@ -825,28 +825,28 @@ function TrustSection({ data }: { data: TrustAccountReport }) {
 
       {/* Trust accounts table */}
       {data.accounts.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Trust Account Balances</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Trust Account Balances</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-[#0d1526]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Client</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Case</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Balance</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Deposits</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Withdrawals</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Client</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Case</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Balance</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Deposits</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Withdrawals</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
                 {data.accounts.map((a, i) => (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="px-6 py-3 text-sm font-medium text-gray-900">{a.clientName}</td>
-                    <td className="px-6 py-3 text-sm text-gray-700">{a.caseNumber}</td>
-                    <td className="px-6 py-3 text-sm text-right font-semibold text-gray-900">{formatCurrency(a.balance)}</td>
+                  <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#1f2937]">
+                    <td className="px-6 py-3 text-sm font-medium text-gray-900 dark:text-white">{a.clientName}</td>
+                    <td className="px-6 py-3 text-sm text-gray-700 dark:text-gray-200">{a.caseNumber}</td>
+                    <td className="px-6 py-3 text-sm text-right font-semibold text-gray-900 dark:text-white">{formatCurrency(a.balance)}</td>
                     <td className="px-6 py-3 text-sm text-right text-green-600">{formatCurrency(a.totalDeposits)}</td>
                     <td className="px-6 py-3 text-sm text-right text-red-600">{formatCurrency(a.totalWithdrawals)}</td>
                     <td className="px-6 py-3 text-center">
@@ -870,26 +870,26 @@ function TrustSection({ data }: { data: TrustAccountReport }) {
 
       {/* Recent transactions */}
       {data.recentTransactions.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Recent Trust Transactions</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Trust Transactions</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-[#0d1526]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Client</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Balance After</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Client</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Type</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Amount</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Balance After</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
                 {data.recentTransactions.slice(0, 15).map((t, i) => (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="px-6 py-3 text-sm text-gray-700">{new Date(t.transactionDate).toLocaleDateString()}</td>
-                    <td className="px-6 py-3 text-sm font-medium text-gray-900">{t.clientName}</td>
+                  <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#1f2937]">
+                    <td className="px-6 py-3 text-sm text-gray-700 dark:text-gray-200">{new Date(t.transactionDate).toLocaleDateString()}</td>
+                    <td className="px-6 py-3 text-sm font-medium text-gray-900 dark:text-white">{t.clientName}</td>
                     <td className="px-6 py-3 text-sm">
                       <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${
                         t.transactionType === 'deposit' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -902,7 +902,7 @@ function TrustSection({ data }: { data: TrustAccountReport }) {
                     }`}>
                       {t.transactionType === 'deposit' ? '+' : '-'}{formatCurrency(Math.abs(t.amount))}
                     </td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-900">{formatCurrency(t.balanceAfter)}</td>
+                    <td className="px-6 py-3 text-sm text-right text-gray-900 dark:text-white">{formatCurrency(t.balanceAfter)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -937,24 +937,24 @@ function TeamComparisonSection({ data }: { data: TeamPerformanceReport }) {
 
       {/* Team averages */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-          <p className="text-xs text-gray-500 mb-1">Avg. Billable Hours</p>
-          <p className="text-xl font-bold text-gray-900">{data.teamAverages.avgBillableHours}h</p>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-4">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Avg. Billable Hours</p>
+          <p className="text-xl font-bold text-gray-900 dark:text-white">{data.teamAverages.avgBillableHours}h</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-          <p className="text-xs text-gray-500 mb-1">Avg. Utilization</p>
-          <p className="text-xl font-bold text-gray-900">{data.teamAverages.avgUtilizationRate}%</p>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-4">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Avg. Utilization</p>
+          <p className="text-xl font-bold text-gray-900 dark:text-white">{data.teamAverages.avgUtilizationRate}%</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-          <p className="text-xs text-gray-500 mb-1">Avg. Revenue</p>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-4">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Avg. Revenue</p>
           <p className="text-xl font-bold text-green-600">{formatCurrency(data.teamAverages.avgRevenueGenerated)}</p>
         </div>
       </div>
 
       {/* Comparison chart */}
       {chartData.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Attorney Comparison</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Attorney Comparison</h3>
           <ResponsiveContainer width="100%" height={320}>
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -972,42 +972,42 @@ function TeamComparisonSection({ data }: { data: TeamPerformanceReport }) {
 
       {/* Attorney detail table */}
       {data.attorneys.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Attorney Details</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Attorney Details</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-[#0d1526]">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Attorney</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Billable Hrs</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Utilization</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Active Cases</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Closed</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Revenue</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Collections</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Task Comp.</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Attorney</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Role</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Billable Hrs</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Utilization</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Active Cases</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Closed</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Revenue</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Collections</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Task Comp.</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
                 {data.attorneys.map((a, i) => (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm font-medium text-gray-900">{a.attorney.name}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 capitalize">{a.role.replace('_', ' ')}</td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-900">{a.productivity.billableHours}h</td>
+                  <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#1f2937]">
+                    <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{a.attorney.name}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-200 capitalize">{a.role.replace('_', ' ')}</td>
+                    <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{a.productivity.billableHours}h</td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <Progress value={a.productivity.utilizationRate} className="w-16" />
-                        <span className="text-sm text-gray-900">{a.productivity.utilizationRate}%</span>
+                        <span className="text-sm text-gray-900 dark:text-white">{a.productivity.utilizationRate}%</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-900">{a.caseManagement.activeCases}</td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-900">{a.caseManagement.casesClosedInPeriod}</td>
+                    <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{a.caseManagement.activeCases}</td>
+                    <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{a.caseManagement.casesClosedInPeriod}</td>
                     <td className="px-4 py-3 text-sm text-right font-semibold text-green-600">{formatCurrency(a.financial.revenueGenerated)}</td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-900">{formatCurrency(a.financial.collectionsGenerated)}</td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-900">{a.caseManagement.taskCompletionRate}%</td>
+                    <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{formatCurrency(a.financial.collectionsGenerated)}</td>
+                    <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-white">{a.caseManagement.taskCompletionRate}%</td>
                   </tr>
                 ))}
               </tbody>
@@ -1032,8 +1032,8 @@ function ProductivityTrendsSection({ data }: { data: ProductivityTrendReport }) 
       </div>
 
       {data.trends.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Monthly Trends</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Monthly Trends</h3>
           <ResponsiveContainer width="100%" height={350}>
             <LineChart data={data.trends}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -1051,27 +1051,27 @@ function ProductivityTrendsSection({ data }: { data: ProductivityTrendReport }) 
 
       {/* Trend table */}
       {data.trends.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Monthly Data</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Monthly Data</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-[#0d1526]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Month</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Billable Hours</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Revenue</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Eff. Rate</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Month</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Billable Hours</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Revenue</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Eff. Rate</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
                 {data.trends.map((t, i) => (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="px-6 py-3 text-sm font-medium text-gray-900">{t.month}</td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-900">{t.billableHours}h</td>
+                  <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#1f2937]">
+                    <td className="px-6 py-3 text-sm font-medium text-gray-900 dark:text-white">{t.month}</td>
+                    <td className="px-6 py-3 text-sm text-right text-gray-900 dark:text-white">{t.billableHours}h</td>
                     <td className="px-6 py-3 text-sm text-right text-green-600 font-medium">{formatCurrency(t.revenue)}</td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-900">
+                    <td className="px-6 py-3 text-sm text-right text-gray-900 dark:text-white">
                       {t.billableHours > 0 ? formatCurrency(Math.round(t.revenue / t.billableHours)) + '/hr' : '-'}
                     </td>
                   </tr>
@@ -1100,8 +1100,8 @@ function CaseLifecycleSection({ data }: { data: CaseLifecycleReport }) {
 
       {/* By case type chart */}
       {data.byCaseType.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Duration by Case Type</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Duration by Case Type</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data.byCaseType}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -1121,8 +1121,8 @@ function CaseLifecycleSection({ data }: { data: CaseLifecycleReport }) {
       {/* Stage distribution */}
       <div className="grid md:grid-cols-2 gap-6">
         {data.byStage.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Active Cases by Stage</h3>
+          <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Active Cases by Stage</h3>
             <ResponsiveContainer width="100%" height={250}>
               <RPieChart>
                 <Pie
@@ -1145,18 +1145,18 @@ function CaseLifecycleSection({ data }: { data: CaseLifecycleReport }) {
         )}
 
         {data.byCaseType.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Closed Cases by Type</h3>
+          <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Closed Cases by Type</h3>
             <div className="space-y-3">
               {data.byCaseType.map((t, i) => (
                 <div key={i} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                    <span className="text-sm text-gray-700">{t.caseType}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-200">{t.caseType}</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm font-semibold text-gray-900">{t.count} cases</span>
-                    <span className="text-xs text-gray-500 ml-2">({t.avgDays} days avg)</span>
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white">{t.count} cases</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">({t.avgDays} days avg)</span>
                   </div>
                 </div>
               ))}
@@ -1192,8 +1192,8 @@ function CaseOutcomesSection({ data }: { data: CaseOutcomesReport }) {
       {/* Outcomes pie chart */}
       <div className="grid md:grid-cols-2 gap-6">
         {outcomeData.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Case Outcomes</h3>
+          <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Case Outcomes</h3>
             <ResponsiveContainer width="100%" height={280}>
               <RPieChart>
                 <Pie
@@ -1217,18 +1217,18 @@ function CaseOutcomesSection({ data }: { data: CaseOutcomesReport }) {
         )}
 
         {/* Outcomes legend */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Outcome Summary</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Outcome Summary</h3>
           <div className="space-y-4">
             {outcomeData.map((d, i) => (
               <div key={i} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-4 h-4 rounded" style={{ backgroundColor: d.color }} />
-                  <span className="text-sm text-gray-700">{d.name}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-200">{d.name}</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-lg font-bold text-gray-900">{d.value}</span>
-                  <span className="text-sm text-gray-500 ml-2">
+                  <span className="text-lg font-bold text-gray-900 dark:text-white">{d.value}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
                     ({data.summary.totalCases > 0 ? Math.round((d.value / data.summary.totalCases) * 100) : 0}%)
                   </span>
                 </div>
@@ -1240,33 +1240,33 @@ function CaseOutcomesSection({ data }: { data: CaseOutcomesReport }) {
 
       {/* By case type */}
       {data.byCaseType.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Outcomes by Case Type</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Outcomes by Case Type</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-[#0d1526]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Case Type</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Settled</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Trial</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Dismissed</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Default</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Other</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Case Type</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Settled</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Trial</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Dismissed</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Default</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Other</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Total</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
                 {data.byCaseType.map((t, i) => (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="px-6 py-3 text-sm font-medium text-gray-900">{t.caseType}</td>
+                  <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#1f2937]">
+                    <td className="px-6 py-3 text-sm font-medium text-gray-900 dark:text-white">{t.caseType}</td>
                     <td className="px-6 py-3 text-sm text-right text-green-600">{t.settled}</td>
                     <td className="px-6 py-3 text-sm text-right text-blue-600">{t.trial}</td>
                     <td className="px-6 py-3 text-sm text-right text-amber-600">{t.dismissed}</td>
                     <td className="px-6 py-3 text-sm text-right text-purple-600">{t.defaultJudgment}</td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-600">{t.other}</td>
-                    <td className="px-6 py-3 text-sm text-right font-semibold text-gray-900">{t.total}</td>
+                    <td className="px-6 py-3 text-sm text-right text-gray-600 dark:text-gray-300">{t.other}</td>
+                    <td className="px-6 py-3 text-sm text-right font-semibold text-gray-900 dark:text-white">{t.total}</td>
                   </tr>
                 ))}
               </tbody>
@@ -1293,8 +1293,8 @@ function WorkloadSection({ data }: { data: WorkloadReport }) {
 
       {/* Workload by attorney chart */}
       {data.byAttorney.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Cases by Attorney</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Cases by Attorney</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data.byAttorney.map(a => ({ name: a.name.split(' ')[0], cases: a.caseCount }))}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -1314,8 +1314,8 @@ function WorkloadSection({ data }: { data: WorkloadReport }) {
       <div className="grid md:grid-cols-2 gap-6">
         {/* By phase */}
         {data.byPhase.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Cases by Phase</h3>
+          <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Cases by Phase</h3>
             <ResponsiveContainer width="100%" height={250}>
               <RPieChart>
                 <Pie
@@ -1339,8 +1339,8 @@ function WorkloadSection({ data }: { data: WorkloadReport }) {
 
         {/* By type */}
         {data.byType.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Cases by Type</h3>
+          <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Cases by Type</h3>
             <ResponsiveContainer width="100%" height={250}>
               <RPieChart>
                 <Pie
@@ -1365,26 +1365,26 @@ function WorkloadSection({ data }: { data: WorkloadReport }) {
 
       {/* Attorney workload table */}
       {data.byAttorney.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Attorney Workload Details</h3>
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Attorney Workload Details</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-[#0d1526]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Attorney</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Cases</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cases by Stage</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Attorney</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Role</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Cases</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Cases by Stage</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
                 {data.byAttorney.map((a, i) => (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="px-6 py-3 text-sm font-medium text-gray-900">{a.name}</td>
-                    <td className="px-6 py-3 text-sm text-gray-700 capitalize">{a.role.replace('_', ' ')}</td>
-                    <td className="px-6 py-3 text-sm text-right font-semibold text-gray-900">{a.caseCount}</td>
+                  <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#1f2937]">
+                    <td className="px-6 py-3 text-sm font-medium text-gray-900 dark:text-white">{a.name}</td>
+                    <td className="px-6 py-3 text-sm text-gray-700 dark:text-gray-200 capitalize">{a.role.replace('_', ' ')}</td>
+                    <td className="px-6 py-3 text-sm text-right font-semibold text-gray-900 dark:text-white">{a.caseCount}</td>
                     <td className="px-6 py-3">
                       <div className="flex flex-wrap gap-1">
                         {Object.entries(a.casesByStage).map(([stage, count]) => (
@@ -1404,7 +1404,7 @@ function WorkloadSection({ data }: { data: WorkloadReport }) {
 
       {/* Unassigned cases */}
       {data.unassignedCases.length > 0 && (
-        <div className="bg-white rounded-xl border border-red-200 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-red-200 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-red-200 bg-red-50">
             <h3 className="text-lg font-semibold text-red-900 flex items-center gap-2">
               <AlertTriangle className="w-5 h-5" />
@@ -1413,25 +1413,25 @@ function WorkloadSection({ data }: { data: WorkloadReport }) {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-[#0d1526]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Case Number</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Client</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stage</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Case Number</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Client</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Stage</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Created</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
                 {data.unassignedCases.map((c, i) => (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="px-6 py-3 text-sm font-medium text-gray-900">{c.caseNumber || '-'}</td>
-                    <td className="px-6 py-3 text-sm text-gray-700">{c.clientName}</td>
+                  <tr key={i} className="hover:bg-gray-50 dark:hover:bg-[#1f2937]">
+                    <td className="px-6 py-3 text-sm font-medium text-gray-900 dark:text-white">{c.caseNumber || '-'}</td>
+                    <td className="px-6 py-3 text-sm text-gray-700 dark:text-gray-200">{c.clientName}</td>
                     <td className="px-6 py-3 text-sm">
-                      <span className="inline-flex px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-700 capitalize">
+                      <span className="inline-flex px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 dark:bg-[#1f2937] text-gray-700 dark:text-gray-200 capitalize">
                         {c.caseStage.replace('_', ' ')}
                       </span>
                     </td>
-                    <td className="px-6 py-3 text-sm text-gray-700">{new Date(c.createdAt).toLocaleDateString()}</td>
+                    <td className="px-6 py-3 text-sm text-gray-700 dark:text-gray-200">{new Date(c.createdAt).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>
@@ -1464,12 +1464,12 @@ function MetricCard({ label, value, icon: Icon, color }: {
   const c = colorMap[color] || colorMap.blue
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+    <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-4">
       <div className="flex items-center gap-3 mb-2">
         <div className={`w-8 h-8 ${c.bg} rounded-lg flex items-center justify-center`}>
           <Icon className={`w-4 h-4 ${c.icon}`} />
         </div>
-        <span className="text-xs text-gray-500">{label}</span>
+        <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
       </div>
       <p className={`text-xl font-bold ${c.text}`}>{value}</p>
     </div>
@@ -1510,8 +1510,8 @@ function ScheduledReportsSection({ schedules, loading, runningId, showCreate, on
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Scheduled Reports</h2>
-          <p className="text-sm text-gray-600">Automatically generate and deliver reports</p>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Scheduled Reports</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-300">Automatically generate and deliver reports</p>
         </div>
         <button
           onClick={() => onShowCreate(true)}
@@ -1523,10 +1523,10 @@ function ScheduledReportsSection({ schedules, loading, runningId, showCreate, on
       </div>
 
       {schedules.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center">
+        <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-12 text-center">
           <Calendar className="mx-auto w-16 h-16 text-gray-300 mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Scheduled Reports</h3>
-          <p className="text-gray-600 mb-4">Set up automated reports to be delivered to your inbox</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Scheduled Reports</h3>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">Set up automated reports to be delivered to your inbox</p>
           <button
             onClick={() => onShowCreate(true)}
             className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
@@ -1537,7 +1537,7 @@ function ScheduledReportsSection({ schedules, loading, runningId, showCreate, on
       ) : (
         <div className="space-y-4">
           {schedules.map((schedule) => (
-            <div key={schedule.id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <div key={schedule.id} className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-5">
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
                   <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
@@ -1547,7 +1547,7 @@ function ScheduledReportsSection({ schedules, loading, runningId, showCreate, on
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-gray-900">{schedule.schedule_name}</h3>
+                      <h3 className="font-semibold text-gray-900 dark:text-white">{schedule.schedule_name}</h3>
                       <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${
                         schedule.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
                       }`}>
@@ -1557,13 +1557,13 @@ function ScheduledReportsSection({ schedules, loading, runningId, showCreate, on
                         {(schedule.export_format || 'pdf').toUpperCase()}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
                       {frequencyLabels[schedule.frequency] || schedule.frequency}
                       {schedule.frequency === 'weekly' && ` on ${dayLabels[schedule.day_of_week] || 'Mon'}`}
                       {schedule.frequency === 'monthly' && ` on day ${schedule.day_of_month || 1}`}
                       {' at '}{schedule.time_of_day || '08:00'}
                     </p>
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
+                    <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                       <span>{schedule.recipients?.length || 0} recipients</span>
                       {schedule.last_run_at && (
                         <span>Last run: {new Date(schedule.last_run_at).toLocaleDateString()}</span>
@@ -1583,7 +1583,7 @@ function ScheduledReportsSection({ schedules, loading, runningId, showCreate, on
                   <button
                     onClick={() => onRunNow(schedule.id)}
                     disabled={runningId === schedule.id}
-                    className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+                    className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium border border-gray-300 dark:border-[#374151] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937] disabled:opacity-50"
                   >
                     {runningId === schedule.id ? (
                       <Loader2 className="w-3 h-3 animate-spin" />
@@ -1594,14 +1594,14 @@ function ScheduledReportsSection({ schedules, loading, runningId, showCreate, on
                   </button>
                   <button
                     onClick={() => onToggle(schedule.id, schedule.is_active)}
-                    className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-50"
+                    className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937]"
                     title={schedule.is_active ? 'Pause' : 'Resume'}
                   >
                     {schedule.is_active ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                   </button>
                   <button
                     onClick={() => onDelete(schedule.id)}
-                    className="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-50"
+                    className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-red-600 rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937]"
                     title="Delete"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -1683,10 +1683,10 @@ function CreateScheduleModal({ onClose, onCreated }: {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-gray-900">Create Scheduled Report</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+      <div className="bg-white dark:bg-[#111827] rounded-xl shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b border-gray-200 dark:border-[#1f2937] flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Create Scheduled Report</h3>
+          <button onClick={onClose} className="text-gray-400 dark:text-gray-500 hover:text-gray-600">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -1694,22 +1694,22 @@ function CreateScheduleModal({ onClose, onCreated }: {
         <div className="p-6 space-y-4">
           {/* Schedule name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Schedule Name</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Schedule Name</label>
             <input
               value={formData.schedule_name}
               onChange={(e) => setFormData({ ...formData, schedule_name: e.target.value })}
               placeholder="e.g., Weekly Revenue Report"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
             />
           </div>
 
           {/* Report type */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Report Type</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Report Type</label>
             <select
               value={formData.report_type}
               onChange={(e) => setFormData({ ...formData, report_type: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
             >
               {reportTypes.map(rt => (
                 <option key={rt.value} value={rt.value}>{rt.label}</option>
@@ -1720,11 +1720,11 @@ function CreateScheduleModal({ onClose, onCreated }: {
           {/* Frequency and day */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Frequency</label>
               <select
                 value={formData.frequency}
                 onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
               >
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
@@ -1736,11 +1736,11 @@ function CreateScheduleModal({ onClose, onCreated }: {
 
             {formData.frequency === 'weekly' || formData.frequency === 'biweekly' ? (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Day of Week</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Day of Week</label>
                 <select
                   value={formData.day_of_week}
                   onChange={(e) => setFormData({ ...formData, day_of_week: Number(e.target.value) })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 >
                   {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day, i) => (
                     <option key={i} value={i}>{day}</option>
@@ -1749,11 +1749,11 @@ function CreateScheduleModal({ onClose, onCreated }: {
               </div>
             ) : formData.frequency === 'monthly' || formData.frequency === 'quarterly' ? (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Day of Month</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Day of Month</label>
                 <select
                   value={formData.day_of_month}
                   onChange={(e) => setFormData({ ...formData, day_of_month: Number(e.target.value) })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 >
                   {Array.from({ length: 28 }, (_, i) => (
                     <option key={i + 1} value={i + 1}>{i + 1}</option>
@@ -1766,20 +1766,20 @@ function CreateScheduleModal({ onClose, onCreated }: {
           {/* Time and format */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Time</label>
               <input
                 type="time"
                 value={formData.time_of_day}
                 onChange={(e) => setFormData({ ...formData, time_of_day: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Format</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Format</label>
               <select
                 value={formData.export_format}
                 onChange={(e) => setFormData({ ...formData, export_format: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
               >
                 <option value="pdf">PDF</option>
                 <option value="excel">Excel</option>
@@ -1790,11 +1790,11 @@ function CreateScheduleModal({ onClose, onCreated }: {
 
           {/* Date range for report */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Report Date Range</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Report Date Range</label>
             <select
               value={formData.filters.date_range}
               onChange={(e) => setFormData({ ...formData, filters: { ...formData.filters, date_range: e.target.value } })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
             >
               {dateRangeOptions.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -1804,7 +1804,7 @@ function CreateScheduleModal({ onClose, onCreated }: {
 
           {/* Recipients */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Recipients</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Recipients</label>
             <div className="space-y-2">
               {formData.recipients.map((email, index) => (
                 <div key={index} className="flex gap-2">
@@ -1817,7 +1817,7 @@ function CreateScheduleModal({ onClose, onCreated }: {
                       setFormData({ ...formData, recipients: updated })
                     }}
                     placeholder="email@example.com"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                   />
                   {formData.recipients.length > 1 && (
                     <button
@@ -1827,7 +1827,7 @@ function CreateScheduleModal({ onClose, onCreated }: {
                           recipients: formData.recipients.filter((_, i) => i !== index),
                         })
                       }}
-                      className="p-2 text-gray-400 hover:text-red-500"
+                      className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-500"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -1844,10 +1844,10 @@ function CreateScheduleModal({ onClose, onCreated }: {
           </div>
         </div>
 
-        <div className="p-6 border-t border-gray-200 flex gap-3 justify-end">
+        <div className="p-6 border-t border-gray-200 dark:border-[#1f2937] flex gap-3 justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-[#374151] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937]"
           >
             Cancel
           </button>

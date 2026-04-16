@@ -611,7 +611,7 @@ export default function DocumentsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <main className="flex-1 overflow-auto">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -625,7 +625,7 @@ export default function DocumentsPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
 
       <main className="flex-1 overflow-auto">
@@ -633,14 +633,14 @@ export default function DocumentsPage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Documents</h1>
-              <p className="mt-2 text-gray-600">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Documents</h1>
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
                 {filteredDocuments.length} document{filteredDocuments.length !== 1 ? 's' : ''} found
               </p>
             </div>
             <div className="flex items-center gap-3">
               {/* View Toggle */}
-              <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
+              <div className="flex items-center gap-1 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-1">
                 <button
                   onClick={() => handleViewModeChange('grid')}
                   className={`p-2 rounded transition-colors ${
@@ -773,7 +773,7 @@ export default function DocumentsPage() {
                       setShowBulkTag(false)
                       setBulkTagIds([])
                     }}
-                    className="px-3 py-1.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
+                    className="px-3 py-1.5 bg-white dark:bg-[#111827] text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-[#374151] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937] transition-colors text-sm font-medium"
                   >
                     Cancel
                   </button>
@@ -783,11 +783,11 @@ export default function DocumentsPage() {
               {/* Bulk Categorize Panel */}
               {showBulkCategorize && (
                 <div className="flex items-center gap-3 pt-3 border-t border-blue-200">
-                  <label className="text-sm font-medium text-gray-700">Set category:</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Set category:</label>
                   <select
                     value={bulkCategory}
                     onChange={(e) => setBulkCategory(e.target.value)}
-                    className="px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="px-3 py-1.5 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                   >
                     <option value="">Select category...</option>
                     {DOCUMENT_CATEGORIES.map((cat) => (
@@ -809,11 +809,11 @@ export default function DocumentsPage() {
               {/* Bulk Reassign Panel */}
               {showBulkReassign && (
                 <div className="flex items-center gap-3 pt-3 border-t border-blue-200">
-                  <label className="text-sm font-medium text-gray-700">Move to case:</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Move to case:</label>
                   <select
                     value={bulkCaseId}
                     onChange={(e) => setBulkCaseId(e.target.value)}
-                    className="px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="px-3 py-1.5 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                   >
                     <option value="">Select case...</option>
                     {cases.map((c) => (
@@ -835,7 +835,7 @@ export default function DocumentsPage() {
               {/* Bulk Tag Panel */}
               {showBulkTag && (
                 <div className="flex items-center gap-3 pt-3 border-t border-blue-200">
-                  <label className="text-sm font-medium text-gray-700">Add tags:</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Add tags:</label>
                   <TagFilterBar
                     selectedTagIds={bulkTagIds}
                     onTagsChange={setBulkTagIds}
@@ -855,16 +855,16 @@ export default function DocumentsPage() {
           {/* Upload Section */}
           {showUpload && cases.length > 0 && (
             <div className="mb-8">
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Upload New Documents</h2>
+              <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-6">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Upload New Documents</h2>
                 {selectedCase === 'all' ? (
                   <div className="text-center py-6">
-                    <FolderOpen className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-                    <p className="text-gray-700 font-medium mb-1">Select a case first</p>
-                    <p className="text-sm text-gray-500 mb-4">Documents must be assigned to a case. Use the case filter above to select one.</p>
+                    <FolderOpen className="w-10 h-10 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
+                    <p className="text-gray-700 dark:text-gray-200 font-medium mb-1">Select a case first</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Documents must be assigned to a case. Use the case filter above to select one.</p>
                     <select
                       onChange={(e) => { if (e.target.value) setSelectedCase(e.target.value) }}
-                      className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       defaultValue=""
                     >
                       <option value="" disabled>Choose a case...</option>
@@ -887,22 +887,22 @@ export default function DocumentsPage() {
           )}
 
           {/* Search and Filter Bar */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+          <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-4 mb-6">
             {/* Top Row - Search and Filter Toggle */}
             <div className="flex gap-4 mb-4">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
                 <input
                   type="text"
                   placeholder="Search documents..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -929,7 +929,7 @@ export default function DocumentsPage() {
               {userRole === 'admin' && filteredDocuments.length > 0 && (
                 <button
                   onClick={toggleSelectAll}
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium flex items-center gap-2"
+                  className="px-4 py-2 bg-gray-100 dark:bg-[#1f2937] text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-[#374151] transition-colors font-medium flex items-center gap-2"
                 >
                   {selectedDocs.size === filteredDocuments.length ? (
                     <CheckSquare className="w-5 h-5 text-blue-600" />
@@ -943,13 +943,13 @@ export default function DocumentsPage() {
 
             {/* Expanded Filters */}
             {showFilters && (
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-gray-200 dark:border-[#1f2937]">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                   {/* Case Filter */}
                   <select
                     value={selectedCase}
                     onChange={(e) => setSelectedCase(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="all">All Cases</option>
                     {cases.map((case_) => (
@@ -963,7 +963,7 @@ export default function DocumentsPage() {
                   <select
                     value={categoryFilter}
                     onChange={(e) => setCategoryFilter(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="all">All Categories</option>
                     {DOCUMENT_CATEGORIES.map((cat) => (
@@ -977,7 +977,7 @@ export default function DocumentsPage() {
                   <select
                     value={dateFilter}
                     onChange={(e) => setDateFilter(e.target.value as DateFilter)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="all">All Time</option>
                     <option value="7days">Last 7 Days</option>
@@ -990,7 +990,7 @@ export default function DocumentsPage() {
                     <select
                       value={uploaderFilter}
                       onChange={(e) => setUploaderFilter(e.target.value as UploaderFilter)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="all">All Uploaders</option>
                       <option value="me">Uploaded by Me</option>
@@ -1003,7 +1003,7 @@ export default function DocumentsPage() {
                     <select
                       value={sharedFilter}
                       onChange={(e) => setSharedFilter(e.target.value as SharedFilter)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="all">All Documents</option>
                       <option value="shared">Shared with Client</option>
@@ -1016,7 +1016,7 @@ export default function DocumentsPage() {
                     <select
                       value={archiveFilter}
                       onChange={(e) => setArchiveFilter(e.target.value as ArchiveFilter)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="active">Active Documents</option>
                       <option value="archived">Archived Only</option>
@@ -1026,7 +1026,7 @@ export default function DocumentsPage() {
                 </div>
 
                 {/* Tag Filter */}
-                <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-[#1f2937]">
                   <TagFilterBar
                     selectedTagIds={tagFilter}
                     onTagsChange={setTagFilter}
@@ -1057,7 +1057,7 @@ export default function DocumentsPage() {
             <>
               {/* Sort Controls */}
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-sm text-gray-600">Sort by:</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">Sort by:</span>
                 {[
                   { field: 'name' as SortField, label: 'Name' },
                   { field: 'date' as SortField, label: 'Date' },
@@ -1083,10 +1083,10 @@ export default function DocumentsPage() {
 
               {/* Documents Display */}
           {filteredDocuments.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-              <FolderOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No documents found</h3>
-              <p className="text-gray-500 mb-4">
+            <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-12 text-center">
+              <FolderOpen className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No documents found</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-4">
                 {searchQuery || hasActiveFilters() 
                   ? 'Try adjusting your search terms or filters' 
                   : 'Upload your first document to get started'}
@@ -1125,7 +1125,7 @@ export default function DocumentsPage() {
                           {selectedDocs.has(doc.id) ? (
                             <CheckSquare className="w-5 h-5 text-blue-600" />
                           ) : (
-                            <Square className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                            <Square className="w-5 h-5 text-gray-400 dark:text-gray-500 hover:text-gray-600" />
                           )}
                         </button>
                       )}
@@ -1133,10 +1133,10 @@ export default function DocumentsPage() {
                         <FileText className="w-5 h-5 text-blue-600" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-sm font-medium text-gray-900 truncate">
+                        <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate">
                           {doc.original_filename}
                         </h3>
-                        <p className="text-xs text-gray-500">{formatFileSize(doc.file_size)}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{formatFileSize(doc.file_size)}</p>
                       </div>
                     </div>
 
@@ -1151,12 +1151,12 @@ export default function DocumentsPage() {
                     </div>
 
                     {doc.description && (
-                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
                         {doc.description}
                       </p>
                     )}
 
-                    <div className="space-y-1 mb-3 text-xs text-gray-500">
+                    <div className="space-y-1 mb-3 text-xs text-gray-500 dark:text-gray-400">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         <span>{formatDate(doc.uploaded_at)}</span>
@@ -1175,7 +1175,7 @@ export default function DocumentsPage() {
                       )}
                     </div>
 
-                    <div className="flex items-center gap-2 pt-3 border-t border-gray-200">
+                    <div className="flex items-center gap-2 pt-3 border-t border-gray-200 dark:border-[#1f2937]">
                       <button
                         onClick={() => setPreviewDoc(doc)}
                         className="flex-1 px-3 py-1.5 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center justify-center gap-1"
@@ -1185,7 +1185,7 @@ export default function DocumentsPage() {
                       </button>
                       <button
                         onClick={() => handleDownload(doc)}
-                        className="flex-1 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors flex items-center justify-center gap-1"
+                        className="flex-1 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#1f2937] rounded-lg transition-colors flex items-center justify-center gap-1"
                       >
                         <Download className="w-4 h-4" />
                         Download
@@ -1197,10 +1197,10 @@ export default function DocumentsPage() {
             </div>
           ) : (
             /* List/Table View */
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-gray-50 dark:bg-[#0d1526] border-b border-gray-200 dark:border-[#1f2937]">
                     <tr>
                       {userRole === 'admin' && (
                         <th className="px-4 py-3 text-left w-12">
@@ -1208,45 +1208,45 @@ export default function DocumentsPage() {
                             {selectedDocs.size === filteredDocuments.length ? (
                               <CheckSquare className="w-5 h-5 text-blue-600" />
                             ) : (
-                              <Square className="w-5 h-5 text-gray-400" />
+                              <Square className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                             )}
                           </button>
                         </th>
                       )}
                       <th className="px-4 py-3 text-left w-12"></th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                         Name
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                         Category
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                         Tags
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                         Size
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                         Uploaded
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                         Status
                       </th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-gray-200 dark:divide-[#1f2937]">
                     {filteredDocuments.map((doc) => (
-                      <tr key={doc.id} className="hover:bg-gray-50 transition-colors">
+                      <tr key={doc.id} className="hover:bg-gray-50 dark:hover:bg-[#1f2937] transition-colors">
                         {userRole === 'admin' && (
                           <td className="px-4 py-3">
                             <button onClick={() => toggleSelectDoc(doc.id)}>
                               {selectedDocs.has(doc.id) ? (
                                 <CheckSquare className="w-5 h-5 text-blue-600" />
                               ) : (
-                                <Square className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                                <Square className="w-5 h-5 text-gray-400 dark:text-gray-500 hover:text-gray-600" />
                               )}
                             </button>
                           </td>
@@ -1258,9 +1258,9 @@ export default function DocumentsPage() {
                         </td>
                         <td className="px-4 py-3">
                           <div>
-                            <p className="text-sm font-medium text-gray-900">{doc.original_filename}</p>
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">{doc.original_filename}</p>
                             {doc.description && (
-                              <p className="text-xs text-gray-500 truncate max-w-xs">{doc.description}</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">{doc.description}</p>
                             )}
                           </div>
                         </td>
@@ -1275,10 +1275,10 @@ export default function DocumentsPage() {
                             maxVisible={2}
                           />
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-600">
+                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
                           {formatFileSize(doc.file_size)}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-600">
+                        <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
                           {formatDate(doc.uploaded_at)}
                         </td>
                         <td className="px-4 py-3">
@@ -1308,7 +1308,7 @@ export default function DocumentsPage() {
                             </button>
                             <button
                               onClick={() => handleDownload(doc)}
-                              className="p-1.5 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                              className="p-1.5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1f2937] rounded transition-colors"
                               title="Download"
                             >
                               <Download className="w-4 h-4" />

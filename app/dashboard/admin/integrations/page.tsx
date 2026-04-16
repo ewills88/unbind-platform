@@ -82,8 +82,8 @@ export default function AdminIntegrationsPage() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Integrations</h1>
-        <p className="text-gray-600 mt-1">Connect third-party services to your firm</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Integrations</h1>
+        <p className="text-gray-600 dark:text-gray-300 mt-1">Connect third-party services to your firm</p>
       </div>
 
       {error && (
@@ -95,7 +95,7 @@ export default function AdminIntegrationsPage() {
 
       {categories.map(category => (
         <div key={category} className="mb-8">
-          <h2 className="text-sm font-semibold text-gray-500 uppercase mb-3">{category}</h2>
+          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase mb-3">{category}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {ALL_INTEGRATIONS.filter(i => i.category === category).map(integration => {
               const status = getStatus(integration.type)
@@ -104,15 +104,15 @@ export default function AdminIntegrationsPage() {
               const Icon = ICON_MAP[integration.icon] || Puzzle
 
               return (
-                <div key={integration.type} className="bg-white border border-gray-200 rounded-lg p-4">
+                <div key={integration.type} className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <Icon className="w-5 h-5 text-gray-600" />
+                      <div className="w-10 h-10 bg-gray-100 dark:bg-[#1f2937] rounded-lg flex items-center justify-center">
+                        <Icon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-semibold text-gray-900">{integration.name}</h3>
-                        <p className="text-xs text-gray-500">{integration.description}</p>
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{integration.name}</h3>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{integration.description}</p>
                       </div>
                     </div>
                   </div>
@@ -135,7 +135,7 @@ export default function AdminIntegrationsPage() {
                   </div>
 
                   {status?.last_sync_at && (
-                    <p className="text-xs text-gray-400 mt-2">
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
                       Last sync: {new Date(status.last_sync_at).toLocaleString()}
                     </p>
                   )}

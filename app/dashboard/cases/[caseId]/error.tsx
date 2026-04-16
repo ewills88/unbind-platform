@@ -12,10 +12,10 @@ export default function CaseDetailError({
   const router = useRouter()
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0d1526]">
       <div className="text-center p-8 max-w-md">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Error Loading Case</h2>
-        <p className="text-gray-600 mb-6">{error.message || 'Something went wrong loading this case.'}</p>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error Loading Case</h2>
+        <p className="text-gray-600 dark:text-gray-300 mb-6">{error.message || 'Something went wrong loading this case.'}</p>
         <div className="flex gap-3 justify-center">
           <button
             onClick={() => reset()}
@@ -25,7 +25,7 @@ export default function CaseDetailError({
           </button>
           <button
             onClick={() => router.push('/dashboard/cases')}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+            className="px-4 py-2 bg-gray-200 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300"
           >
             Back to Cases
           </button>

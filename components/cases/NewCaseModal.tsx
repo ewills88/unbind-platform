@@ -127,34 +127,34 @@ export default function NewCaseModal({ open, onOpenChange, onCaseCreated }: NewC
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Client Name *</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Client Name *</label>
               <input
                 type="text"
                 value={form.clientName}
                 onChange={(e) => setForm({ ...form, clientName: e.target.value })}
                 placeholder="e.g. Jane Smith"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Spouse Name *</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Spouse Name *</label>
               <input
                 type="text"
                 value={form.spouseName}
                 onChange={(e) => setForm({ ...form, spouseName: e.target.value })}
                 placeholder="e.g. John Smith"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">State *</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">State *</label>
               <select
                 value={form.state}
                 onChange={(e) => setForm({ ...form, state: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               >
                 {allStates.map((s) => (
                   <option key={s.code} value={s.code}>{s.name}</option>
@@ -162,11 +162,11 @@ export default function NewCaseModal({ open, onOpenChange, onCaseCreated }: NewC
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Case Type</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Case Type</label>
               <select
                 value={form.caseType}
                 onChange={(e) => setForm({ ...form, caseType: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               >
                 <option value="dissolution">Dissolution of Marriage</option>
                 <option value="legal_separation">Legal Separation</option>
@@ -176,11 +176,11 @@ export default function NewCaseModal({ open, onOpenChange, onCaseCreated }: NewC
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Initial Status</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Initial Status</label>
             <select
               value={form.status}
               onChange={(e) => setForm({ ...form, status: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             >
               <option value="consultation">Consultation</option>
               <option value="active">Active</option>
@@ -188,20 +188,20 @@ export default function NewCaseModal({ open, onOpenChange, onCaseCreated }: NewC
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Notes</label>
             <textarea
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               placeholder="Any initial notes about this case..."
               rows={2}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
             />
           </div>
 
           <div className="flex justify-end gap-3 pt-2">
             <button
               onClick={handleClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#1f2937] rounded-lg transition-colors"
             >
               Cancel
             </button>

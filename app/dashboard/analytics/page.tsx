@@ -129,7 +129,7 @@ export default function AnalyticsDashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <main className="flex-1 flex items-center justify-center">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
@@ -139,21 +139,21 @@ export default function AnalyticsDashboardPage() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-7xl mx-auto p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Analytics & Reporting</h1>
-              <p className="text-sm text-gray-500 mt-0.5">Comprehensive firm performance analytics</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Analytics & Reporting</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Comprehensive firm performance analytics</p>
             </div>
             <div className="flex items-center gap-3">
               <select
                 value={timeRange}
                 onChange={e => setTimeRange(e.target.value as 'month' | 'quarter' | 'year')}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-3 py-2 border border-gray-200 dark:border-[#1f2937] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="month">This Month</option>
                 <option value="quarter">This Quarter</option>
@@ -163,7 +163,7 @@ export default function AnalyticsDashboardPage() {
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-1 bg-gray-100 rounded-lg p-1 mb-6">
+          <div className="flex gap-1 bg-gray-100 dark:bg-[#1f2937] rounded-lg p-1 mb-6">
             {TABS.map(tab => (
               <button
                 key={tab.key}
@@ -197,18 +197,18 @@ export default function AnalyticsDashboardPage() {
                         key={kpi.metric_key}
                         className={`p-3 rounded-lg border ${getKPIStatusBg(kpi.status)}`}
                       >
-                        <p className="text-xs text-gray-600 mb-1 truncate">{kpi.label}</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-300 mb-1 truncate">{kpi.label}</p>
                         <p className={`text-lg font-bold ${getKPIStatusColor(kpi.status)}`}>
                           {formatMetricValue(kpi.current_value, kpi.format)}
                         </p>
                         <div className="flex items-center justify-between mt-1">
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
                             Target: {formatMetricValue(kpi.target_value, kpi.format)}
                           </span>
                           <div className="flex items-center">
                             {kpi.trend === 'up' && <ArrowUpRight className="w-3 h-3 text-green-500" />}
                             {kpi.trend === 'down' && <ArrowDownRight className="w-3 h-3 text-red-500" />}
-                            {kpi.trend === 'flat' && <Minus className="w-3 h-3 text-gray-400" />}
+                            {kpi.trend === 'flat' && <Minus className="w-3 h-3 text-gray-400 dark:text-gray-500" />}
                           </div>
                         </div>
                         {/* Progress bar */}
@@ -357,7 +357,7 @@ export default function AnalyticsDashboardPage() {
                     <div className="space-y-6">
                       {/* By Stage */}
                       <div>
-                        <h4 className="text-sm font-medium text-gray-700 mb-3">By Stage</h4>
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-3">By Stage</h4>
                         <div className="space-y-2">
                           {caseAnalytics.by_stage.map(stage => {
                             const total = caseAnalytics.by_stage.reduce((s, st) => s + st.count, 0)
@@ -365,10 +365,10 @@ export default function AnalyticsDashboardPage() {
                             return (
                               <div key={stage.stage}>
                                 <div className="flex justify-between text-sm mb-0.5">
-                                  <span className="text-gray-700">{stage.label}</span>
-                                  <span className="text-gray-500">{stage.count} ({Math.round(pct)}%)</span>
+                                  <span className="text-gray-700 dark:text-gray-200">{stage.label}</span>
+                                  <span className="text-gray-500 dark:text-gray-400">{stage.count} ({Math.round(pct)}%)</span>
                                 </div>
-                                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                <div className="h-2 bg-gray-100 dark:bg-[#1f2937] rounded-full overflow-hidden">
                                   <div
                                     className="h-full bg-blue-500 rounded-full"
                                     style={{ width: `${pct}%` }}
@@ -383,7 +383,7 @@ export default function AnalyticsDashboardPage() {
                       {/* By Type (Pie) */}
                       {caseAnalytics.by_type.length > 0 && (
                         <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-3">By Type</h4>
+                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-3">By Type</h4>
                           <ResponsiveContainer width="100%" height={200}>
                             <RPieChart>
                               <Pie
@@ -408,25 +408,25 @@ export default function AnalyticsDashboardPage() {
                       )}
 
                       {/* Summary stats */}
-                      <div className="grid grid-cols-3 gap-3 pt-3 border-t border-gray-100">
+                      <div className="grid grid-cols-3 gap-3 pt-3 border-t border-gray-100 dark:border-[#1f2937]">
                         <div className="text-center">
-                          <p className="text-lg font-bold text-gray-900">{caseAnalytics.avg_duration_days}</p>
-                          <p className="text-xs text-gray-500">Avg Duration (days)</p>
+                          <p className="text-lg font-bold text-gray-900 dark:text-white">{caseAnalytics.avg_duration_days}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">Avg Duration (days)</p>
                         </div>
                         <div className="text-center">
                           <p className="text-lg font-bold text-green-600">{caseAnalytics.open_rate}</p>
-                          <p className="text-xs text-gray-500">Opened This Month</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">Opened This Month</p>
                         </div>
                         <div className="text-center">
                           <p className="text-lg font-bold text-blue-600">{caseAnalytics.close_rate}</p>
-                          <p className="text-xs text-gray-500">Closed This Month</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">Closed This Month</p>
                         </div>
                       </div>
 
                       {/* Case Aging */}
                       {caseAnalytics.aging.length > 0 && (
                         <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-3">Case Aging</h4>
+                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-3">Case Aging</h4>
                           <ResponsiveContainer width="100%" height={160}>
                             <BarChart data={caseAnalytics.aging}>
                               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -454,7 +454,7 @@ export default function AnalyticsDashboardPage() {
                   {leaderboard.length > 0 ? (
                     <div className="space-y-3">
                       {leaderboard.map((attorney) => (
-                        <div key={attorney.user_id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                        <div key={attorney.user_id} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-[#0d1526] rounded-lg">
                           <div className="flex items-center gap-2 w-8">
                             {attorney.rank <= 3 ? (
                               <span className={`text-sm font-bold ${
@@ -465,15 +465,15 @@ export default function AnalyticsDashboardPage() {
                                 #{attorney.rank}
                               </span>
                             ) : (
-                              <span className="text-sm text-gray-400">#{attorney.rank}</span>
+                              <span className="text-sm text-gray-400 dark:text-gray-500">#{attorney.rank}</span>
                             )}
                           </div>
                           <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
                             <span className="text-white font-semibold text-xs">{attorney.initials}</span>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">{attorney.full_name}</p>
-                            <div className="flex items-center gap-3 text-xs text-gray-500">
+                            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{attorney.full_name}</p>
+                            <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
                               <span>{attorney.active_cases} cases</span>
                               <span>{attorney.billable_hours}h</span>
                               <span>{attorney.utilization_rate}% util</span>
@@ -481,14 +481,14 @@ export default function AnalyticsDashboardPage() {
                           </div>
                           <div className="text-right">
                             <p className="text-sm font-bold text-green-600">{formatCurrency(attorney.revenue)}</p>
-                            <p className="text-xs text-gray-500">{attorney.collection_rate}% collected</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">{attorney.collection_rate}% collected</p>
                           </div>
                         </div>
                       ))}
 
                       <Link
                         href="/dashboard/reports/performance"
-                        className="block w-full px-4 py-2 text-center text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="block w-full px-4 py-2 text-center text-sm font-medium text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-[#1f2937] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937] transition-colors"
                       >
                         View Detailed Performance Report
                       </Link>
@@ -505,15 +505,15 @@ export default function AnalyticsDashboardPage() {
           {activeTab === 'reports' && (
             <div className="space-y-6">
               {/* Report Generator */}
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Generate Report</h2>
+              <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-6">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Generate Report</h2>
                 <div className="grid md:grid-cols-4 gap-4 mb-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Report Type</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Report Type</label>
                     <select
                       value={reportType}
                       onChange={e => setReportType(e.target.value as ReportType)}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-200 dark:border-[#1f2937] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       {Object.entries(REPORT_TYPE_INFO).filter(([k]) => k !== 'custom').map(([key, info]) => (
                         <option key={key} value={key}>{info.label}</option>
@@ -521,11 +521,11 @@ export default function AnalyticsDashboardPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Date Range</label>
                     <select
                       value={reportDateRange}
                       onChange={e => setReportDateRange(e.target.value as DateRangePreset)}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-200 dark:border-[#1f2937] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       {Object.entries(DATE_RANGE_PRESETS).filter(([k]) => k !== 'custom').map(([key, info]) => (
                         <option key={key} value={key}>{info.label}</option>
@@ -533,11 +533,11 @@ export default function AnalyticsDashboardPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Group By</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Group By</label>
                     <select
                       value={reportGroupBy}
                       onChange={e => setReportGroupBy(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-200 dark:border-[#1f2937] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="none">No Grouping</option>
                       <option value="attorney">Attorney</option>
@@ -561,27 +561,27 @@ export default function AnalyticsDashboardPage() {
                   </div>
                 </div>
 
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                   {REPORT_TYPE_INFO[reportType]?.description}
                 </p>
               </div>
 
               {/* Generated Report Results */}
               {generatedReport && (
-                <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h2 className="text-lg font-semibold text-gray-900">
+                      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                         {REPORT_TYPE_INFO[generatedReport.report_type as ReportType]?.label || 'Report'}
                       </h2>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
                         {new Date(generatedReport.period.start).toLocaleDateString()} -{' '}
                         {new Date(generatedReport.period.end).toLocaleDateString()}
                       </p>
                     </div>
                     <button
                       onClick={() => setGeneratedReport(null)}
-                      className="px-3 py-1.5 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50"
+                      className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-[#1f2937] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937]"
                     >
                       Clear
                     </button>
@@ -590,11 +590,11 @@ export default function AnalyticsDashboardPage() {
                   {/* Summary Cards */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                     {generatedReport.summary && Object.entries(generatedReport.summary).slice(0, 4).map(([key, value]) => (
-                      <div key={key} className="p-3 bg-gray-50 rounded-lg">
-                        <p className="text-xs text-gray-500 mb-0.5">
+                      <div key={key} className="p-3 bg-gray-50 dark:bg-[#0d1526] rounded-lg">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">
                           {key.replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())}
                         </p>
-                        <p className="text-lg font-bold text-gray-900">
+                        <p className="text-lg font-bold text-gray-900 dark:text-white">
                           {typeof value === 'number'
                             ? key.includes('rate') ? `${value}%`
                             : key.includes('revenue') || key.includes('collected') || key.includes('outstanding')
@@ -613,25 +613,25 @@ export default function AnalyticsDashboardPage() {
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b border-gray-200">
-                            <th className="text-left py-2 px-3 font-medium text-gray-700">Group</th>
-                            <th className="text-right py-2 px-3 font-medium text-gray-700">Revenue</th>
-                            <th className="text-right py-2 px-3 font-medium text-gray-700">Collected</th>
-                            <th className="text-right py-2 px-3 font-medium text-gray-700">Outstanding</th>
-                            <th className="text-right py-2 px-3 font-medium text-gray-700">Hours</th>
-                            <th className="text-right py-2 px-3 font-medium text-gray-700">Cases</th>
-                            <th className="text-right py-2 px-3 font-medium text-gray-700">Collection Rate</th>
+                          <tr className="border-b border-gray-200 dark:border-[#1f2937]">
+                            <th className="text-left py-2 px-3 font-medium text-gray-700 dark:text-gray-200">Group</th>
+                            <th className="text-right py-2 px-3 font-medium text-gray-700 dark:text-gray-200">Revenue</th>
+                            <th className="text-right py-2 px-3 font-medium text-gray-700 dark:text-gray-200">Collected</th>
+                            <th className="text-right py-2 px-3 font-medium text-gray-700 dark:text-gray-200">Outstanding</th>
+                            <th className="text-right py-2 px-3 font-medium text-gray-700 dark:text-gray-200">Hours</th>
+                            <th className="text-right py-2 px-3 font-medium text-gray-700 dark:text-gray-200">Cases</th>
+                            <th className="text-right py-2 px-3 font-medium text-gray-700 dark:text-gray-200">Collection Rate</th>
                           </tr>
                         </thead>
                         <tbody>
                           {generatedReport.data.map((row: { label: string; metrics: Record<string, number> }, i: number) => (
-                            <tr key={i} className="border-b border-gray-100 hover:bg-gray-50">
-                              <td className="py-2 px-3 font-medium text-gray-900">{row.label}</td>
-                              <td className="py-2 px-3 text-right text-gray-700">{formatCurrency(row.metrics.revenue || 0)}</td>
-                              <td className="py-2 px-3 text-right text-gray-700">{formatCurrency(row.metrics.collected || 0)}</td>
-                              <td className="py-2 px-3 text-right text-gray-700">{formatCurrency(row.metrics.outstanding || 0)}</td>
-                              <td className="py-2 px-3 text-right text-gray-700">{row.metrics.billable_hours || 0}h</td>
-                              <td className="py-2 px-3 text-right text-gray-700">{row.metrics.cases || 0}</td>
+                            <tr key={i} className="border-b border-gray-100 dark:border-[#1f2937] hover:bg-gray-50 dark:hover:bg-[#1f2937]">
+                              <td className="py-2 px-3 font-medium text-gray-900 dark:text-white">{row.label}</td>
+                              <td className="py-2 px-3 text-right text-gray-700 dark:text-gray-200">{formatCurrency(row.metrics.revenue || 0)}</td>
+                              <td className="py-2 px-3 text-right text-gray-700 dark:text-gray-200">{formatCurrency(row.metrics.collected || 0)}</td>
+                              <td className="py-2 px-3 text-right text-gray-700 dark:text-gray-200">{formatCurrency(row.metrics.outstanding || 0)}</td>
+                              <td className="py-2 px-3 text-right text-gray-700 dark:text-gray-200">{row.metrics.billable_hours || 0}h</td>
+                              <td className="py-2 px-3 text-right text-gray-700 dark:text-gray-200">{row.metrics.cases || 0}</td>
                               <td className="py-2 px-3 text-right">
                                 <span className={`font-medium ${(row.metrics.collection_rate || 0) >= 80 ? 'text-green-600' : (row.metrics.collection_rate || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'}`}>
                                   {row.metrics.collection_rate || 0}%
@@ -641,14 +641,14 @@ export default function AnalyticsDashboardPage() {
                           ))}
                         </tbody>
                         <tfoot>
-                          <tr className="bg-gray-50 font-semibold">
-                            <td className="py-2 px-3 text-gray-900">Totals</td>
-                            <td className="py-2 px-3 text-right text-gray-900">{formatCurrency(generatedReport.totals?.revenue || 0)}</td>
-                            <td className="py-2 px-3 text-right text-gray-900">{formatCurrency(generatedReport.totals?.collected || 0)}</td>
-                            <td className="py-2 px-3 text-right text-gray-900">{formatCurrency(generatedReport.totals?.outstanding || 0)}</td>
-                            <td className="py-2 px-3 text-right text-gray-900">{generatedReport.totals?.billable_hours || 0}h</td>
-                            <td className="py-2 px-3 text-right text-gray-900">{generatedReport.totals?.cases || 0}</td>
-                            <td className="py-2 px-3 text-right text-gray-900">{generatedReport.totals?.collection_rate || 0}%</td>
+                          <tr className="bg-gray-50 dark:bg-[#0d1526] font-semibold">
+                            <td className="py-2 px-3 text-gray-900 dark:text-white">Totals</td>
+                            <td className="py-2 px-3 text-right text-gray-900 dark:text-white">{formatCurrency(generatedReport.totals?.revenue || 0)}</td>
+                            <td className="py-2 px-3 text-right text-gray-900 dark:text-white">{formatCurrency(generatedReport.totals?.collected || 0)}</td>
+                            <td className="py-2 px-3 text-right text-gray-900 dark:text-white">{formatCurrency(generatedReport.totals?.outstanding || 0)}</td>
+                            <td className="py-2 px-3 text-right text-gray-900 dark:text-white">{generatedReport.totals?.billable_hours || 0}h</td>
+                            <td className="py-2 px-3 text-right text-gray-900 dark:text-white">{generatedReport.totals?.cases || 0}</td>
+                            <td className="py-2 px-3 text-right text-gray-900 dark:text-white">{generatedReport.totals?.collection_rate || 0}%</td>
                           </tr>
                         </tfoot>
                       </table>
@@ -675,23 +675,23 @@ export default function AnalyticsDashboardPage() {
               )}
 
               {/* Saved Reports */}
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold text-gray-900">Saved Reports</h2>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Saved Reports</h2>
                 </div>
 
                 {savedReports.length > 0 ? (
                   <div className="space-y-2">
                     {savedReports.map(report => (
-                      <div key={report.id} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50">
+                      <div key={report.id} className="flex items-center justify-between p-3 border border-gray-100 dark:border-[#1f2937] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937]">
                         <div className="flex items-center gap-3">
                           <FileText className="w-5 h-5 text-blue-500" />
                           <div>
                             <div className="flex items-center gap-2">
-                              <p className="text-sm font-medium text-gray-900">{report.report_name}</p>
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">{report.report_name}</p>
                               {report.is_favorite && <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />}
                             </div>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
                               {REPORT_TYPE_INFO[report.report_type as ReportType]?.label || report.report_type}
                               {report.last_run_at && ` \u2022 Last run: ${new Date(report.last_run_at).toLocaleDateString()}`}
                             </p>
@@ -732,14 +732,14 @@ export default function AnalyticsDashboardPage() {
                         setReportType(key as ReportType)
                         handleGenerateReport()
                       }}
-                      className="flex items-start gap-3 p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-sm transition-all text-left"
+                      className="flex items-start gap-3 p-4 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg hover:border-blue-300 hover:shadow-sm transition-all text-left"
                     >
                       <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
                         <FileText className="w-5 h-5 text-blue-600" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{info.label}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">{info.description}</p>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">{info.label}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{info.description}</p>
                       </div>
                     </button>
                   ))}
@@ -775,16 +775,16 @@ function CollapsibleSection({
   children: React.ReactNode
 }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg">
+    <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg">
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between p-4"
       >
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-          {subtitle && <p className="text-sm text-gray-500 mt-0.5">{subtitle}</p>}
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
+          {subtitle && <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{subtitle}</p>}
         </div>
-        {isExpanded ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+        {isExpanded ? <ChevronUp className="w-5 h-5 text-gray-400 dark:text-gray-500" /> : <ChevronDown className="w-5 h-5 text-gray-400 dark:text-gray-500" />}
       </button>
       {isExpanded && <div className="px-4 pb-4">{children}</div>}
     </div>
@@ -813,14 +813,14 @@ function MetricCard({
   const isNegative = invertChange ? effectiveChange > 0 : effectiveChange < 0
 
   return (
-    <div className="p-4 bg-gray-50 rounded-lg">
+    <div className="p-4 bg-gray-50 dark:bg-[#0d1526] rounded-lg">
       <div className="flex justify-between items-start mb-2">
-        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{title}</p>
-        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
+        <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{title}</p>
+        <div className="w-8 h-8 bg-white dark:bg-[#111827] rounded-lg flex items-center justify-center shadow-sm">
           {icon}
         </div>
       </div>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
+      <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
       {effectiveChange !== 0 && (
         <div className="flex items-center gap-1 mt-1">
           {isPositive && <ArrowUpRight className="w-3.5 h-3.5 text-green-600" />}
@@ -828,10 +828,10 @@ function MetricCard({
           <span className={`text-xs font-medium ${isPositive ? 'text-green-600' : isNegative ? 'text-red-600' : 'text-gray-500'}`}>
             {changeIsDelta ? `${effectiveChange > 0 ? '+' : ''}${effectiveChange}pp` : `${Math.abs(effectiveChange)}%`}
           </span>
-          <span className="text-xs text-gray-400">vs last period</span>
+          <span className="text-xs text-gray-400 dark:text-gray-500">vs last period</span>
         </div>
       )}
-      {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
+      {subtitle && <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>}
     </div>
   )
 }
@@ -840,7 +840,7 @@ function EmptyState({ icon, message }: { icon: React.ReactNode; message: string 
   return (
     <div className="text-center py-8">
       <div className="mx-auto text-gray-300 mb-3">{icon}</div>
-      <p className="text-sm text-gray-500">{message}</p>
+      <p className="text-sm text-gray-500 dark:text-gray-400">{message}</p>
     </div>
   )
 }
@@ -896,11 +896,11 @@ function KPITargetsSection({
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border border-gray-200 rounded-lg p-6">
+      <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">KPI Targets</h2>
-            <p className="text-sm text-gray-500 mt-0.5">Set performance targets for your firm</p>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">KPI Targets</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Set performance targets for your firm</p>
           </div>
           <button
             onClick={handleSave}
@@ -922,8 +922,8 @@ function KPITargetsSection({
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-2">
                     <div>
-                      <p className="text-sm font-medium text-gray-900">{kpi.label}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">{kpi.label}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         Current: {formatMetricValue(kpi.current_value, kpi.format)}
                         {kpi.change_percent !== 0 && (
                           <span className={kpi.change_percent > 0 ? 'text-green-600' : 'text-red-600'}>
@@ -933,12 +933,12 @@ function KPITargetsSection({
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <label className="text-xs text-gray-500">Target:</label>
+                      <label className="text-xs text-gray-500 dark:text-gray-400">Target:</label>
                       <input
                         type="number"
                         value={targets[kpi.metric_key] ?? kpi.target_value}
                         onChange={e => setTargets(prev => ({ ...prev, [kpi.metric_key]: Number(e.target.value) }))}
-                        className="w-24 px-2 py-1 text-sm border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-right"
+                        className="w-24 px-2 py-1 text-sm border border-gray-200 dark:border-[#1f2937] rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-right"
                       />
                     </div>
                   </div>
@@ -955,8 +955,8 @@ function KPITargetsSection({
                     />
                   </div>
                   <div className="flex justify-between mt-1">
-                    <span className="text-xs text-gray-500">0</span>
-                    <span className="text-xs text-gray-500">{formatMetricValue(targets[kpi.metric_key] ?? kpi.target_value, kpi.format)}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">0</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">{formatMetricValue(targets[kpi.metric_key] ?? kpi.target_value, kpi.format)}</span>
                   </div>
                 </div>
               </div>

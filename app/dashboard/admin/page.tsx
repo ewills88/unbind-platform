@@ -107,29 +107,29 @@ export default function AdminDashboardPage() {
   return (
     <div className="max-w-6xl mx-auto px-6 py-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Admin Console</h1>
-        <p className="text-gray-600 mt-1">Manage your firm settings, team, and configuration</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Console</h1>
+        <p className="text-gray-600 dark:text-gray-300 mt-1">Manage your firm settings, team, and configuration</p>
       </div>
 
       {/* Quick Stats */}
       {stats && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <p className="text-sm text-gray-500">Active Members</p>
-            <p className="text-2xl font-bold text-gray-900 mt-1">{stats.activeMembers}</p>
-            <p className="text-xs text-gray-400 mt-1">{stats.totalMembers} total</p>
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Active Members</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.activeMembers}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{stats.totalMembers} total</p>
           </div>
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <p className="text-sm text-gray-500">Pending Invitations</p>
-            <p className="text-2xl font-bold text-gray-900 mt-1">{stats.pendingInvitations}</p>
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Pending Invitations</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.pendingInvitations}</p>
           </div>
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <p className="text-sm text-gray-500">Current Plan</p>
-            <p className="text-2xl font-bold text-gray-900 mt-1">{stats.planName}</p>
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Current Plan</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.planName}</p>
           </div>
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <p className="text-sm text-gray-500">Seats Usage</p>
-            <p className="text-2xl font-bold text-gray-900 mt-1">{stats.seatsUsed} / {stats.seatsIncluded}</p>
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Seats Usage</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.seatsUsed} / {stats.seatsIncluded}</p>
             <div className="mt-2 bg-gray-200 rounded-full h-1.5">
               <div
                 className="bg-blue-600 h-1.5 rounded-full"
@@ -148,7 +148,7 @@ export default function AdminDashboardPage() {
             <Link
               key={section.name}
               href={section.href}
-              className="bg-white border border-gray-200 rounded-lg p-5 hover:border-blue-300 hover:shadow-sm transition-all group"
+              className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-5 hover:border-blue-300 hover:shadow-sm transition-all group"
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3">
@@ -156,11 +156,11 @@ export default function AdminDashboardPage() {
                     <Icon className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 group-hover:text-blue-600">{section.name}</h3>
-                    <p className="text-sm text-gray-500 mt-0.5">{section.description}</p>
+                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600">{section.name}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{section.description}</p>
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-blue-600 mt-1" />
+                <ArrowRight className="w-4 h-4 text-gray-400 dark:text-gray-500 group-hover:text-blue-600 mt-1" />
               </div>
             </Link>
           )

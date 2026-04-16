@@ -58,7 +58,7 @@ export default function MobileBottomNav() {
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl safe-bottom" style={{ backgroundColor: '#0a0f1e' }}>
           <div className="flex items-center justify-between px-5 pt-4 pb-2">
             <span className="text-sm font-semibold text-white">More</span>
-            <button onClick={() => setMoreOpen(false)} className="p-1 text-gray-400 hover:text-white">
+            <button onClick={() => setMoreOpen(false)} className="p-1 text-gray-400 dark:text-gray-500 hover:text-white">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -85,7 +85,7 @@ export default function MobileBottomNav() {
       )}
 
       {/* Bottom nav bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 safe-bottom" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-[#111827] border-t border-gray-200 dark:border-[#1f2937] safe-bottom" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         <div className="flex items-center justify-around h-16">
           {/* Home */}
           <Link href="/dashboard" className="flex flex-col items-center gap-0.5 min-w-[56px]">

@@ -102,17 +102,17 @@ export default function DiscoveryDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <main className="flex-1 flex items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+          <Loader2 className="w-8 h-8 animate-spin text-gray-400 dark:text-gray-500" />
         </main>
       </div>
     )
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-5xl mx-auto p-6">
@@ -121,12 +121,12 @@ export default function DiscoveryDetailPage() {
             <div>
               <button
                 onClick={() => router.push(`/dashboard/cases/${caseId}`)}
-                className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-2"
+                className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 mb-2"
               >
                 <ArrowLeft className="w-4 h-4" /> Back to Case
               </button>
-              <h1 className="text-2xl font-bold text-gray-900">{discovery?.title}</h1>
-              <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{discovery?.title}</h1>
+              <div className="flex items-center gap-4 mt-1 text-sm text-gray-500 dark:text-gray-400">
                 <span>{DISCOVERY_TYPE_INFO[discovery?.discovery_type as DiscoveryType]?.label}</span>
                 {discovery?.served_date && (
                   <span className="flex items-center gap-1">
@@ -154,7 +154,7 @@ export default function DiscoveryDetailPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => router.push(`/dashboard/cases/${caseId}/discovery/${discoveryId}/generate`)}
-                className="flex items-center gap-2 border border-gray-300 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                className="flex items-center gap-2 border border-gray-300 dark:border-[#374151] text-gray-700 dark:text-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#1f2937] transition-colors text-sm"
               >
                 <Download className="w-4 h-4" />
                 Generate Document
@@ -163,15 +163,15 @@ export default function DiscoveryDetailPage() {
           </div>
 
           {/* Progress */}
-          <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-4 mb-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="font-semibold text-gray-900 text-sm">Response Progress</span>
-              <span className="text-sm text-gray-500">
+              <span className="font-semibold text-gray-900 dark:text-white text-sm">Response Progress</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
                 {statusCounts.finalized} of {items.length} finalized
               </span>
             </div>
             <Progress value={completionPercent} className="h-2.5" />
-            <div className="flex justify-between mt-2 text-xs text-gray-500">
+            <div className="flex justify-between mt-2 text-xs text-gray-500 dark:text-gray-400">
               <span>{statusCounts.pending} pending</span>
               <span>{statusCounts.drafted} drafted</span>
               <span>{statusCounts.reviewed} reviewed</span>
@@ -200,7 +200,7 @@ export default function DiscoveryDetailPage() {
             <div className="flex items-center gap-2">
               {selectedItems.length > 0 && (
                 <>
-                  <span className="text-xs text-gray-500">{selectedItems.length} selected</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">{selectedItems.length} selected</span>
                   <button
                     onClick={() => handleBulkStatus('drafted')}
                     className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
@@ -215,7 +215,7 @@ export default function DiscoveryDetailPage() {
                   </button>
                   <button
                     onClick={() => setSelectedItems([])}
-                    className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700"
+                    className="px-2 py-1 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700"
                   >
                     Clear
                   </button>
@@ -232,10 +232,10 @@ export default function DiscoveryDetailPage() {
 
           {/* Items */}
           {items.length === 0 ? (
-            <div className="text-center py-16 bg-white border border-gray-200 rounded-lg">
+            <div className="text-center py-16 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg">
               <FileText className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-              <p className="font-medium text-gray-900">No items yet</p>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="font-medium text-gray-900 dark:text-white">No items yet</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 Add individual interrogatories or requests to track responses
               </p>
               <button
@@ -365,10 +365,10 @@ function DiscoveryItemEditor({
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+    <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg overflow-hidden">
       {/* Header */}
       <div
-        className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
+        className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1f2937]"
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -376,7 +376,7 @@ function DiscoveryItemEditor({
             {item.item_number}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm text-gray-900 line-clamp-1">{item.request_text || 'No request text'}</p>
+            <p className="text-sm text-gray-900 dark:text-white line-clamp-1">{item.request_text || 'No request text'}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0 ml-3">
@@ -384,26 +384,26 @@ function DiscoveryItemEditor({
             {statusInfo.label}
           </span>
           {dirty && <span className="w-2 h-2 rounded-full bg-orange-400" title="Unsaved changes" />}
-          {expanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+          {expanded ? <ChevronUp className="w-4 h-4 text-gray-400 dark:text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-400 dark:text-gray-500" />}
         </div>
       </div>
 
       {/* Expanded editor */}
       {expanded && (
-        <div className="border-t border-gray-100 p-4 space-y-4">
+        <div className="border-t border-gray-100 dark:border-[#1f2937] p-4 space-y-4">
           {/* Request text */}
           <div>
-            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
               {getItemTypeLabel(discoveryType)} No. {item.item_number}
             </label>
-            <div className="p-3 bg-gray-50 rounded-lg text-sm text-gray-800 whitespace-pre-wrap">
+            <div className="p-3 bg-gray-50 dark:bg-[#0d1526] rounded-lg text-sm text-gray-800 dark:text-gray-100 whitespace-pre-wrap">
               {item.request_text || 'No request text provided'}
             </div>
           </div>
 
           {/* Status selector */}
           <div>
-            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Status</label>
+            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Status</label>
             <div className="flex gap-2">
               {(Object.entries(ITEM_STATUS_INFO) as [DiscoveryItemStatus, typeof ITEM_STATUS_INFO[DiscoveryItemStatus]][]).map(
                 ([key, info]) => (
@@ -426,7 +426,7 @@ function DiscoveryItemEditor({
           {/* Objections */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                 Objections
               </label>
               <button
@@ -458,14 +458,14 @@ function DiscoveryItemEditor({
                 onChange={(e) => setObjectionText(e.target.value)}
                 placeholder="Objection text..."
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               />
             )}
           </div>
 
           {/* Response */}
           <div>
-            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
               {discoveryType === 'rfa' ? 'Response (Admit / Deny / Lack Information)' : 'Response'}
             </label>
 
@@ -500,12 +500,12 @@ function DiscoveryItemEditor({
                   : 'Type your response here...'
               }
               rows={discoveryType === 'rfa' ? 3 : 5}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
             />
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100 dark:border-[#1f2937]">
             <button
               onClick={handleSave}
               disabled={saving || !dirty}
@@ -565,36 +565,36 @@ function ObjectionPickerModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-2xl mx-4 shadow-xl max-h-[80vh] flex flex-col">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+      <div className="bg-white dark:bg-[#111827] rounded-lg w-full max-w-2xl mx-4 shadow-xl max-h-[80vh] flex flex-col">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">Add Objection</h3>
-            <p className="text-sm text-gray-500">Select a standard objection ({stateCode})</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Add Objection</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Select a standard objection ({stateCode})</p>
           </div>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
-            <X className="w-5 h-5 text-gray-400" />
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 dark:hover:bg-[#1f2937] rounded">
+            <X className="w-5 h-5 text-gray-400 dark:text-gray-500" />
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
           {loading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+              <Loader2 className="w-6 h-6 animate-spin text-gray-400 dark:text-gray-500" />
             </div>
           ) : templates.length === 0 ? (
-            <p className="text-center text-gray-500 py-8">No templates found for {stateCode}</p>
+            <p className="text-center text-gray-500 dark:text-gray-400 py-8">No templates found for {stateCode}</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {templates.map(t => (
                 <button
                   key={t.id}
                   onClick={() => onSelect(t)}
-                  className="text-left p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                  className="text-left p-4 border border-gray-200 dark:border-[#1f2937] rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors"
                 >
-                  <p className="font-semibold text-sm text-gray-900 capitalize mb-1">
+                  <p className="font-semibold text-sm text-gray-900 dark:text-white capitalize mb-1">
                     {OBJECTION_TYPE_LABELS[t.objection_type] || t.objection_type.replace(/_/g, ' ')}
                   </p>
-                  <p className="text-xs text-gray-600 line-clamp-3">{t.objection_text}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-3">{t.objection_text}</p>
                   {t.statutory_reference && (
                     <p className="text-xs text-blue-600 mt-2">{t.statutory_reference}</p>
                   )}
@@ -676,11 +676,11 @@ function AddItemsModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-2xl mx-4 shadow-xl max-h-[85vh] flex flex-col">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Add Discovery Items</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
-            <X className="w-5 h-5 text-gray-400" />
+      <div className="bg-white dark:bg-[#111827] rounded-lg w-full max-w-2xl mx-4 shadow-xl max-h-[85vh] flex flex-col">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#1f2937]">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Add Discovery Items</h3>
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 dark:hover:bg-[#1f2937] rounded">
+            <X className="w-5 h-5 text-gray-400 dark:text-gray-500" />
           </button>
         </div>
 
@@ -702,12 +702,12 @@ function AddItemsModal({
                 onChange={(e) => updateRow(index, e.target.value)}
                 placeholder={`Enter request/interrogatory #${item.item_number}...`}
                 rows={3}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                className="flex-1 px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               />
               {items.length > 1 && (
                 <button
                   onClick={() => removeRow(index)}
-                  className="p-1.5 hover:bg-red-50 rounded text-gray-400 hover:text-red-500 mt-1"
+                  className="p-1.5 hover:bg-red-50 rounded text-gray-400 dark:text-gray-500 hover:text-red-500 mt-1"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -723,10 +723,10 @@ function AddItemsModal({
           </button>
         </div>
 
-        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-[#1f2937] bg-gray-50 dark:bg-[#0d1526] rounded-b-lg">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+            className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#374151] rounded-lg transition-colors"
           >
             Cancel
           </button>

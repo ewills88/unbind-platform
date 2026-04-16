@@ -104,30 +104,30 @@ export default function GenerateDiscoveryDocumentPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <main className="flex-1 flex items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+          <Loader2 className="w-8 h-8 animate-spin text-gray-400 dark:text-gray-500" />
         </main>
       </div>
     )
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto p-6">
           {/* Header */}
           <button
             onClick={() => router.push(`/dashboard/cases/${caseId}/discovery/${discoveryId}`)}
-            className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4"
+            className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 mb-4"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Responses
           </button>
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Generate Response Document</h1>
-          <p className="text-gray-500 text-sm mb-6">{discovery?.title}</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Generate Response Document</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">{discovery?.title}</p>
 
           {/* Warning if not all finalized */}
           {hasUnfinalized && (
@@ -151,11 +151,11 @@ export default function GenerateDiscoveryDocumentPage() {
           )}
 
           {/* Options */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-            <h2 className="font-semibold text-gray-900 mb-4">Document Options</h2>
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-6 mb-6">
+            <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Document Options</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                   Responding Party Name
                 </label>
                 <input
@@ -163,9 +163,9 @@ export default function GenerateDiscoveryDocumentPage() {
                   value={respondingPartyName}
                   onChange={(e) => setRespondingPartyName(e.target.value)}
                   placeholder="Full legal name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   This name will appear in the caption and verification page
                 </p>
               </div>
@@ -178,8 +178,8 @@ export default function GenerateDiscoveryDocumentPage() {
                   className="rounded text-blue-600"
                 />
                 <div>
-                  <span className="text-sm font-medium text-gray-900">Include Verification Page</span>
-                  <p className="text-xs text-gray-500">State-specific verification / declaration under penalty of perjury</p>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">Include Verification Page</span>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">State-specific verification / declaration under penalty of perjury</p>
                 </div>
               </label>
 
@@ -191,42 +191,42 @@ export default function GenerateDiscoveryDocumentPage() {
                   className="rounded text-blue-600"
                 />
                 <div>
-                  <span className="text-sm font-medium text-gray-900">Include Objections</span>
-                  <p className="text-xs text-gray-500">Include objection text before substantive responses</p>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">Include Objections</span>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Include objection text before substantive responses</p>
                 </div>
               </label>
             </div>
           </div>
 
           {/* Summary */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-            <h2 className="font-semibold text-gray-900 mb-4">Document Summary</h2>
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg p-6 mb-6">
+            <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Document Summary</h2>
             <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
               <div>
-                <p className="text-gray-500">Discovery Type</p>
-                <p className="font-medium text-gray-900">
+                <p className="text-gray-500 dark:text-gray-400">Discovery Type</p>
+                <p className="font-medium text-gray-900 dark:text-white">
                   {DISCOVERY_TYPE_INFO[discovery?.discovery_type as DiscoveryType]?.label || discovery?.discovery_type}
                 </p>
               </div>
               <div>
-                <p className="text-gray-500">Set</p>
-                <p className="font-medium text-gray-900">{discovery?.set_number}</p>
+                <p className="text-gray-500 dark:text-gray-400">Set</p>
+                <p className="font-medium text-gray-900 dark:text-white">{discovery?.set_number}</p>
               </div>
               <div>
-                <p className="text-gray-500">Total Items</p>
-                <p className="font-medium text-gray-900">{totalCount}</p>
+                <p className="text-gray-500 dark:text-gray-400">Total Items</p>
+                <p className="font-medium text-gray-900 dark:text-white">{totalCount}</p>
               </div>
               <div>
-                <p className="text-gray-500">Finalized</p>
-                <p className="font-medium text-gray-900">{finalizedCount} of {totalCount}</p>
+                <p className="text-gray-500 dark:text-gray-400">Finalized</p>
+                <p className="font-medium text-gray-900 dark:text-white">{finalizedCount} of {totalCount}</p>
               </div>
               <div>
-                <p className="text-gray-500">With Objections</p>
-                <p className="font-medium text-gray-900">{withObjections}</p>
+                <p className="text-gray-500 dark:text-gray-400">With Objections</p>
+                <p className="font-medium text-gray-900 dark:text-white">{withObjections}</p>
               </div>
               <div>
-                <p className="text-gray-500">Served Date</p>
-                <p className="font-medium text-gray-900">
+                <p className="text-gray-500 dark:text-gray-400">Served Date</p>
+                <p className="font-medium text-gray-900 dark:text-white">
                   {discovery?.served_date ? formatDate(discovery.served_date) : 'N/A'}
                 </p>
               </div>

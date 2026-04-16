@@ -260,11 +260,11 @@ export default function TeamPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <Users className="w-7 h-7" />
             Team Management
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
             {members.length} member{members.length !== 1 ? 's' : ''}
           </p>
         </div>
@@ -288,8 +288,8 @@ export default function TeamPage() {
       )}
 
       {/* Members List */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="divide-y divide-gray-100">
+      <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm overflow-hidden">
+        <div className="divide-y divide-gray-100 dark:divide-[#1f2937]">
           {members.map((member, index) => {
             const roleInfo = FIRM_MEMBER_ROLE_INFO[member.role]
             const statusInfo = STATUS_STYLES[member.status]
@@ -301,7 +301,7 @@ export default function TeamPage() {
             return (
               <div
                 key={member.id}
-                className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 dark:hover:bg-[#1f2937] transition-colors"
               >
                 <div className="flex items-center gap-4">
                   <div
@@ -314,8 +314,8 @@ export default function TeamPage() {
                     </span>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{displayName}</p>
-                    <p className="text-sm text-gray-500">{displayEmail}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">{displayName}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{displayEmail}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -335,15 +335,15 @@ export default function TeamPage() {
                         onClick={() =>
                           setOpenMenuId(openMenuId === member.id ? null : member.id)
                         }
-                        className="p-1.5 text-gray-400 hover:text-gray-600 rounded"
+                        className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-gray-600 rounded"
                       >
                         <MoreVertical className="w-4 h-4" />
                       </button>
                       {openMenuId === member.id && (
-                        <div className="absolute right-0 mt-1 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                        <div className="absolute right-0 mt-1 w-36 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-lg shadow-lg z-10">
                           <button
                             onClick={() => openEdit(member)}
-                            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#1f2937]"
                           >
                             <Pencil className="w-3.5 h-3.5" />
                             Edit
@@ -368,7 +368,7 @@ export default function TeamPage() {
           })}
 
           {members.length === 0 && (
-            <div className="px-6 py-12 text-center text-gray-500">
+            <div className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
               <Users className="w-12 h-12 mx-auto mb-3 text-gray-300" />
               <p className="font-medium">No team members yet</p>
               <p className="text-sm mt-1">Invite your first team member to get started.</p>
@@ -394,7 +394,7 @@ export default function TeamPage() {
                 type="email"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="colleague@example.com"
               />
             </div>
@@ -404,7 +404,7 @@ export default function TeamPage() {
                 id="invite-role"
                 value={inviteRole}
                 onChange={(e) => setInviteRole(e.target.value as FirmMemberRole)}
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 {(
                   Object.entries(FIRM_MEMBER_ROLE_INFO) as [
@@ -424,7 +424,7 @@ export default function TeamPage() {
           <DialogFooter>
             <button
               onClick={() => setShowInvite(false)}
-              className="px-4 py-2 text-gray-700 hover:text-gray-900"
+              className="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-gray-900"
             >
               Cancel
             </button>
@@ -467,7 +467,7 @@ export default function TeamPage() {
                   setEditRole(role)
                   setEditPermissions(getDefaultPermissions(role))
                 }}
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 {(
                   Object.entries(FIRM_MEMBER_ROLE_INFO) as [
@@ -485,11 +485,11 @@ export default function TeamPage() {
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">Permissions</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Permissions</h3>
               <div className="space-y-4">
                 {PERMISSION_CATEGORIES.map((category) => (
-                  <div key={category.key} className="border border-gray-200 rounded-lg p-4">
-                    <h4 className="text-sm font-medium text-gray-700 mb-3">
+                  <div key={category.key} className="border border-gray-200 dark:border-[#1f2937] rounded-lg p-4">
+                    <h4 className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-3">
                       {category.label}
                     </h4>
                     <div className="grid grid-cols-2 gap-3">
@@ -520,7 +520,7 @@ export default function TeamPage() {
           <DialogFooter>
             <button
               onClick={() => setEditMember(null)}
-              className="px-4 py-2 text-gray-700 hover:text-gray-900"
+              className="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-gray-900"
             >
               Cancel
             </button>
@@ -553,7 +553,7 @@ export default function TeamPage() {
           <DialogFooter>
             <button
               onClick={() => setRemoveMember(null)}
-              className="px-4 py-2 text-gray-700 hover:text-gray-900"
+              className="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-gray-900"
             >
               Cancel
             </button>

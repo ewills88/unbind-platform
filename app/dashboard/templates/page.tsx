@@ -327,14 +327,14 @@ export default function TemplatesPage() {
   }, {} as Record<string, DocumentTemplate[]>)
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
 
       <main className="flex-1 overflow-auto">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Tab Navigation */}
           {!selectedTemplate && (
-            <div className="flex items-center gap-1 mb-6 border-b border-gray-200">
+            <div className="flex items-center gap-1 mb-6 border-b border-gray-200 dark:border-[#1f2937]">
               <button
                 onClick={() => setTab('generate')}
                 className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
@@ -375,8 +375,8 @@ export default function TemplatesPage() {
                 <>
                   {/* Header */}
                   <div className="mb-6">
-                    <h1 className="text-3xl font-bold text-gray-900">Generate Document</h1>
-                    <p className="mt-2 text-gray-600">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Generate Document</h1>
+                    <p className="mt-2 text-gray-600 dark:text-gray-300">
                       Select a template, fill in the details, and download a formatted .docx document.
                     </p>
                   </div>
@@ -390,21 +390,21 @@ export default function TemplatesPage() {
                       {/* Search & Filter */}
                       <div className="flex flex-col sm:flex-row gap-4 mb-6">
                         <div className="flex-1 relative">
-                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
                           <input
                             type="text"
                             placeholder="Search templates..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
                         <div className="flex items-center gap-2">
-                          <Filter className="w-4 h-4 text-gray-500" />
+                          <Filter className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                           <select
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
-                            className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="px-3 py-2 border border-gray-300 dark:border-[#374151] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
                             <option value="all">All Categories</option>
                             {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
@@ -414,15 +414,15 @@ export default function TemplatesPage() {
                         </div>
                       </div>
 
-                      <p className="text-sm text-gray-500 mb-4">
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                         {filteredTemplates.length} template{filteredTemplates.length !== 1 ? 's' : ''} available
                       </p>
 
                       {filteredTemplates.length === 0 ? (
-                        <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-                          <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                          <h3 className="text-lg font-medium text-gray-900 mb-2">No templates found</h3>
-                          <p className="text-gray-600">Try adjusting your search or filter.</p>
+                        <div className="text-center py-12 bg-white dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-[#1f2937]">
+                          <FileText className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No templates found</h3>
+                          <p className="text-gray-600 dark:text-gray-300">Try adjusting your search or filter.</p>
                         </div>
                       ) : (
                         <div className="space-y-8">
@@ -436,10 +436,10 @@ export default function TemplatesPage() {
                                   <div className={`p-1.5 rounded-md ${colors.bg}`}>
                                     <Icon className={`w-4 h-4 ${colors.text}`} />
                                   </div>
-                                  <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">
                                     {CATEGORY_LABELS[category] || category}
                                   </h3>
-                                  <span className="text-xs text-gray-400">({categoryTemplates.length})</span>
+                                  <span className="text-xs text-gray-400 dark:text-gray-500">({categoryTemplates.length})</span>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -454,24 +454,24 @@ export default function TemplatesPage() {
                                           <Icon className={`w-5 h-5 ${colors.text}`} />
                                         </div>
                                         {template.estimated_prep_time && (
-                                          <span className="text-xs text-gray-400">
+                                          <span className="text-xs text-gray-400 dark:text-gray-500">
                                             ~{template.estimated_prep_time} min
                                           </span>
                                         )}
                                       </div>
-                                      <h4 className="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+                                      <h4 className="font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 transition-colors">
                                         {template.template_name}
                                       </h4>
                                       {template.form_number && (
-                                        <p className="text-xs font-mono text-gray-400 mb-2">
+                                        <p className="text-xs font-mono text-gray-400 dark:text-gray-500 mb-2">
                                           Form {template.form_number}
                                         </p>
                                       )}
-                                      <p className="text-sm text-gray-600 line-clamp-2">
+                                      <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
                                         {template.description}
                                       </p>
                                       {template.required_data_fields && template.required_data_fields.length > 0 && (
-                                        <p className="text-xs text-gray-400 mt-3">
+                                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-3">
                                           {template.required_data_fields.length} required field{template.required_data_fields.length !== 1 ? 's' : ''}
                                         </p>
                                       )}

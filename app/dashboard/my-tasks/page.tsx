@@ -80,8 +80,8 @@ export default function MyTasksPage() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">My Tasks</h1>
-        <p className="text-gray-500 mt-1">Tasks and cases assigned to you</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Tasks</h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-1">Tasks and cases assigned to you</p>
       </div>
 
       {/* Quick stats */}
@@ -156,10 +156,10 @@ export default function MyTasksPage() {
             />
           ))
         ) : (
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center">
+          <div className="bg-white dark:bg-[#111827] rounded-xl border border-gray-200 dark:border-[#1f2937] shadow-sm p-12 text-center">
             <CheckCircle className="mx-auto mb-3 text-green-400 w-12 h-12" />
-            <p className="font-medium text-gray-900">No pending tasks</p>
-            <p className="text-sm text-gray-500 mt-1">You&apos;re all caught up!</p>
+            <p className="font-medium text-gray-900 dark:text-white">No pending tasks</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">You&apos;re all caught up!</p>
           </div>
         )}
       </div>
@@ -186,8 +186,8 @@ function StatCard({
     >
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-gray-500">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{value}</p>
         </div>
         {icon}
       </div>
@@ -230,7 +230,7 @@ function TaskCard({
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2 flex-wrap">
-              <h4 className="font-semibold text-gray-900">{task.title}</h4>
+              <h4 className="font-semibold text-gray-900 dark:text-white">{task.title}</h4>
               <span
                 className={`px-2 py-0.5 text-xs font-medium rounded-full ${priorityInfo.color} ${priorityInfo.bgColor}`}
               >
@@ -244,10 +244,10 @@ function TaskCard({
             </div>
 
             {task.description && (
-              <p className="text-sm text-gray-600 mb-3">{task.description}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{task.description}</p>
             )}
 
-            <div className="flex flex-wrap gap-3 text-xs text-gray-500">
+            <div className="flex flex-wrap gap-3 text-xs text-gray-500 dark:text-gray-400">
               <span className="flex items-center gap-1">
                 <FileText className="w-3 h-3" />
                 {taskTypeInfo.label}
@@ -296,7 +296,7 @@ function TaskCard({
                 {task.status === 'pending' && (
                   <button
                     onClick={() => onStatusChange(task.id, 'in_progress')}
-                    className="px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium"
+                    className="px-3 py-1.5 text-xs bg-gray-100 dark:bg-[#1f2937] text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-[#374151] font-medium"
                   >
                     Start Task
                   </button>
@@ -312,7 +312,7 @@ function TaskCard({
                 {task.case_info && (
                   <button
                     onClick={() => onViewCase(task.case_id)}
-                    className="px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium"
+                    className="px-3 py-1.5 text-xs bg-gray-100 dark:bg-[#1f2937] text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-[#374151] font-medium"
                   >
                     View Case
                   </button>
@@ -322,7 +322,7 @@ function TaskCard({
 
             {/* Completion form */}
             {isCompleting && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg space-y-3">
+              <div className="mt-4 p-4 bg-gray-50 dark:bg-[#0d1526] rounded-lg space-y-3">
                 <div>
                   <Label>Completion Notes</Label>
                   <textarea
@@ -330,7 +330,7 @@ function TaskCard({
                     onChange={(e) => setCompletionNotes(e.target.value)}
                     placeholder="Add any notes about completing this task..."
                     rows={3}
-                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg resize-none"
+                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 dark:border-[#374151] rounded-lg resize-none"
                   />
                 </div>
                 <div>
@@ -338,7 +338,7 @@ function TaskCard({
                   <select
                     value={timeSpent}
                     onChange={(e) => setTimeSpent(parseInt(e.target.value))}
-                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg"
+                    className="mt-1 w-full px-3 py-2 text-sm border border-gray-300 dark:border-[#374151] rounded-lg"
                   >
                     <option value="15">15 minutes</option>
                     <option value="30">30 minutes</option>
@@ -358,7 +358,7 @@ function TaskCard({
                   </button>
                   <button
                     onClick={() => setIsCompleting(false)}
-                    className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-800"
+                    className="px-3 py-1.5 text-xs text-gray-600 dark:text-gray-300 hover:text-gray-800"
                   >
                     Cancel
                   </button>
