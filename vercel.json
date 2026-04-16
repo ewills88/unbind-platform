@@ -85,6 +85,10 @@
     {
       "path": "/api/cron/refresh-reports",
       "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/outreach/send",
+      "schedule": "0 13 * * *"
     }
   ]
 }
