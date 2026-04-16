@@ -34,6 +34,8 @@ const STATUS_COLORS: Record<string, string> = {
   draft: 'bg-gray-100 text-gray-600',
   scheduled: 'bg-blue-100 text-blue-700',
   posted: 'bg-green-100 text-green-700',
+  failed: 'bg-red-100 text-red-700',
+  cancelled: 'bg-yellow-100 text-yellow-700',
 }
 
 function getPlatformConfig(platform: string) {
@@ -95,23 +97,23 @@ export default function SocialPostsTab() {
     }
   }
 
-  const markPosted = async (postId: string) => {
+  const updatePostField = async (postId: string, updates: Record<string, unknown>) => {
     await authFetch('/api/admin/social', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: postId, status: 'posted', posted_at: new Date().toISOString() }),
+      body: JSON.stringify({ id: postId, ...updates }),
     })
     fetchPosts()
   }
 
-  const saveMetrics = async (postId: string) => {
-    await authFetch('/api/admin/social', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: postId, ...metricsForm }),
-    })
-    setEditingMetrics(null)
-    fetchPosts()
+  const updateStatus = async (postId: string, newStatus: string) => {
+    const updates: Record<string, unknown> = { status: newStatus }
+    if (newStatus === 'posted') updates.posted_at = new Date().toISOString()
+    await updatePostField(postId, updates)
+  }
+
+  const saveMetricOnBlur = async (postId: string, field: string, value: number) => {
+    await updatePostField(postId, { [field]: value })
   }
 
   const startEditMetrics = (post: SocialPost) => {
@@ -225,6 +227,7 @@ export default function SocialPostsTab() {
               <select value={newStatus} onChange={e => setNewStatus(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
                 <option value="draft">Draft</option>
                 <option value="scheduled">Scheduled</option>
+                <option value="posted">Posted</option>
               </select>
             </div>
           </div>
@@ -270,7 +273,17 @@ export default function SocialPostsTab() {
                       {post.scheduled_for ? new Date(post.scheduled_for).toLocaleDateString() : '—'}
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[post.status] || 'bg-gray-100'}`}>{post.status}</span>
+                      <select
+                        value={post.status}
+                        onChange={e => updateStatus(post.id, e.target.value)}
+                        className={`px-2 py-1 rounded-full text-xs font-medium border-0 cursor-pointer ${STATUS_COLORS[post.status] || 'bg-gray-100'}`}
+                      >
+                        <option value="draft">Draft</option>
+                        <option value="scheduled">Scheduled</option>
+                        <option value="posted">Posted</option>
+                        <option value="failed">Failed</option>
+                        <option value="cancelled">Cancelled</option>
+                      </select>
                     </td>
                     {isEditing ? (
                       <>
@@ -281,12 +294,13 @@ export default function SocialPostsTab() {
                               min="0"
                               value={metricsForm[field]}
                               onChange={e => setMetricsForm({ ...metricsForm, [field]: parseInt(e.target.value) || 0 })}
+                              onBlur={() => saveMetricOnBlur(post.id, field, metricsForm[field])}
                               className="w-14 px-1 py-1 text-xs border border-blue-300 rounded text-center"
                             />
                           </td>
                         ))}
                         <td className="px-2 py-3">
-                          <button onClick={() => saveMetrics(post.id)} className="text-xs text-blue-600 font-medium">Save</button>
+                          <button onClick={() => setEditingMetrics(null)} className="text-xs text-gray-500 hover:text-gray-700">Done</button>
                         </td>
                       </>
                     ) : (
@@ -296,11 +310,8 @@ export default function SocialPostsTab() {
                         <td className="px-3 py-3 text-center text-gray-600">{post.shares}</td>
                         <td className="px-3 py-3 text-center text-gray-600">{post.clicks}</td>
                         <td className="px-3 py-3 text-center text-gray-600">{post.leads_generated}</td>
-                        <td className="px-2 py-3 space-x-2 whitespace-nowrap">
+                        <td className="px-2 py-3">
                           <button onClick={() => startEditMetrics(post)} className="text-xs text-gray-500 hover:text-blue-600">Edit</button>
-                          {post.status !== 'posted' && (
-                            <button onClick={() => markPosted(post.id)} className="text-xs text-green-600 hover:text-green-700">Post</button>
-                          )}
                         </td>
                       </>
                     )}
