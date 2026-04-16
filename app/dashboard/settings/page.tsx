@@ -7,7 +7,8 @@ import Sidebar from '@/components/layout/Sidebar'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
-import { User, Bell, Shield, CreditCard } from 'lucide-react'
+import { User, Bell, Shield, CreditCard, Sun, Moon } from 'lucide-react'
+import { useTheme } from '@/components/providers/ThemeProvider'
 
 const supabase = createClient(
   'https://rpbjravqgflidnwjkgvc.supabase.co',
@@ -32,6 +33,7 @@ interface Profile {
 
 export default function SettingsPage() {
   const router = useRouter()
+  const { theme, setTheme } = useTheme()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -129,7 +131,7 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -139,17 +141,49 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0d1526]">
       <Sidebar />
-      
+
       <main className="flex-1 overflow-auto">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-            <p className="mt-2 text-gray-600">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">
               Manage your account settings and preferences
             </p>
+          </div>
+
+          {/* Appearance */}
+          <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Appearance</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              Choose how Unbind looks to you. Your setting is saved on this device.
+            </p>
+            <div className="grid grid-cols-2 gap-3 max-w-md">
+              <button
+                onClick={() => setTheme('light')}
+                className={`flex flex-col items-center gap-2 py-5 rounded-lg transition-all ${
+                  theme === 'light'
+                    ? 'border-2 border-amber-500 bg-amber-50 text-gray-900'
+                    : 'border border-gray-200 dark:border-[#1f2937] bg-white dark:bg-[#0d1526] text-gray-600 dark:text-gray-400 hover:border-gray-300'
+                }`}
+              >
+                <Sun className="w-5 h-5" />
+                <span className="text-sm font-medium">Light</span>
+              </button>
+              <button
+                onClick={() => setTheme('dark')}
+                className={`flex flex-col items-center gap-2 py-5 rounded-lg transition-all ${
+                  theme === 'dark'
+                    ? 'border-2 border-amber-500 bg-slate-800 text-white'
+                    : 'border border-gray-200 dark:border-[#1f2937] bg-white dark:bg-[#0d1526] text-gray-600 dark:text-gray-400 hover:border-gray-300'
+                }`}
+              >
+                <Moon className="w-5 h-5" />
+                <span className="text-sm font-medium">Dark</span>
+              </button>
+            </div>
           </div>
 
           <Tabs defaultValue="profile" className="space-y-6">
@@ -176,8 +210,8 @@ export default function SettingsPage() {
 
             {/* Profile Settings */}
             <TabsContent value="profile" className="space-y-6">
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-6">Profile Information</h2>
+              <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-6">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Profile Information</h2>
                 
                 {/* Avatar */}
                 <div className="flex items-center gap-6 mb-6">
@@ -271,8 +305,8 @@ export default function SettingsPage() {
 
             {/* Notification Settings */}
             <TabsContent value="notifications" className="space-y-6">
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-6">Notification Preferences</h2>
+              <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-6">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Notification Preferences</h2>
                 
                 <div className="space-y-6">
                   {/* Email Notifications */}
@@ -358,8 +392,8 @@ export default function SettingsPage() {
 
             {/* Account Settings */}
             <TabsContent value="account" className="space-y-6">
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-6">Account Settings</h2>
+              <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-6">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Account Settings</h2>
                 
                 <div className="space-y-6">
                   {/* Account Type */}
@@ -403,8 +437,8 @@ export default function SettingsPage() {
             {/* Billing (Attorney only) */}
             {profile?.role === 'admin' && (
               <TabsContent value="billing" className="space-y-6">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-6">Billing & Subscription</h2>
+                <div className="bg-white dark:bg-[#111827] rounded-lg shadow-sm border border-gray-200 dark:border-[#1f2937] p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Billing & Subscription</h2>
                   
                   <div className="space-y-6">
                     {/* Current Plan */}

@@ -49,6 +49,52 @@ function createSupabaseClient() {
   return createClient(SUPABASE_URL!, SUPABASE_KEY!)
 }
 
+// ─── Validation ────────────────────────────────────────────────────────────
+// Prevents bad data (image URLs, Google review blurbs, quoted strings, etc.)
+// from being inserted into outreach_leads.
+
+function isValidEmail(email: string | null | undefined): email is string {
+  if (!email) return false
+  const trimmed = email.trim().toLowerCase()
+  if (trimmed.length === 0 || trimmed.length > 254) return false
+  if (trimmed === 'no email') return false
+  // Reject image/asset extensions that the scraper sometimes picks up
+  if (/\.(png|jpe?g|gif|svg|webp|ico|pdf|css|js)(\?|$)/i.test(trimmed)) return false
+  // Reject common garbage tokens
+  if (/(noreply|no-reply|example\.com|sentry|cloudflare|wixpress|godaddy|wordpress)/i.test(trimmed)) return false
+  // Strict RFC-ish check
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)
+}
+
+function isValidName(name: string | null | undefined): name is string {
+  if (!name) return false
+  const trimmed = name.trim()
+  if (trimmed.length < 3 || trimmed.length > 100) return false
+  if (trimmed.startsWith('"') || trimmed.startsWith("'")) return false
+  // Reject obvious review/firm-blurb text
+  const lower = trimmed.toLowerCase()
+  if (/^the\s+.*law\s+firm/i.test(trimmed)) return false
+  if (/\b(review|rating|stars?|client|customer|great|excellent|recommend)\b/.test(lower)) return false
+  // Must contain at least one space (first + last) and only sensible chars
+  if (!/\s/.test(trimmed)) return false
+  if (!/^[a-zA-Z][a-zA-Z .,'\-]+$/.test(trimmed)) return false
+  return true
+}
+
+function isValidFirm(firm: string | null | undefined): boolean {
+  if (!firm) return false
+  const trimmed = firm.trim()
+  return trimmed.length > 0 && trimmed.length < 200 && trimmed !== '—'
+}
+
+function isValidLead(lead: Lead): boolean {
+  if (!isValidName(lead.name)) return false
+  if (!isValidFirm(lead.firm_name)) return false
+  // Email is optional at scrape time, but if present must be valid
+  if (lead.email !== null && !isValidEmail(lead.email)) return false
+  return true
+}
+
 async function fetchWithProxy(url: string): Promise<string> {
   const proxyUrl = `http://api.scraperapi.com?api_key=${SCRAPERAPI_KEY}&url=${encodeURIComponent(url)}&render=false`
 
@@ -160,13 +206,12 @@ async function tryExtractEmail(avvoUrl: string): Promise<string | null> {
     const websiteUrl = websiteMatch[1]
     const siteHtml = await fetchWithProxy(websiteUrl)
 
-    // Extract email from website
-    const emailMatch = siteHtml.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/i)
-    if (emailMatch) {
-      const email = emailMatch[1].toLowerCase()
-      // Filter out common non-personal emails
-      if (!email.includes('noreply') && !email.includes('example.com') && !email.includes('sentry')) {
-        return email
+    // Extract all candidate emails from website, return first valid one
+    const emailMatches = siteHtml.matchAll(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/gi)
+    for (const m of emailMatches) {
+      const candidate = m[1].toLowerCase()
+      if (isValidEmail(candidate)) {
+        return candidate
       }
     }
   } catch {
@@ -252,43 +297,59 @@ async function main() {
     const leads = await scrapeMarket(market.city, market.state, LEADS_PER_MARKET)
     console.log(`  Scraped ${leads.length} raw leads`)
 
-    // Deduplicate
-    const newLeads = leads.filter(lead => {
+    // Step 1: filter out invalid records (bad names, missing firms, etc.)
+    const validLeads = leads.filter(lead => {
+      const valid = isValidLead(lead)
+      if (!valid) console.log(`  Rejected invalid lead: "${lead.name}" (firm: ${lead.firm_name || 'null'})`)
+      return valid
+    })
+    const invalidCount = leads.length - validLeads.length
+    if (invalidCount > 0) console.log(`  Filtered ${invalidCount} invalid leads`)
+
+    // Step 2: deduplicate
+    const newLeads = validLeads.filter(lead => {
       const key = `${lead.name}|${lead.city}|${lead.state}`.toLowerCase()
       return !existingKeys.has(key)
     })
 
-    const skipped = leads.length - newLeads.length
+    const skipped = validLeads.length - newLeads.length
     totalSkipped += skipped
     if (skipped > 0) console.log(`  Skipped ${skipped} duplicates`)
 
-    // Try to extract emails for top leads (limit API calls)
+    // Step 3: try to extract emails for top leads (limit API calls)
     const emailLimit = Math.min(newLeads.length, 5)
     for (let i = 0; i < emailLimit; i++) {
       if (newLeads[i].avvo_url) {
         console.log(`  Extracting email for ${newLeads[i].name}...`)
-        newLeads[i].email = await tryExtractEmail(newLeads[i].avvo_url!)
-        if (newLeads[i].email) {
-          console.log(`    Found: ${newLeads[i].email}`)
+        const extracted = await tryExtractEmail(newLeads[i].avvo_url!)
+        // Only assign if extraction returned a valid email
+        if (extracted && isValidEmail(extracted)) {
+          newLeads[i].email = extracted
+          console.log(`    Found: ${extracted}`)
+        } else if (extracted) {
+          console.log(`    Rejected invalid email: ${extracted}`)
         }
         await new Promise(r => setTimeout(r, 1500))
       }
     }
 
-    // Insert into Supabase
-    if (newLeads.length > 0) {
+    // Step 4: final validation pass before insert (belt-and-suspenders)
+    const insertableLeads = newLeads.filter(isValidLead)
+
+    // Step 5: insert into Supabase
+    if (insertableLeads.length > 0) {
       const { error } = await supabase
         .from('outreach_leads')
-        .insert(newLeads)
+        .insert(insertableLeads)
 
       if (error) {
         console.error(`  Insert error:`, error.message)
       } else {
-        console.log(`  Inserted ${newLeads.length} new leads`)
-        totalNew += newLeads.length
+        console.log(`  Inserted ${insertableLeads.length} new leads`)
+        totalNew += insertableLeads.length
 
         // Track in existing keys set
-        for (const lead of newLeads) {
+        for (const lead of insertableLeads) {
           existingKeys.add(`${lead.name}|${lead.city}|${lead.state}`.toLowerCase())
         }
       }

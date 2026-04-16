@@ -151,7 +151,7 @@ export default function Sidebar() {
   const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => (
     <div className="flex flex-col h-full">
       {/* Logo/Brand */}
-<div className={`border-b border-gray-200 ${isCollapsed ? 'flex items-center justify-center py-5' : 'px-5 py-5'}`}>
+<div className={`border-b border-gray-200 dark:border-[#1f2937] ${isCollapsed ? 'flex items-center justify-center py-5' : 'px-5 py-5'}`}>
   {isCollapsed ? (
     <svg width="44" height="28" viewBox="2 10 56 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ overflow: 'visible' }}>
       <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#0a0f1e" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
@@ -165,12 +165,12 @@ export default function Sidebar() {
           <circle cx="49" cy="14" r="2.5" fill="#f5a623"/>
         </svg>
         <div>
-          <div className="text-lg font-bold text-gray-900 leading-tight">Unbind</div>
+          <div className="text-lg font-bold text-gray-900 dark:text-white leading-tight">Unbind</div>
           <div className="text-xs leading-tight" style={{ color: '#f5a623' }}>Divorce. Together.</div>
         </div>
       </div>
       {firmInfo && (
-        <p className="text-[11px] text-gray-400 mt-2 truncate">{firmInfo.name}</p>
+        <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-2 truncate">{firmInfo.name}</p>
       )}
     </div>
   )}
@@ -191,14 +191,14 @@ export default function Sidebar() {
               className={`
                 flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all relative
                 ${isActive
-                  ? 'bg-blue-50 text-blue-700 shadow-sm'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-blue-50 text-blue-700 dark:bg-[#1e3a5f] dark:text-white shadow-sm'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1f2937]'
                 }
                 ${isCollapsed ? 'justify-center' : 'space-x-3'}
               `}
             >
               <div className="relative">
-                <Icon className={`${isActive ? 'text-blue-700' : 'text-gray-500'} ${isCollapsed ? 'w-5 h-5' : 'w-5 h-5 flex-shrink-0'}`} />
+                <Icon className={`${isActive ? 'text-blue-700 dark:text-white' : 'text-gray-500 dark:text-gray-400'} ${isCollapsed ? 'w-5 h-5' : 'w-5 h-5 flex-shrink-0'}`} />
                 {showBadge && isCollapsed && (
                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-medium rounded-full flex items-center justify-center">
                     {totalUnread > 9 ? '9+' : totalUnread}
@@ -221,7 +221,7 @@ export default function Sidebar() {
       </nav>
 
       {/* User Profile */}
-      <div className="border-t border-gray-200 p-4">
+      <div className="border-t border-gray-200 dark:border-[#1f2937] p-4">
         {profile && (
           <div className={`${isCollapsed ? 'flex flex-col items-center' : 'flex items-center justify-between'}`}>
             <div className={`flex items-center ${isCollapsed ? 'flex-col space-y-2' : 'space-x-3'}`}>
@@ -232,10 +232,10 @@ export default function Sidebar() {
               </div>
               {!isCollapsed && (
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                     {profile.full_name || 'User'}
                   </p>
-                  <p className="text-xs text-gray-500 truncate">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                     {profile.role === 'admin' ? 'Attorney' : 'Client'}
                   </p>
                 </div>
@@ -244,7 +244,7 @@ export default function Sidebar() {
             {!isCollapsed && (
               <button
                 onClick={handleLogout}
-                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                className="p-2 text-gray-500 dark:text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                 title="Logout"
               >
                 <LogOut className="w-5 h-5" />
@@ -259,18 +259,18 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile Menu Button */}
-<div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3 safe-top flex items-center justify-between">
+<div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white dark:bg-[#0a0f1e] border-b border-gray-200 dark:border-[#1f2937] px-4 py-3 safe-top flex items-center justify-between">
   <div className="flex items-center gap-3">
     <svg width="36" height="24" viewBox="2 10 56 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" style={{ overflow: 'visible' }}>
-      <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" stroke="#0a0f1e" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M8 24c0-5.5 4.5-10 10-10 3.3 0 6.2 1.6 8 4.1l1.5 2 1.5-2C30.8 15.6 33.7 14 37 14c5.5 0 10 4.5 10 10s-4.5 10-10 10c-3.3 0-6.2-1.6-8-4.1l-1.5-2-1.5 2C24.2 32.4 21.3 34 18 34c-5.5 0-10-4.5-10-10z" className="stroke-[#0a0f1e] dark:stroke-cyan-400" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
       <circle cx="49" cy="14" r="2" fill="#f5a623"/>
     </svg>
-    <span className="text-base font-bold text-gray-900">Unbind</span>
+    <span className="text-base font-bold text-gray-900 dark:text-white">Unbind</span>
   </div>
   <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
     <SheetTrigger asChild>
-      <button className="p-2 hover:bg-gray-100 rounded-lg">
-        <Menu className="w-6 h-6 text-gray-700" />
+      <button className="p-2 hover:bg-gray-100 dark:hover:bg-[#1f2937] rounded-lg">
+        <Menu className="w-6 h-6 text-gray-700 dark:text-gray-300" />
       </button>
     </SheetTrigger>
     <SheetContent side="left" className="p-0 w-72">
@@ -284,22 +284,22 @@ export default function Sidebar() {
         className={`
           hidden lg:flex lg:flex-col
           fixed left-0 top-0 bottom-0 z-30
-          bg-white border-r border-gray-200
+          bg-white dark:bg-[#0a0f1e] border-r border-gray-200 dark:border-[#1f2937]
           transition-all duration-300 ease-in-out
           ${isCollapsed ? 'w-20' : 'w-64'}
         `}
       >
         <SidebarContent />
-        
+
         {/* Collapse Toggle */}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="absolute -right-3 top-6 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm"
+          className="absolute -right-3 top-6 w-6 h-6 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1f2937] rounded-full flex items-center justify-center hover:bg-gray-50 dark:hover:bg-[#1f2937] transition-colors shadow-sm"
         >
           {isCollapsed ? (
-            <ChevronRight className="w-4 h-4 text-gray-600" />
+            <ChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-300" />
           ) : (
-            <ChevronLeft className="w-4 h-4 text-gray-600" />
+            <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-gray-300" />
           )}
         </button>
       </aside>

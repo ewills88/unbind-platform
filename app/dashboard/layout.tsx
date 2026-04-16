@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import { ThemeProvider } from '@/components/providers/ThemeProvider'
 
 const AssistantBubble = dynamic(
   () => import('@/components/assistant/AssistantBubble'),
@@ -86,13 +87,18 @@ function SetupBanner() {
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-      <SetupBanner />
-      <div className="pb-20 md:pb-0">
-        {children}
+    <ThemeProvider>
+      <div
+        className="min-h-screen dark:bg-[#0a0f1e] transition-colors"
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
+      >
+        <SetupBanner />
+        <div className="pb-20 md:pb-0">
+          {children}
+        </div>
+        <MobileBottomNav />
+        <AssistantBubble />
       </div>
-      <MobileBottomNav />
-      <AssistantBubble />
-    </div>
+    </ThemeProvider>
   )
 }
